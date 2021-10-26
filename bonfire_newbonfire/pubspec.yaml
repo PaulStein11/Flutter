@@ -1,0 +1,60 @@
+name: bonfire_newbonfire
+description: A new Flutter application.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.3
+  #GOOGLE SERVICES
+  #Firebase
+  firebase_core: "0.4.4+3"
+  firebase_analytics: "5.0.11"
+  firebase_auth: "0.15.4"
+  firebase_storage: "3.1.1"
+  cloud_firestore: "0.13.4+2"
+  #Sign In
+  google_sign_in: ^4.4.4
+
+  #OTHERS
+  provider: "4.0.4"
+  image_picker: "0.6.3+4"
+  percent_indicator: "^2.1.1"
+  share: ^0.6.2+3
+  font_awesome_flutter: ^9.1.0
+  url_launcher:
+
+  #Divulgation
+  agora_rtc_engine: ^4.0.1
+  skeleton_text: ^2.0.0
+  permission_handler:
+  path_provider:
+  flutter_audio_recorder2:
+  audioplayers:
+  intl: ^0.17.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+      - family: MyFlutterApp
+        fonts:
+          - asset: assets/fonts/MyFlutterApp.ttf
+      - family: Palanquin
+        fonts:
+          - asset: assets/fonts/palanquin/palanquin-regular.ttf
+      - family: Poppins
+        fonts:
+          - asset: assets/fonts/poppins/Poppins-Light.otf
