@@ -1,0 +1,87 @@
+name: bonfire_newbonfire
+description: A new Flutter application.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.3
+
+  #GOOGLE SERVICES
+  #Firebase
+  firebase_core: "0.4.4+3"
+  firebase_analytics: "5.0.11"
+  firebase_auth: "0.15.4"
+  firebase_storage:
+  cloud_firestore: "0.13.4+2"
+  firebase_dynamic_links:
+  #Sign In
+  google_sign_in: ^4.4.4
+
+  #OTHERS
+  provider: "4.0.4"
+  image_picker: ^0.6.7+14
+  percent_indicator: "^2.1.1"
+  timeago: ^2.0.26
+  uuid: ^2.0.1
+  share:
+  shared_preferences: ^2.0.6
+  font_awesome_flutter: ^9.1.0
+  pinput: ^1.2.0
+  flutter_email_sender:
+  decorated_icon: ^1.2.1
+  #Divulgation
+  skeleton_text: ^2.0.0
+  audioplayers:
+  flutter_audio_recorder2: 0.0.1
+  path_provider:
+  permission_handler:
+  url_launcher:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: MyFlutterApp
+      fonts:
+        - asset: assets/fonts/MyFlutterApp.ttf
+
+    - family: Palanquin
+      fonts:
+        - asset: assets/fonts/palanquin/palanquin-bold.ttf
+
+    - family: PalanquinRegular
+      fonts:
+        - asset: assets/fonts/palanquin/palanquin-regular.ttf
+
+    - family: PalanquinDark
+      fonts:
+        - asset: assets/fonts/palanquin/palanquindark-semibold.ttf
+
+    - family: PalanquinSemibold
+      fonts:
+        - asset: assets/fonts/palanquin/palanquin-semibold.ttf
+
+    - family: PalanquinDarkMedium
+      fonts:
+        - asset: assets/fonts/palanquin/palanquindark-medium.ttf
+
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/poppins/Poppins-Light.otf
