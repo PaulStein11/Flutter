@@ -38,7 +38,7 @@ class CreateBonfireAudio extends StatefulWidget {
 class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
   String id, name, profileImage, title, bfId = Uuid().v4();
   bool isAnonym;
-  List<firebase_storage.StorageReference> references = [];
+  List<firebase_storage.Reference> references = [];
 
   _CreateBonfireAudioState(
       this.title, this.profileImage, this.name, this.id, this.isAnonym);
@@ -572,10 +572,10 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         _filePath,
         '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
       );
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("Users")
-          .document(widget.id)
-          .updateData(
+          .doc(widget.id)
+          .update(
         {"bonfires": FieldValue.increment(1)},
       );
       /*await DBFuture.instance
@@ -689,10 +689,10 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
 
   Future<void> _onUploadComplete() async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-    var listResult = await firebaseStorage
+    firebase_storage.ListResult listResult = (await firebaseStorage
         .ref()
         .child('upload-voice-firebase')
-        .getDownloadURL();
+        .getDownloadURL()) as firebase_storage.ListResult;
     setState(() {
       references = listResult.items;
     });

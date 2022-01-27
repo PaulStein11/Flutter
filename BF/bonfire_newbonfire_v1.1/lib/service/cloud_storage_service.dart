@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 
 class CloudStorageService {
@@ -6,7 +7,7 @@ class CloudStorageService {
 
   //Variable declaration
   FirebaseStorage _storage;
-  StorageReference _baseRef;
+  Reference _baseRef;
   String _profileImages = "profile_images";
 
   CloudStorageService() {
@@ -15,13 +16,12 @@ class CloudStorageService {
     _baseRef = _storage.ref();
   }
 
-  Future<StorageTaskSnapshot> uploadUserImage(String _uid, File _imageFile) {
+  Future<TaskSnapshot> uploadUserImage(String _uid, File _imageFile) {
     try {
       return _baseRef
           .child(_uid)
           .child(_profileImages)
-          .putFile(_imageFile)
-          .onComplete;
+          .putFile(_imageFile).whenComplete(() => null);
 
     } catch(e) {
       print(e);

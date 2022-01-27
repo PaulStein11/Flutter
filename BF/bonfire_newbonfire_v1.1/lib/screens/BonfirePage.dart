@@ -73,7 +73,7 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver{
   double _percent = 0.0;
   int _totalTime;
   int _currentTime;
-  List<firebase_storage.StorageReference> references = [];
+  List<firebase_storage.Reference> references = [];
 
   final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   Timer _timerLink;
@@ -463,11 +463,11 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver{
                                                                             'Report',
                                                                         onPressed:
                                                                             () {
-                                                                          Firestore
+                                                                          FirebaseFirestore
                                                                               .instance
                                                                               .collection("Bonfire")
-                                                                              .document(bfId)
-                                                                              .updateData(
+                                                                              .doc(bfId)
+                                                                              .update(
                                                                             {
                                                                               "report": FieldValue.increment(1)
                                                                             },
@@ -642,10 +642,10 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver{
 
   Future<void> _onUploadComplete() async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-    var listResult = await firebaseStorage
+    firebase_storage.ListResult listResult = (await firebaseStorage
         .ref()
         .child('upload-voice-firebase')
-        .getDownloadURL();
+        .getDownloadURL()) as firebase_storage.ListResult;
     setState(() {
       references = listResult.items;
     });

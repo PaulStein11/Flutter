@@ -169,10 +169,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     });
 
                                     if (_usernameIsValid & _bioIsValid) {
-                                      await Firestore.instance
+                                      await FirebaseFirestore.instance
                                           .collection("Users")
-                                          .document(_auth.user.uid)
-                                          .updateData({
+                                          .doc(_auth.user.uid)
+                                          .update({
                                         "name": displayNameController.text,
                                         "bio": bioController.text,
                                       });

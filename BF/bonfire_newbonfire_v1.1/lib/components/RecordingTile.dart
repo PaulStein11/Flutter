@@ -595,10 +595,10 @@ class _RecordTileState extends State<RecordTile> {
           interactionId,
           title,
           _filePath);
-      await Firestore.instance.collection("Bonfire").document(bfId).updateData({
+      await FirebaseFirestore.instance.collection("Bonfire").doc(bfId).update({
         "audience": FieldValue.increment(1),
       });
-      await Firestore.instance.collection("Users").document(uid).updateData({
+      await FirebaseFirestore.instance.collection("Users").doc(uid).update({
         "interactions": FieldValue.increment(1),
       });
       await FutureService.instance.createActivity(uid, ownerName, this.ownerImage, bfId, bfTitle);

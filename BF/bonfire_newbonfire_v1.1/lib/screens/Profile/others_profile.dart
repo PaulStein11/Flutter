@@ -204,7 +204,7 @@ class _OthersProfileState extends State<OthersProfile> {
               elevation: 2.0,
               child: MaterialButton(
                 onPressed: () {
-                  FutureService.instance.createOrGetConversartion(
+                  /*FutureService.instance.createOrGetConversartion(
                       _auth.user.uid, widget.profileId,
                           (String _conversationID) {
                         Navigator.push(context, MaterialPageRoute(builder: (_context) {
@@ -214,7 +214,7 @@ class _OthersProfileState extends State<OthersProfile> {
                               username,
                               profileImage);
                         }),);
-                      });
+                      });*/
                 },
                 minWidth: 110.0,
                 height: 22.0,

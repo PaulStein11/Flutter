@@ -35,9 +35,9 @@ class CommentsState extends State<Comments> {
 
   buildComments() {
     return StreamBuilder(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection("Message")
-          .document(postId)
+          .doc(postId)
           .collection("postMsg")
           .orderBy("timestamp", descending: false)
           .snapshots(),
@@ -135,9 +135,9 @@ class CommentsState extends State<Comments> {
                           ),
                           trailing: GestureDetector(
                             onTap: () {
-                              Firestore.instance
+                              FirebaseFirestore.instance
                                   .collection("Message")
-                                  .document(postId)
+                                  .doc(postId)
                                   .collection("postMsg")
                                   .add({
                                 "username": _data.name,
@@ -149,9 +149,9 @@ class CommentsState extends State<Comments> {
                               });
                               bool isNotPostOwner = postOwnerId == _data.uid;
                               if (isNotPostOwner) {
-                                Firestore.instance
+                                FirebaseFirestore.instance
                                     .collection("Notifications")
-                                    .document(postOwnerId)
+                                    .doc(postOwnerId)
                                     .collection("notificationsItems")
                                     .add({
                                   "type": "comment",

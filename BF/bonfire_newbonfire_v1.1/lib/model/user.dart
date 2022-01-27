@@ -14,9 +14,9 @@ class MyUserModel {
   MyUserModel({this.uid, this.name, this.email, this.profileImage, this.bio, this.bonfires, this.interactions, this.lastSeen});
 
   factory MyUserModel.fromDocument(DocumentSnapshot _snapshot) {
-    var _data = _snapshot.data;
+    Map<String, dynamic> _data = _snapshot.data as Map<String, dynamic>;
     return MyUserModel(
-      uid: _snapshot.documentID,
+      uid: _snapshot.id,
       name: _data["name"],
       email: _data["email"],
       profileImage: _data["profileImage"],

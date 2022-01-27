@@ -18,7 +18,7 @@ enum AuthStatus {
 
 //Creating a class to host all the AuthProvider functionality
 class AuthProvider extends ChangeNotifier {
-  FirebaseUser user;
+  User user;
   AuthStatus status;
   FirebaseAuth _auth; //Internal variable to call firebase auth
   static AuthProvider instance =
@@ -38,7 +38,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void _checkCurrentUserIsAuthenticated() async {
-    user = await _auth.currentUser();
+    user = await _auth.currentUser;
     if (user != null) {
       notifyListeners();
       _autoLogin();
@@ -51,7 +51,7 @@ class AuthProvider extends ChangeNotifier {
     status = AuthStatus.Authenticating;
     notifyListeners();
     try {
-      AuthResult _result = await _auth.signInWithEmailAndPassword(
+      UserCredential _result = await _auth.signInWithEmailAndPassword(
           email: _email, password: _password);
       user = _result.user;
       status = AuthStatus.Authenticated;
@@ -81,7 +81,7 @@ class AuthProvider extends ChangeNotifier {
     status = AuthStatus.Authenticating;
     notifyListeners();
     try {
-      AuthResult _result = await _auth.createUserWithEmailAndPassword(
+      UserCredential _result = await _auth.createUserWithEmailAndPassword(
           email: _email, password: _password);
       user = _result.user;
       status = AuthStatus.Authenticated;

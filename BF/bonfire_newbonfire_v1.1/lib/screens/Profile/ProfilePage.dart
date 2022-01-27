@@ -38,10 +38,10 @@ class _ProfilePageState extends State<ProfilePage> {
     var _result = await CloudStorageService.instance
         .uploadUserImage(_auth.user.uid, _image);
     var _imageURL = await _result.ref.getDownloadURL();
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("Users")
-        .document(_auth.user.uid)
-        .updateData({
+        .doc(_auth.user.uid)
+        .update({
       "profileImage": _imageURL.toString(),
     });
   }

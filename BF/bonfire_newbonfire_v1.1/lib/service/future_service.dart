@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FutureService {
   static FutureService instance = FutureService();
-  Firestore _db;
+  FirebaseFirestore _db;
 
   FutureService() {
-    _db = Firestore.instance;
+    _db = FirebaseFirestore.instance;
   }
 
   String _userCollection = "Users";
@@ -25,7 +25,7 @@ class FutureService {
     String _duration,
   ) async {
     try {
-      return await _db.collection(_bfCollection).document(_bfId).setData({
+      return await _db.collection(_bfCollection).doc(_bfId).set({
         "ownerId": _uid,
         "ownerName": _ownerName,
         "ownerImage": _ownerImage,
@@ -43,7 +43,7 @@ class FutureService {
       print(e);
     }
 
-    await Firestore.instance.collection("Users").document(_uid).updateData(
+    await FirebaseFirestore.instance.collection("Users").doc(_uid).update(
       {
         "posts": FieldValue.increment(1),
       },
@@ -52,7 +52,7 @@ class FutureService {
 
   Future<void> deleteBFInDB(String _bfId, _postId) async {
     try {
-      return await _db.collection(_bfCollection).document(_bfId).get().then(
+      return await _db.collection(_bfCollection).doc(_bfId).get().then(
         (doc) {
           if (doc.exists) {
             doc.reference.delete();
@@ -68,9 +68,9 @@ class FutureService {
     try {
       return await _db
           .collection(_interactionCollection)
-          .document(_bfId)
+          .doc(_bfId)
           .collection("usersInteraction")
-          .document(_interactionId)
+          .doc(_interactionId)
           .get()
           .then(
         (doc) {
@@ -87,7 +87,7 @@ class FutureService {
   Future<void> createUserInDB(String _uid, String _name, String _email,
       String _bio, String _profileImage) async {
     try {
-      return await _db.collection(_userCollection).document(_uid).setData({
+      return await _db.collection(_userCollection).doc(_uid).set({
         "name": _name,
         "email": _email,
         "profileImage": _profileImage,
@@ -114,10 +114,10 @@ class FutureService {
     try {
       return await _db
           .collection(_interactionCollection)
-          .document(_bfId)
+          .doc(_bfId)
           .collection("usersInteraction")
-          .document(_interactionId)
-          .setData(
+          .doc(_interactionId)
+          .set(
         {
           "ownerId": _ownerId,
           "ownerName": _ownerName,
@@ -142,10 +142,10 @@ class FutureService {
     try {
       return await _db
           .collection(_commentsCollection)
-          .document(_postId)
+          .doc(_postId)
           .collection("postMsg")
-          .document(_comntId)
-          .setData({
+          .doc(_comntId)
+          .set({
         "postId": _postId,
         "ownerId": _uid,
         "name": _name,
@@ -168,10 +168,10 @@ class FutureService {
     try {
       return await _db
           .collection("Activity")
-          .document(_uid)
+          .doc(_uid)
           .collection("usersActivity")
-          .document(_bfId)
-          .setData({
+          .doc(_bfId)
+          .set({
         "ownerId": _uid,
         "ownerName": _ownerName,
         "ownerImage": _ownerImage,
@@ -184,44 +184,44 @@ class FutureService {
       print(e);
     }
 
-    await Firestore.instance.collection("Users").document(_uid).updateData(
+    await FirebaseFirestore.instance.collection("Users").doc(_uid).update(
       {
         "posts": FieldValue.increment(1),
       },
     );
   }
 
-  Future<void> createOrGetConversartion(String _currentID, String _recepientID,
+  /*Future<void> createOrGetConversartion(String _currentID, String _recepientID,
       Future<void> _onSuccess(String _conversationID)) async {
     var _ref = _db.collection(_conversationsCollection);
     var _userConversationRef = _db
         .collection(_userCollection)
-        .document(_currentID)
+        .doc(_currentID)
         .collection(_conversationsCollection);
     try {
       var conversation =
-          await _userConversationRef.document(_recepientID).get();
+          await _userConversationRef.doc(_recepientID).get();
       if (conversation.data != null) {
         return _onSuccess(conversation.data["conversationID"]);
       } else {
-        var _conversationRef = _ref.document();
-        await _conversationRef.setData(
+        var _conversationRef = _ref.doc();
+        await _conversationRef.set(
           {
             "members": [_currentID, _recepientID],
             "ownerID": _currentID,
             'messages': [],
           },
         );
-        return _onSuccess(_conversationRef.documentID);
+        return _onSuccess(_conversationRef.id);
       }
     } catch (e) {
       print(e);
     }
-  }
+  }*/
 
   Future<void> sendMessage(String _conversationID, Message _message) {
     var _ref =
-        _db.collection(_conversationsCollection).document(_conversationID);
+        _db.collection(_conversationsCollection).doc(_conversationID);
     var _messageType = "";
     switch (_message.type) {
       case MessageType.Text:
@@ -232,7 +232,7 @@ class FutureService {
         break;
       default:
     }
-    return _ref.updateData(
+    return _ref.update(
       {
         "messages": FieldValue.arrayUnion(
           [

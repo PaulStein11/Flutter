@@ -49,7 +49,7 @@ class Interaction extends StatefulWidget {
       this.likes});
 
   factory Interaction.fromDocument(DocumentSnapshot _snapshot) {
-    var _data = _snapshot.data;
+    Map<String, dynamic> _data = _snapshot.data as Map<String, dynamic>;
     return Interaction(
       bfId: _data['bfId'],
       bfTitle: _data['bfTitle'],
@@ -137,12 +137,12 @@ class _InteractionState extends State<Interaction> {
   handleLikePost() {
     bool _isLiked = likes[currentUserId] == true;
     if (_isLiked) {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("Interactions")
-          .document(bfId)
+          .doc(bfId)
           .collection('usersInteraction')
-          .document(interactionId)
-          .updateData({'likes.$currentUserId': false});
+          .doc(interactionId)
+          .update({'likes.$currentUserId': false});
       //removeLikeFromActivityFeed();
       setState(() {
         likeCount -= 1;
@@ -150,12 +150,12 @@ class _InteractionState extends State<Interaction> {
         likes[currentUserId] = false;
       });
     } else if (!_isLiked) {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("Interactions")
-          .document(bfId)
+          .doc(bfId)
           .collection('usersInteraction')
-          .document(interactionId)
-          .updateData({'likes.$currentUserId': true});
+          .doc(interactionId)
+          .update({'likes.$currentUserId': true});
       //addLikeToActivityFeed();
       setState(() {
         likeCount += 1;
@@ -221,10 +221,10 @@ class _InteractionState extends State<Interaction> {
                                       cancelActionText: 'Cancel',
                                       defaultActionText: 'Delete',
                                       onPressed: () async {
-                                    await Firestore.instance
+                                    await FirebaseFirestore.instance
                                         .collection("Bonfire")
-                                        .document(bfId)
-                                        .updateData({
+                                        .doc(bfId)
+                                        .update({
                                       "audience": FieldValue.increment(-1)
                                     });
                                     Navigator.of(context).pushAndRemoveUntil(
@@ -433,12 +433,12 @@ class _InteractionState extends State<Interaction> {
                               onPressed: () {
                                 bool _isLiked = likes[userData.uid] == true;
                                 if (_isLiked) {
-                                  Firestore.instance
+                                  FirebaseFirestore.instance
                                       .collection("Interactions")
-                                      .document(bfId)
+                                      .doc(bfId)
                                       .collection('usersInteraction')
-                                      .document(interactionId)
-                                      .updateData(
+                                      .doc(interactionId)
+                                      .update(
                                           {'likes.${userData.uid}': false});
                                   //removeLikeFromActivityFeed();
                                   setState(() {
@@ -449,12 +449,12 @@ class _InteractionState extends State<Interaction> {
                                   print(
                                       "interaction disliked by user ${userData.uid}");
                                 } else if (!_isLiked) {
-                                  Firestore.instance
+                                  FirebaseFirestore.instance
                                       .collection("Interactions")
-                                      .document(bfId)
+                                      .doc(bfId)
                                       .collection('usersInteraction')
-                                      .document(interactionId)
-                                      .updateData(
+                                      .doc(interactionId)
+                                      .update(
                                           {'likes.${userData.uid}': true});
                                   //addLikeToActivityFeed();
                                   setState(() {
@@ -462,12 +462,12 @@ class _InteractionState extends State<Interaction> {
                                     likeCount += 1;
                                     likes[userData.uid] = true;
                                   });
-                                  Firestore.instance
+                                  FirebaseFirestore.instance
                                       .collection("Activity")
-                                      .document(userData.uid)
+                                      .doc(userData.uid)
                                       .collection("usersActivity")
-                                      .document()
-                                      .setData(
+                                      .doc()
+                                      .set(
                                           {"bfId": bfId, "bfTitle": bfTitle});
                                 }
                                 print(

@@ -26,13 +26,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         _timer = Timer.periodic(
           Duration(seconds: 2),
           (timer) async {
-            await FirebaseAuth.instance.currentUser()
+            await FirebaseAuth.instance.currentUser
               ..reload();
-            var user = await FirebaseAuth.instance.currentUser();
-            if (user.isEmailVerified) {
+            var user = await FirebaseAuth.instance.currentUser;
+            if (user.emailVerified) {
               setState(
                 () {
-                  _isUserEmailVerified = user.isEmailVerified;
+                  _isUserEmailVerified = user.emailVerified;
                   NavigationService.instance.navigateToReplacement("guide");
                 },
               );

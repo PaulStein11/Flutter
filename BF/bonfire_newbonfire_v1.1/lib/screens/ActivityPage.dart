@@ -31,7 +31,7 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  List<firebase_storage.StorageReference> references = [];
+  List<firebase_storage.Reference> references = [];
 
   String bfId;
 
@@ -246,7 +246,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                                                               cancelActionText: 'Cancel',
                                                                               defaultActionText: 'Report',
                                                                               onPressed: () {
-                                                                                Firestore.instance.collection("Bonfire").document(bfId).updateData(
+                                                                                FirebaseFirestore.instance.collection("Bonfire").doc(bfId).update(
                                                                                   {
                                                                                     "report": FieldValue.increment(1)
                                                                                   },
@@ -419,10 +419,10 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Future<void> _onUploadComplete() async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-    var listResult = await firebaseStorage
+    firebase_storage.ListResult listResult = (await firebaseStorage
         .ref()
         .child('upload-voice-firebase')
-        .getDownloadURL();
+        .getDownloadURL()) as firebase_storage.ListResult;
     setState(() {
       references = listResult.items;
     });

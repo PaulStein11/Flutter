@@ -17,10 +17,10 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class StreamService {
   static StreamService instance = StreamService();
-  Firestore _db;
+  FirebaseFirestore _db;
 
   StreamService() {
-    _db = Firestore.instance;
+    _db = FirebaseFirestore.instance;
   }
 
   String _userCollection = "Users";
@@ -31,8 +31,8 @@ class StreamService {
 
   Stream<List<MyUserModel>> getUsersInDB() {
     var _ref = _db.collection("Users");
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return MyUserModel.fromDocument(_doc);
       }).toList();
     });
@@ -41,18 +41,18 @@ class StreamService {
   Stream<List<Interaction>> getInteractions(String _bfId) {
     var _ref = _db
         .collection("Interactions")
-        .document(_bfId)
+        .doc(_bfId)
         .collection("usersInteraction")
         .orderBy("likes", descending: true);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return Interaction.fromDocument(_doc);
       }).toList();
     });
   }
 
   Stream<BF> getBonfire(String _bfId) {
-    var _ref = _db.collection("Bonfire").document(_bfId);
+    var _ref = _db.collection("Bonfire").doc(_bfId);
     return _ref.get().asStream().map((_snapshot) {
       return BF.fromFirestore(_snapshot);
     });
@@ -60,8 +60,8 @@ class StreamService {
 
   Stream<List<BF>> getBonfires(int limit) {
     var _ref = _db.collection("Bonfire").orderBy("timestamp", descending: true).limit(limit);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return BF.fromFirestore(_doc);
       }).toList();
     });
@@ -70,8 +70,8 @@ class StreamService {
   Stream<List<BF>> getActivities() {
     var _ref =
         _db.collection("Activity").orderBy("timestamp", descending: true);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return BF.fromFirestore(_doc);
       }).toList();
     });
@@ -80,11 +80,11 @@ class StreamService {
   Stream<List<Activity>> getActivity(String _userId) {
     var _ref = _db
         .collection("Activity")
-        .document(_userId)
+        .doc(_userId)
         .collection("usersActivity")
         .orderBy("timestamp", descending: true);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return Activity.fromFirestore(_doc);
       }).toList();
     });
@@ -100,18 +100,18 @@ class StreamService {
   Stream<List<NotificationItem>> getNotificationsItem(String _userID) {
     var _ref = _db
         .collection(_feedItemsCollection)
-        .document(_userID)
+        .doc(_userID)
         .collection("feedItems")
         .orderBy("timestamp", descending: true);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return NotificationItem.fromDocument(_doc);
       }).toList();
     });
   }
 
   Stream<MyUserModel> isUserInTech(String _userID) {
-    var _ref = _db.collection("FollowingTech").document(_userID);
+    var _ref = _db.collection("FollowingTech").doc(_userID);
     return _ref.get().asStream().map((_snapshot) {
       return MyUserModel.fromDocument(_snapshot);
     });
@@ -120,11 +120,11 @@ class StreamService {
   Stream<List<BF>> getMyPosts(String _userID) {
     var _ref = _db
         .collection(_bfCollection)
-        .document(_userID)
+        .doc(_userID)
         .collection("userPosts")
         .orderBy("timestamp", descending: true);
     return _ref.snapshots().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+      return _snapshot.docs.map((_doc) {
         return BF.fromFirestore(_doc);
       }).toList();
     });
@@ -153,21 +153,21 @@ class StreamService {
   }*/
 
   Stream<MyUserModel> getUserData(String _userID) {
-    var _ref = _db.collection(_userCollection).document(_userID);
+    var _ref = _db.collection(_userCollection).doc(_userID);
     return _ref.get().asStream().map((_snapshot) {
       return MyUserModel.fromDocument(_snapshot);
     });
   }
 
   Stream<BF> getBFAudience(String _userID) {
-    var _ref = _db.collection(_bfCollection).document(_userID);
+    var _ref = _db.collection(_bfCollection).doc(_userID);
     return _ref.get().asStream().map((_snapshot) {
       return BF.fromFirestore(_snapshot);
     });
   }
 
   Stream<BF> getMyActivity(String _userID) {
-    var _ref = _db.collection(_bfCollection).document(_userID);
+    var _ref = _db.collection(_bfCollection).doc(_userID);
     return _ref.get().asStream().map((_snapshot) {
       return BF.fromFirestore(_snapshot);
     });
@@ -176,11 +176,11 @@ class StreamService {
   Stream<List<Comment>> getComments(String _postID) {
     var _ref = _db
         .collection(_commentsCollection)
-        .document(_postID)
+        .doc(_postID)
         .collection("postMsg")
         .orderBy("timestamp", descending: false);
     return _ref.snapshots().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+      return _snapshot.docs.map((_doc) {
         return Comment.fromFirestore(_doc);
       }).toList();
     });
@@ -191,12 +191,12 @@ class StreamService {
   Stream<List<BF>> getTechTimeline() {
     var _ref = _db
         .collection("TimelineTech")
-        .document("time_tech")
+        .doc("time_tech")
         .collection("timelinePosts")
         .orderBy("timestamp", descending: true)
         .limit(10);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return BF.fromFirestore(_doc);
       }).toList();
     });
@@ -206,12 +206,12 @@ class StreamService {
   Stream<List<BF>> getNatureTimeline() {
     var _ref = _db
         .collection("TimelineNat")
-        .document("time_nature")
+        .doc("time_nature")
         .collection("timelinePosts")
         .orderBy("timestamp", descending: true)
         .limit(10);
-    return _ref.getDocuments().asStream().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+    return _ref.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
         return BF.fromFirestore(_doc);
       }).toList();
     });
@@ -220,10 +220,10 @@ class StreamService {
   Stream<List<ConversationSnippet>> getUserConversations(String _userID) {
     var _ref = _db
         .collection(_userCollection)
-        .document(_userID)
+        .doc(_userID)
         .collection(_conversationsCollection);
     return _ref.snapshots().map((_snapshot) {
-      return _snapshot.documents.map((_doc) {
+      return _snapshot.docs.map((_doc) {
         return ConversationSnippet.fromFirestore(_doc);
       }).toList();
     });
@@ -231,7 +231,7 @@ class StreamService {
 
   Stream<Conversation> getConversation(String _conversationID) {
     var _ref =
-        _db.collection(_conversationsCollection).document(_conversationID);
+        _db.collection(_conversationsCollection).doc(_conversationID);
     return _ref.snapshots().map(
       (_doc) {
         return Conversation.fromFirestore(_doc);
@@ -243,13 +243,13 @@ class StreamService {
   Stream<List<BF>> getHealthTimeline() {
     var _ref = _db
         .collection("TimelineHealth")
-        .document("time_health")
+        .doc("time_health")
         .collection("timelinePosts")
         .orderBy("timestamp", descending: true)
         .limit(10);
-    return _ref.getDocuments().asStream().map(
+    return _ref.get().asStream().map(
       (_snapshot) {
-        return _snapshot.documents.map(
+        return _snapshot.docs.map(
           (_doc) {
             return BF.fromFirestore(_doc);
           },

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/screens/Login/SplashPage.dart';
 import 'package:bonfire_newbonfire/utils/ourTheme.dart';
@@ -11,16 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'screens/screens.dart';
 
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.black,
-    // navigation bar color
-    statusBarColor: Colors.grey.shade900,
-    //Color(0xff1E1C1A), // status bar color
-    statusBarIconBrightness: Brightness.dark,
-  ));
+Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

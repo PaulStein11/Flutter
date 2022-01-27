@@ -50,7 +50,7 @@ class Activity extends StatefulWidget {
   });
 
   factory Activity.fromFirestore(DocumentSnapshot _snapshot) {
-    var _data = _snapshot.data;
+    Map<String, dynamic> _data = _snapshot.data as Map<String, dynamic>;
 
     return Activity(
       bfId: _data['bfId'],
@@ -94,7 +94,7 @@ class _ActivityState extends State<Activity> {
     this.timestamp,
   });
 
-  List<firebase_storage.StorageReference> references = [];
+  List<firebase_storage.Reference> references = [];
 
   @override
   Widget build(BuildContext context) {
@@ -328,10 +328,10 @@ class _ActivityState extends State<Activity> {
 
   Future<void> _onUploadComplete() async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-    var listResult = await firebaseStorage
+    firebase_storage.ListResult listResult = (await firebaseStorage
         .ref()
         .child('upload-voice-firebase')
-        .getDownloadURL();
+        .getDownloadURL()) as firebase_storage.ListResult;
     setState(() {
       references = listResult.items;
     });
