@@ -92,6 +92,7 @@ class StreamService {
   }
 
   Stream<List<BF>> getMyPosts(String _userID) {
+    Timestamp timestamp;
     var _ref = _db
         .collection(_bfCollection)
         .document(_userID)

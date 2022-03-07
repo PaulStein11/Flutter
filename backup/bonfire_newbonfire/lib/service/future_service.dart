@@ -1,6 +1,6 @@
 import 'package:bonfire_newbonfire/model/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+
 
 class FutureService {
   static FutureService instance = FutureService();
@@ -33,7 +33,7 @@ class FutureService {
         "bfId": _bfId,
         "title": _title,
         "audience": 0,
-        "timestamp": Timestamp.now(),
+        "timestamp": DateTime.now(),
         "likes": {},
         "dislikes": {},
         "upgrades": {},
