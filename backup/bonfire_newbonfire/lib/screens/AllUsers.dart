@@ -81,6 +81,11 @@ class _AllUsersState extends State<AllUsers> {
                     stream: StreamService.instance.getUsersInDB(),
                     builder: (_context, _snapshot) {
                       var _usersData = _snapshot.data;
+                      _usersData.map((e) {
+                        List<String> tokenIdList = [];
+                        tokenIdList.add(e.tokenId);
+                        return tokenIdList;
+                      });
                       /*if (_usersData != null) {
                           _usersData.removeWhere((_contact) =>
                           _contact.uid == _auth.user.uid);

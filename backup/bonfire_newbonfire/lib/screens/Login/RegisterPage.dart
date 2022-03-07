@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/service/snackbar_service.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
@@ -81,12 +82,13 @@ class _RegisterPageState extends State<RegisterPage> {
           onChanged: () {
             _formKey.currentState.save();
           },
-          child: SingleChildScrollView(
-            child: SafeArea(
-              child: Column(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -109,10 +111,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: _image != null
                               ? Text("")
                               : Icon(
-                                  MyFlutterApp.user,
-                                  color: Colors.grey.shade200,
-                                  size: 45.0,
-                                ),
+                            MyFlutterApp.user,
+                            color: Colors.grey.shade200,
+                            size: 45.0,
+                          ),
                         ),
                       ),
                     ],
@@ -122,9 +124,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   OurTextForm("Username"),
                   TextFormField(
+                    autofillHints: [AutofillHints.name],
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 20.0),
-                    textAlign: TextAlign.center,
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20.0),
+                    textAlign: TextAlign.left,
                     onSaved: (_input) {
                       setState(() {
                         _name = _input;
@@ -137,13 +141,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           : "Username need more than 6 characters";
                     },
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02),
                   OurTextForm("Email"),
                   TextFormField(
+                    autofillHints: [AutofillHints.email],
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 20.0),
-                    textAlign: TextAlign.center,
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20.0),
+                    textAlign: TextAlign.left,
                     onSaved: (_input) {
                       setState(() {
                         _email = _input;
@@ -156,120 +163,93 @@ class _RegisterPageState extends State<RegisterPage> {
                           : "Please enter a valid email";
                     },
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02),
                   OurTextForm("Password"),
                   TextFormField(
                     obscureText: _obscureText,
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 20.0),
-                    textAlign: TextAlign.center,
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20.0),
+                    textAlign: TextAlign.left,
                     onSaved: (_input) {
                       setState(() {
                         _password = _input;
                       });
                     },
-                    decoration: kTextFieldDecoration.copyWith(),
+                    decoration: kTextFieldDecoration.copyWith(
+                      suffixIcon: IconButton(
+                        iconSize: 20.0,
+                        onPressed: _toggle,
+                        icon: _obscureText
+                            ? Icon(
+                          FontAwesomeIcons.solidEye,
+                          color: Colors.grey,
+                        )
+                            : Icon(
+                          FontAwesomeIcons.solidEyeSlash,
+                          color: Colors.white70,
+                        ),
+                        color: Colors.grey,
+                      ),
+                    ),
                     validator: (_input) {
                       return _input.length != 0 && _input.length > 6
                           ? null
                           : "Password need more than 6 characters";
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0),
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          splashRadius: 0.1,
-                          onPressed: _toggle,
-                          icon: _obscureText
-                              ? Icon(
-                                  Icons.check_box_outline_blank,
-                                  color: Colors.white70,
-                                )
-                              : Icon(
-                                  Icons.check_box,
-                                  color: Colors.white70,
-                                ),
-                        ),
-                        Text(
-                          "Show password",
-                          style:
-                              TextStyle(color: Colors.white70, fontSize: 15.0),
-                        ),
-                      ],
-                    ),
+                  SizedBox(
+                    height: 40.0,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: registerButton(),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.04,
-                  ),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: "By tapping 'Register account' you accept Bonfire ",
-                      style:
-                      TextStyle(color: Colors.white70, fontSize: 15.0,),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: "Privacy policy",
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontSize: 15.0,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              // code to open / launch terms of service link here
-                            },
-                        ),
-                        TextSpan(
-                            text: ' and ',
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.white70),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'Terms & Conditions',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // code to open / launch privacy policy link here
-                                    })
-                            ]),
-                        TextSpan(
-                            text: '. Check ',
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.white70),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'easy peasy',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // code to open / launch privacy policy link here
-                                    })
-                            ]),
-                        TextSpan(
-                          text: ' version on how we manage your data in our platform and with respect of third party',
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                    maxLines: 5,
-                  ),
                 ],
               ),
-            ),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: "By tapping 'Register account' you accept Bonfire ",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 15.0,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Privacy policy",
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontSize: 15.0,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // code to open / launch terms of service link here
+                        },
+                    ),
+                    TextSpan(
+                        text: ' and ',
+                        style:
+                        TextStyle(fontSize: 15, color: Colors.white70),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'Terms & Conditions',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  // code to open / launch privacy policy link here
+                                })
+                        ]),
+                  ],
+                ),
+                maxLines: 4,
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03,)
+            ],
           ),
         );
       },

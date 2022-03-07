@@ -3,6 +3,7 @@ import 'package:bonfire_newbonfire/screens/Login/widgets/textForm.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bonfire_newbonfire/service/snackbar_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../providers/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +33,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( elevation: 0.0, title: Text("Sign in"), centerTitle: true,),
+      appBar: AppBar(
+        elevation: 0.0,
+        title: Text("Sign in"),
+        centerTitle: true,
+      ),
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -64,9 +69,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 OurTextForm("Email"),
                 TextFormField(
+                  autofillHints: [AutofillHints.email],
                   keyboardType: TextInputType.emailAddress,
                   style: TextStyle(color: Colors.grey.shade200, fontSize: 20.0),
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.left,
                   validator: (_input) {
                     return _input.length != 0 && _input.contains("@")
                         ? null
@@ -78,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     });
                     //Do something with the user input.
                   },
-                  decoration: kTextFieldDecoration.copyWith(),
+                  decoration: kTextFieldDecoration,
                 ),
                 SizedBox(
                   height: 20.0,
@@ -86,8 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                 OurTextForm("Password"),
                 TextFormField(
                   obscureText: _obscureText,
-                  style: TextStyle(color: Colors.grey.shade200, fontSize: 20.0),
-                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade200, fontSize: 20.0,),
+                  textAlign: TextAlign.left,
                   validator: (_input) {
                     return _input.length != 0 && _input.length > 6
                         ? null
@@ -99,12 +105,27 @@ class _LoginPageState extends State<LoginPage> {
                       _password = _input;
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(),
+                  decoration: kTextFieldDecoration.copyWith(
+                    suffixIcon: IconButton(
+                      iconSize: 20.0,
+                      onPressed: _toggle,
+                      icon: _obscureText
+                          ? Icon(
+                        FontAwesomeIcons.solidEye,
+                        color: Colors.grey,
+                      )
+                          : Icon(
+                        FontAwesomeIcons.solidEyeSlash,
+                        color: Colors.white70,
+                      ),
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
                 SizedBox(
-                  height: 10.0,
+                  height: 50.0,
                 ),
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.only(left: 0.0),
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -114,13 +135,13 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: _toggle,
                         icon: _obscureText
                             ? Icon(
-                          Icons.check_box_outline_blank,
-                          color: Colors.white70,
-                        )
+                                Icons.check_box_outline_blank,
+                                color: Colors.white70,
+                              )
                             : Icon(
-                          Icons.check_box,
-                          color: Colors.white70,
-                        ),
+                                Icons.check_box,
+                                color: Colors.white70,
+                              ),
                       ),
                       Text(
                         "Show password",
@@ -131,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(
                   height: 30.0,
-                ),
+                ),*/
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0),
                   child: Center(child: loginButton()),
@@ -139,7 +160,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.04,
                 ),
-
               ],
             ),
           ),
@@ -151,17 +171,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget loginButton() {
     return _auth.status == AuthStatus.Authenticating
         ? Align(
-      alignment: Alignment.center,
-      child: CircularProgressIndicator(),
-    )
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(),
+          )
         : OurFilledButton(
-      context: context,
-      text: "Sign into account",
-      onPressed: () async {
-        if (_formKey.currentState.validate()) {
-          _auth.loginUserWithEmailAndPassword(_email, _password, context);
-        }
-      },
-    );
+            context: context,
+            text: "Sign into account",
+            onPressed: () async {
+              if (_formKey.currentState.validate()) {
+                _auth.loginUserWithEmailAndPassword(_email, _password, context);
+              }
+            },
+          );
   }
 }

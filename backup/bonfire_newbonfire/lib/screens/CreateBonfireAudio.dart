@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:bonfire_newbonfire/components/RecordingTile.dart';
+import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/MusicVisualizer.dart';
+import 'package:bonfire_newbonfire/service/cloud_storage_service.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +13,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
-import 'package:bonfire_newbonfire/screens/HomePage.dart';
+import 'package:bonfire_newbonfire/screens/Home/HomePage.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -54,6 +55,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
   RecordingStatus _currentStatus = RecordingStatus.Unset;
   bool stop = false;
   Recording _current;
+  bool _isSpeed = false;
   String interactionId = Uuid().v4();
 
   final _formKey = new GlobalKey<FormState>();
@@ -75,8 +77,17 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
   }
 
   @override
+  void dispose() {
+    super.initState();
+    _isPlaying = false;
+    _isUploading = false;
+    _isRecorded = false;
+    _isRecording = false;
+    _audioPlayer = AudioPlayer();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("Hello title $this.title");
     return ChangeNotifierProvider<AuthProvider>.value(
       value: AuthProvider.instance,
       child: Builder(
@@ -86,19 +97,17 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
               stream: StreamService.instance.getUserData(_auth.user.uid),
               builder: (_context, _snapshot) {
                 var _userData = _snapshot.data;
-
                 return Scaffold(
                     appBar: AppBar(
                       elevation: 0.0,
+                      centerTitle: true,
+                      title: Text("Your Bonfire"),
                     ),
                     body: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.16,
-                          ),
                           Center(
                             child: Container(
                                 color: Theme.of(context).backgroundColor,
@@ -139,15 +148,17 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                       horizontal: 8.0),
                                               child: Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                                                    MainAxisAlignment.start,
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      Text(
-                                                        "Your Bonfire",
+                                                      /*Text(
+                                                        "Title",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline4
@@ -157,40 +168,11 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                     .shade200,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w500),
+                                                                        .w700),
                                                       ),
                                                       SizedBox(
                                                         height: 10.0,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 8.0,
-                                                                left: 8.0,
-                                                                right: 8.0),
-                                                        child: Text(
-                                                          widget.title,
-                                                          style: TextStyle(
-                                                              fontSize: 25,
-                                                              letterSpacing:
-                                                                  0.5,
-                                                              color: Colors.grey
-                                                                  .shade200,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.05,
-                                                      ),
+                                                      ),*/
 
                                                       /*Text(
                                                         "Add 3 keywords to tag your answer",
@@ -205,234 +187,360 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                       ),*/
                                                     ],
                                                   ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(2.0),
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30.0),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        8.0,
-                                                                    horizontal:
-                                                                        5.0),
-                                                            child: Container(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  _isPlaying ==
-                                                                          false
-                                                                      ? InkWell(
-                                                                          onTap:
-                                                                              () async {
-                                                                            _onPlayButtonPressed();
-                                                                          },
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                40.0,
-                                                                            width:
-                                                                                40.0,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: Theme.of(context).indicatorColor,
-                                                                              borderRadius: BorderRadius.circular(20.0),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        SizedBox(height: 20.0),
+                                                        Text(
+                                                          widget.title,
+                                                          style: TextStyle(
+                                                              fontSize: 23.5,
+                                                              color: Colors.grey
+                                                                  .shade200,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.02,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(2.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                vertical: 5.0,
+                                                              ),
+                                                              child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              30.0),
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade700,
+                                                                  ),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceEvenly,
+                                                                    children: [
+                                                                      _isPlaying ==
+                                                                              false
+                                                                          ? InkWell(
+                                                                              onTap: () async {
+                                                                                _onPlayButtonPressed();
+                                                                              },
+                                                                              child: Container(
+                                                                                height: 30.0,
+                                                                                width: 30.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.grey.shade800,
+                                                                                  borderRadius: BorderRadius.circular(100.0),
+                                                                                ),
+                                                                                child: Icon(
+                                                                                  Icons.play_arrow,
+                                                                                  color: Colors.white70,
+                                                                                  //Theme.of(context).primaryColor,
+                                                                                  size: 25.0,
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : InkWell(
+                                                                              onTap: () async {
+                                                                                setState(() {
+                                                                                  _isPlaying = false;
+                                                                                });
+                                                                                _audioPlayer.pause();
+                                                                              },
+                                                                              splashColor: Theme.of(context).accentColor,
+                                                                              child: Container(
+                                                                                height: 30.0,
+                                                                                width: 30.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.grey.shade800,
+                                                                                  borderRadius: BorderRadius.circular(100.0),
+                                                                                ),
+                                                                                child: Icon(
+                                                                                  Icons.pause,
+                                                                                  color: Theme.of(context).primaryColor,
+                                                                                  size: 25.0,
+                                                                                ),
+                                                                              ),
                                                                             ),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.play_arrow,
-                                                                              color: Colors.white70,
-                                                                              //Theme.of(context).primaryColor,
-                                                                              size: 25.0,
+                                                                      _isPlaying ==
+                                                                              true
+                                                                          ? Container(
+                                                                              width: MediaQuery.of(context).size.width * 0.6,
+                                                                              child: MusicVisualizer(
+                                                                                numBars: 28,
+                                                                                barHeight: 5.0,
+                                                                              ),
+                                                                            )
+                                                                          : Container(
+                                                                              width: MediaQuery.of(context).size.width * 0.6,
+                                                                              height: 5,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Colors.grey.shade300,
+                                                                                borderRadius: BorderRadius.circular(5),
+                                                                              ),
                                                                             ),
-                                                                          ),
-                                                                        )
-                                                                      : InkWell(
-                                                                          onTap:
-                                                                              () async {
-                                                                            setState(() {
-                                                                              _isPlaying = false;
-                                                                            });
-                                                                            _audioPlayer.pause();
-                                                                          },
-                                                                          splashColor:
-                                                                              Theme.of(context).accentColor,
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                40.0,
-                                                                            width:
-                                                                                40.0,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: Theme.of(context).indicatorColor,
-                                                                              borderRadius: BorderRadius.circular(20.0),
-                                                                            ),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.pause,
-                                                                              color: Theme.of(context).primaryColor,
-                                                                              size: 25.0,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                  _isPlaying ==
-                                                                          true
-                                                                      ? Container(
-                                                                          width:
-                                                                              MediaQuery.of(context).size.width * 0.50,
-                                                                          child:
-                                                                              MusicVisualizer(
-                                                                            numBars:
-                                                                                28,
-                                                                            barHeight:
-                                                                                25.0,
-                                                                          ),
-                                                                        )
-                                                                      : Container(
-                                                                          width:
-                                                                              MediaQuery.of(context).size.width * 0.50,
-                                                                          height:
-                                                                              3,
-                                                                          decoration:
-                                                                              BoxDecoration(
+                                                                      Text(
+                                                                        '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                16.0,
                                                                             color:
-                                                                                Colors.grey.shade300,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(5),
-                                                                          ),
-                                                                        ),
-                                                                  Text(
-                                                                    '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            16.0,
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .shade300),
-                                                                  )
-                                                                ],
+                                                                                Colors.grey.shade300),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                        SizedBox(
+                                                          height: 20.0,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .cardColor,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20.0),
+                                                                    ),
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    child: IconButton(
+                                                                        onPressed: _onRecordAgainButtonPressed,
+                                                                        icon: Icon(
+                                                                          Icons
+                                                                              .replay,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor,
+                                                                        )),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      "Retry",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Theme.of(context).primaryColor),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                width: 30.0,
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      _onPlayButtonPressed();
+                                                                    },
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          if (_isSpeed ==
+                                                                              false) {
+                                                                            _isSpeed =
+                                                                                true;
+                                                                            _audioPlayer.setPlaybackRate(playbackRate: 1.5);
+                                                                          } else {
+                                                                            _isSpeed =
+                                                                                false;
+                                                                            _audioPlayer.setPlaybackRate(playbackRate: 1.0);
+                                                                          }
+                                                                        });
+                                                                      },
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            50.0,
+                                                                        width:
+                                                                            50.0,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              Theme.of(context).cardColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(100.0),
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child: _isSpeed == false
+                                                                              ? Text(
+                                                                                  "1 x",
+                                                                                  style: Theme.of(context).textTheme.headline5,
+                                                                                )
+                                                                              : Text(
+                                                                                  "1.5 x",
+                                                                                  style: Theme.of(context).textTheme.headline5,
+                                                                                ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      "Speed",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Theme.of(context).primaryColor),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     height:
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.1,
+                                                            0.04,
                                                   ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 50,
-                                                        child: OutlineButton(
-                                                          splashColor: Colors.deepOrange,
-                                                          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          80)),
-                                                          onPressed:
-                                                              _onRecordAgainButtonPressed,
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Try again",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "Palanquin",
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors.grey.shade300),
-                                                            ),
-                                                          ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0),
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 15.0,
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 32.0,
-                                                      ),
-                                                      /*Container(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          decoration: BoxDecoration(
-                                              color:
-                                              Theme.of(context).accentColor,
-                                              borderRadius:
-                                              BorderRadius.circular(50.0)),
-                                          child: IconButton(
-                                            color: Theme.of(context).cardColor,
-                                            icon: Icon(_isPlaying
-                                                ? Icons.pause
-                                                : Icons.play_arrow),
-                                            onPressed: _onPlayButtonPressed,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 15.0,
-                                        ),*/
-                                                      SizedBox(
-                                                        height: 50.0,
-                                                        child: RaisedButton(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          80)),
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
-                                                          onPressed: () {
-                                                            _onFileUploadButtonPressed(
-                                                                widget.title,
-                                                                _userData
-                                                                    .profileImage,
-                                                                _userData.uid,
-                                                                _userData.name,
-                                                                _userData
-                                                                    .tokenId);
-                                                          },
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Done",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "Palanquin",
-                                                                  fontSize:
-                                                                      15.5,
+                                                        Text(
+                                                          "Duration: ",
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline5
+                                                              .copyWith(
                                                                   color: Colors
-                                                                      .white, letterSpacing: 0.5),
-                                                            ),
-                                                          ),
+                                                                      .grey
+                                                                      .shade300,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal),
                                                         ),
-                                                      )
-                                                    ],
+                                                        SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Text(
+                                                          "7 days",
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline5
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .accentColor
+                                                                      .withOpacity(
+                                                                          0.85)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.06,
+                                                  ),
+                                                  Center(
+                                                    child: OurFilledButton(
+                                                      context: context,
+                                                      text: "Done",
+                                                      onPressed: () async {
+                                                        var _audioFile =
+                                                            await CloudStorageService
+                                                                .instance
+                                                                .uploadBfAudio(
+                                                                    widget
+                                                                        .title,
+                                                                    File(
+                                                                        _filePath));
+                                                        var _audioURL =
+                                                            await _audioFile.ref
+                                                                .getDownloadURL();
+                                                        await _onFileUploadButtonPressed(
+                                                            _audioURL,
+                                                            widget.title,
+                                                            _userData
+                                                                .profileImage,
+                                                            _userData.uid,
+                                                            _userData.name,
+                                                            ["f0408c16-9850-11ec-ae2b-7e4b4e57e8f2", "519b75f2-9d8d-11ec-9bee-7a8e62eb08a3"]);
+                                                      },
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -470,45 +578,51 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                           color: _isRecording
                                                               ? Theme.of(
                                                                       context)
-                                                                  .accentColor
-                                                              : Colors.grey,
+                                                                  .primaryColor
+                                                              : Colors.grey
+                                                                  .shade700,
                                                           width: 7.0)),
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                            20.0),
+                                                            5.0),
                                                     child: Container(
-                                                      height: 85.0,
-                                                      width: 85.0,
-                                                      decoration: BoxDecoration(
-                                                        color: _isRecording
-                                                            ? Theme.of(context)
-                                                                .accentColor
-                                                            : Colors.grey,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    100.0),
-                                                      ),
-                                                      child: IconButton(
-                                                        iconSize: 33,
-                                                        color: Colors.white70,
-                                                        icon: _isRecording
-                                                            ? Icon(
-                                                                Icons.pause,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .backgroundColor,
-                                                              )
-                                                            : Icon(
-                                                                MyFlutterApp
-                                                                    .mic,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .backgroundColor,
-                                                              ),
-                                                        onPressed:
-                                                            _onRecordButtonPressed,
+                                                      child: Container(
+                                                        height: 85.0,
+                                                        width: 85.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: _isRecording
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .primaryColor
+                                                              : Colors.grey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100.0),
+                                                        ),
+                                                        child: IconButton(
+                                                          iconSize: 33,
+                                                          color: Colors.white70,
+                                                          icon: _isRecording
+                                                              ? Icon(
+                                                                  MyFlutterApp
+                                                                      .mic,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .backgroundColor,
+                                                                )
+                                                              : Icon(
+                                                                  MyFlutterApp
+                                                                      .mic,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .backgroundColor,
+                                                                ),
+                                                          onPressed:
+                                                              _onRecordButtonPressed,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -524,13 +638,18 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                               ? "-00:00"
                                                               : '${_current.duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}' ??
                                                                   "",
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline4
-                                                                  .copyWith(
-                                                                      fontSize:
-                                                                          25.0),
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline4
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      25.0,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor
+                                                                      .withOpacity(
+                                                                          0.8)),
                                                         ),
                                                       )
                                                     : Padding(
@@ -548,34 +667,6 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                       ),
                                               ],
                                             ),
-                                            /*Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Tips:",
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Text(
-                                                      "See example",
-                                                      style: TextStyle(
-                                                        letterSpacing: 0.5,
-                                                        color: Theme.of(context)
-                                                            .accentColor,
-                                                        fontSize: 14.0,
-                                                        decoration: TextDecoration
-                                                            .underline,
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            )*/
                                           ],
                                         ),
                                       )),
@@ -618,9 +709,8 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
     );
   }
 
-  Future<void> _onFileUploadButtonPressed(String _title, String profileImage,
-      String uid, String name, String tokenId) async {
-    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  Future<void> _onFileUploadButtonPressed(var _audioURL, String title,
+      String profileImage, String uid, String name, List<String> tokenId) async {
     setState(() {
       _isUploading = true;
     });
@@ -630,11 +720,12 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         !widget.isAnonym ? name : "Mr Anonymous",
         !widget.isAnonym ? profileImage : "",
         bfId,
-        _title,
-        _filePath,
+        title,
+        _audioURL.toString(),
         '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
       );
-      await sendNotification([tokenId], "$name created Bonfire", "");
+      await getCloudFirestoreUsers();
+      await sendNotification(tokenId, title, "$name created Bonfire");
       await Firestore.instance
           .collection("Users")
           .document(widget.id)
@@ -748,6 +839,24 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         ),
       );
     }
+  }
+  Future getCloudFirestoreUsers() async {
+    print("getCloudFirestore");
+
+    //assumes you have a collection called "users"
+    Firestore.instance.collection("SendNotifications").getDocuments().then((querySnapshot) {
+      //print(querySnapshot);
+      querySnapshot.documents.map((e) {
+      });
+      print("users: results: length: " + querySnapshot.documents.length.toString());
+      querySnapshot.documents.forEach((value) {
+        print("SENDNOTIFICATIONS: results: value");
+        print(value.data);
+      });
+    }).catchError((onError) {
+      print("getCloudFirestoreUsers: ERROR");
+      print(onError);
+    });
   }
 
   Future<void> _onUploadComplete() async {

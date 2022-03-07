@@ -1,3 +1,4 @@
+import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurOutlinedButton.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
@@ -8,6 +9,7 @@ import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+
 AuthProvider _auth;
 
 class WelcomePage extends StatefulWidget {
@@ -18,11 +20,13 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   bool isAuth = false;
   bool isLoading = false;
+  final String privacytext = "Privacy Policy";
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: ChangeNotifierProvider<AuthProvider>.value(
         value: AuthProvider.instance,
         child: Builder(builder: (BuildContext context) {
@@ -34,7 +38,10 @@ class _WelcomePageState extends State<WelcomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.02,
                 ),
                 Column(
                   children: <Widget>[
@@ -55,7 +62,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: Text(
                         "Join the bonfire",
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme
+                                .of(context)
+                                .primaryColor,
                             fontSize: 35.0,
                             fontWeight: FontWeight.w600),
                       ),
@@ -71,7 +80,10 @@ class _WelcomePageState extends State<WelcomePage> {
                           fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
+                    SizedBox(height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.05,),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -80,19 +92,14 @@ class _WelcomePageState extends State<WelcomePage> {
                           text: 'Continue with Google',
                           hasIcon: true,
                           icon: FontAwesomeIcons.google,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
                             });
-                            _auth.googleSignIn();
-                            var tokenId = await OneSignal.shared
-                                .getDeviceState()
-                                .then((deviceState) {
-                              var userTokenId = deviceState.userId;
-                              print("$userTokenId");
-                              return userTokenId;
-                            });
+                            await _auth.googleSignIn();
                             setState(() {
                               isLoading = false;
                             });
@@ -106,8 +113,11 @@ class _WelcomePageState extends State<WelcomePage> {
                           text: 'Continue with email',
                           hasIcon: true,
                           icon: Icons.email,
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () => Navigator.pushNamed(context, "login"),
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
+                          onPressed: () =>
+                              Navigator.pushNamed(context, "login"),
                         ),
                         SizedBox(
                           height: 35.0,
@@ -115,21 +125,27 @@ class _WelcomePageState extends State<WelcomePage> {
                         Row(children: <Widget>[
                           Expanded(
                               child: Divider(
-                                color: Theme.of(context).primaryColor,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
                               )),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0),
                             child: Text(
                               "Or",
                               style: TextStyle(
-                                  color: Theme.of(context)
+                                  color: Theme
+                                      .of(context)
                                       .primaryColor
                                       .withOpacity(0.7)),
                             ),
                           ),
                           Expanded(
                               child: Divider(
-                                color: Theme.of(context).primaryColor,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
                               )),
                         ]),
                         SizedBox(
@@ -141,7 +157,9 @@ class _WelcomePageState extends State<WelcomePage> {
                             Text(
                               "Don't have an account?",
                               style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme
+                                      .of(context)
+                                      .primaryColor,
                                   fontSize: 16.0),
                             ),
                             FlatButton(
@@ -149,7 +167,9 @@ class _WelcomePageState extends State<WelcomePage> {
                               child: Text(
                                 "Sign up",
                                 style: TextStyle(
-                                    color: Theme.of(context).accentColor,
+                                    color: Theme
+                                        .of(context)
+                                        .accentColor,
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -174,14 +194,28 @@ class _WelcomePageState extends State<WelcomePage> {
                       TextStyle(color: Colors.white70, fontSize: 15.0,),
                       children: <TextSpan>[
                         TextSpan(
-                          text: "Privacy policy",
+                          text: privacytext,
                           style: TextStyle(
-                            color: Theme.of(context).accentColor,
+                            color: Theme
+                                .of(context)
+                                .accentColor,
                             fontSize: 15.0,
                           ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              // code to open / launch terms of service link here
+                            ..onTap = () async {
+                              await showAlertDialog(
+                                  context,
+                                  title:
+                                  privacytext,
+                                  content:
+                                  'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+                                  cancelActionText:
+                                  'Go back',
+                                  defaultActionText:
+                                  'OK', onPressed: () {
+                                Navigator.of(context).pop(false);
+                                print("Open the privacy and policy terms");
+                              });
                             },
                         ),
                         TextSpan(
@@ -193,7 +227,9 @@ class _WelcomePageState extends State<WelcomePage> {
                                   text: 'Terms & Conditions',
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color: Theme.of(context).accentColor,
+                                    color: Theme
+                                        .of(context)
+                                        .accentColor,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -223,7 +259,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),*/
                       ],
                     ),
-                    maxLines: 5,
+                    maxLines: 4,
                   ),
                 ),
               ],

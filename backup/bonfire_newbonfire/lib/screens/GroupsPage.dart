@@ -1,10 +1,19 @@
 import 'dart:async';
-
+import 'package:badges/badges.dart';
+import 'package:bonfire_newbonfire/components/DrawerComponents.dart';
+import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
+import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
+import 'package:bonfire_newbonfire/model/user.dart';
+import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/screens/FunPage.dart';
+import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../my_flutter_app_icons.dart';
-import 'HomePage.dart';
+import 'Home/HomePage.dart';
+import 'SendFeedback.dart';
+
+AuthProvider _auth;
 
 class GroupsPage extends StatefulWidget {
   @override
@@ -14,6 +23,8 @@ class GroupsPage extends StatefulWidget {
 class _GroupsPageState extends State<GroupsPage> {
   final mainController = FixedExtentScrollController();
   var reachEnd = false;
+  final List<String> entries = <String>['A', 'B', 'C'];
+  final List<int> colorCodes = <int>[600, 500, 100];
 
   _listener() {
     final maxScroll = mainController.position.maxScrollExtent;
@@ -46,92 +57,167 @@ class _GroupsPageState extends State<GroupsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topLeft,
-              colors: [Theme
-                  .of(context)
-                  .backgroundColor, Theme
-                  .of(context)
-                  .indicatorColor,
-                Theme
-                    .of(context)
-                    .indicatorColor,
-                Colors.orange.withOpacity(0.4),
-              ])),
-      child: Scaffold(
-        //backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            title: Text(
-              "Groups",
-              style: TextStyle(color: Colors.grey.shade300),
-            ),
-            centerTitle: true,
-            leading: IconButton(
-              onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                  (route) => false),
-              icon: Icon(
-                Icons.arrow_back,
+    return ChangeNotifierProvider<AuthProvider>.value(
+      value: AuthProvider.instance,
+      child: Builder(builder: (BuildContext _context) {
+        _auth = Provider.of<AuthProvider>(_context);
+        return _groupsUI();
+      }),
+    );
+  }
+
+  _groupsUI() {
+    return StreamBuilder<MyUserModel>(
+      stream: StreamService.instance.getUserData(_auth.user.uid),
+      builder: (_context, _snapshot) {
+        var _userData = _snapshot.data;
+        if (!_snapshot.hasData) {
+          return OurLoadingWidget(_context);
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              title: Text(
+                "Groups",
+                style: TextStyle(color: Colors.grey.shade300),
               ),
+              centerTitle: true,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Icon(Icons.filter_list),
+                )
+              ],
             ),
-          ),
-          //StreamBuilder of groups created by the user or company or whatever
-          //Itemcount is the length of the collection
-          //Builder is the ListTile with all the information store in the document of FB
-          body: Column(
-            children: [
-              SizedBox(height: 20.0,),
-              Card(
-                color: Colors.grey.shade800,
-                child: ListTile(
-                  /*leading: Container(
-                    height: 30,
-                    width: 30.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/green.png"),
-                      ),
-                    ),
-                  ),*/
-                  title: Text("# Main BF", style: Theme.of(context).textTheme.headline1,),
-
+            body: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          color: Theme.of(context).cardColor,
+                          child: Expanded(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Fired up",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5
+                                                .copyWith(
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                          SizedBox(width: 12.0,),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius: BorderRadius.circular(50.0),
+                                            ),
+                                            height: 10.0,
+                                            width: 10.0,
+                                          )
+                                        ],
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward_ios_outlined,
+                                        size: 20,
+                                        color: Theme.of(context).primaryColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            color: Colors.greenAccent,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            color: Colors.amber,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Card(
-                color: Colors.grey.shade800,
-                child: ListTile(
-                  /*leading: Container(
-                    height: 30,
-                    width: 30.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/lol.png"),
-                      ),
-                    ),
-                  ),*/
-                  title: Text("# Memeland", style: Theme.of(context).textTheme.headline1,),
-
-                ),
-              )
-            ],
-          )
-
-          /*ListView.builder(
-            itemCount: collection.length,
-            itemBuilder: (context, index) {
-              return ListTileWidget(
-                data.icon,
-                data.title,
-              );
-          return ListTile();
-        })*/
-          ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

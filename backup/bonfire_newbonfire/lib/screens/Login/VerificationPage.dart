@@ -57,15 +57,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
+          centerTitle: true,
           automaticallyImplyLeading: false,
           title: Text(
-            "Bonfire",
-            style: TextStyle(
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-              fontSize: 18.0,
-              letterSpacing: 2.0,
-            ),
+            "Create account",
           ),
         ),
         body: Column(
@@ -73,42 +68,48 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           children: [
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 200.0),
+                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 100.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 80.0,
-                    width: 80.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/email1.png'),
-                        fit: BoxFit.fill,
-                      ),
-                      shape: BoxShape.rectangle,
-                    ),
-                  ),
-                  SizedBox(height: 15.0),
                   Text(
-                    "We have sent you an email!",
+                    "We have sent you an email",
                     style: TextStyle(
-                        color: Colors.grey.shade300,
-                        //Theme.of(context).accentColor,
-                        fontSize: 24.0,
-                        //fontFamily: "Poppins",
-                        letterSpacing: 0.5,
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 30.0,
                         fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: 25.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      //color: Colors.grey,
+                      borderRadius: BorderRadius.circular(100)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Container(
+                        height: 80.0,
+                        width: 80.0,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/email1.png'),
+                            fit: BoxFit.fill,
+                          ),
+                          shape: BoxShape.rectangle,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   SizedBox(height: 30.0),
                   Text(
                     "Verify the link to continue",
                     style: TextStyle(
-                        color: Colors.grey.shade400,
+                        color: Colors.grey.shade200,
                         //Theme.of(context).accentColor,
                         fontSize: 19.0,
-                        //fontFamily: "Poppins",
                         fontWeight: FontWeight.w500),
                     textAlign: TextAlign.center,
                   )

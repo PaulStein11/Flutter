@@ -3,7 +3,7 @@ import "dart:io";
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/screens/Profile/EditProfilePage.dart';
-import 'package:bonfire_newbonfire/screens/Profile/settings.dart';
+import 'package:bonfire_newbonfire/screens/Profile/Settings.dart';
 import 'package:bonfire_newbonfire/service/cloud_storage_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +15,7 @@ import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../my_flutter_app_icons.dart';
-import '../HomePage.dart';
+import '../Home/HomePage.dart';
 
 AuthProvider _auth;
 
@@ -107,16 +107,66 @@ class _ProfilePageState extends State<ProfilePage> {
             if (!_snapshot.hasData) {
               return Text(""); //OurLoadingWidget(context);
             } else {
-              return Column(
-                children: [
-                  _userProfileData(_userData.name, _userData.email,
-                      _userData.profileImage, _userData.bio),
-                  _userCollectedData(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Divider(color: Colors.white70),
-                  ),
-                ],
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    _userProfileData(_userData.name, _userData.email,
+                        _userData.profileImage, _userData.bio),
+                    _userCollectedData(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Divider(
+                        color: Colors.white.withOpacity(0.8),
+                        thickness: 1.25,
+                      ),
+                    ),
+                    SizedBox(height: 17.0,),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: MediaQuery.of(context).size.width * 0.07),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.stream, color: Colors.grey.shade400, size: 25.0,),
+                          SizedBox(width: 15.0,),
+                          Text(
+                            "My Activity",
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: Divider(
+                        color: Colors.grey.shade700,
+                        thickness: 0.5,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: MediaQuery.of(context).size.width * 0.07),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.email, color: Colors.grey.shade400, size: 25.0,),
+                          SizedBox(width: 15.0,),
+                          Text(
+                            "Inbox",
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               );
             }
           },
@@ -252,13 +302,28 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontWeight: FontWeight.w600),
           ),*/
           bio.isEmpty
-              ? Text(
-                  "Define yourself shortly",
-                  style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey.shade500,
-                      letterSpacing: 0.6),
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "• ",
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white70,
+                          letterSpacing: 0.6),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Define yourself shortly",
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey.shade500,
+                            letterSpacing: 0.6),
+                      ),
+                    ),
+                  ],
                 )
               : Text(
                   bio,

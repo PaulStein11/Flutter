@@ -1,9 +1,10 @@
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurOutlinedButton.dart';
+import 'package:bonfire_newbonfire/widgets/OurIconBtn.dart';
 import 'package:flutter/material.dart';
 
 import '../../my_flutter_app_icons.dart';
-import '../HomePage.dart';
+import '../Home/HomePage.dart';
 
 class OnboardingPage extends StatefulWidget {
   @override
@@ -46,6 +47,82 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      child: Container(
+        color: Theme.of(context).backgroundColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Container(
+                    child: Text(
+                      "Welcome to bonfire!",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(fontSize: 22.0, color: Colors.white),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: Text(
+                    "Contribute your ideas around others and build something new together",
+                    //"Get ready to contribute your idea around others and build something new together"
+                    style: Theme.of(context).textTheme.headline4.copyWith(
+                          fontSize: 18.0,
+                          color: Colors.grey.shade400,
+                          fontWeight: FontWeight.w200,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.85,
+              height: MediaQuery.of(context).size.height * 0.32,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  /*OurIconBtn(
+                      hasIcon: true,
+                      text: "join through link",
+                      context: context,
+                      txtColor: Theme.of(context).primaryColor,
+                      btnColor: Theme.of(context).primaryColor,
+                      icon: Icons.add_link),
+                  OurIconBtn(
+                      hasIcon: false,
+                      text: "search groups",
+                      context: context,
+                      txtColor: Theme.of(context).primaryColor,
+                      btnColor: Theme.of(context).primaryColor),*/
+                  OurIconBtn(
+                    hasIcon: false,
+                    text: "Continue",
+                    context: context,
+                    txtColor: Theme.of(context).accentColor,
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => HomePage(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+          ],
+        ),
+      ),
+    ); /*SafeArea(
       child: Container(
         decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
@@ -136,7 +213,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ],
         ),
       ),
-    );
+    );*/
     /*ListWheelScrollView(
         itemExtent: 630,
         diameterRatio: 5,

@@ -4,7 +4,7 @@ import 'package:bonfire_newbonfire/model/notif_updated.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:flutter/material.dart';
 
-import 'HomePage.dart';
+import 'Home/HomePage.dart';
 
 class NotificationPage extends StatefulWidget {
   final String userId;
