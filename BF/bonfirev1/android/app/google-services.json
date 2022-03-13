@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "351533387923",
+    "project_id": "pagoda-7fac2",
+    "storage_bucket": "pagoda-7fac2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351533387923:android:db7f7f27e06ccbf2243d66",
+        "android_client_info": {
+          "package_name": "com.example.bonfirev1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351533387923-la05ai2kf55qiddcbvb3vnvg2aq2m0sk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bonfirev1",
+            "certificate_hash": "24e274866cf72c2a5e1c664eb48733a45c0cae19"
+          }
+        },
+        {
+          "client_id": "351533387923-s5morgjhmq14759r42ep7298epubdjij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN14ECen_3XJKRUjOEvWYhBwpimsqIWwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351533387923-s5morgjhmq14759r42ep7298epubdjij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
