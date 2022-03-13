@@ -14,12 +14,12 @@ Widget CircleAddButton(BuildContext context, {Function onPressed}) {
             height: 28.0,
             width: 28.0,
             decoration: BoxDecoration(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).indicatorColor,
               borderRadius: BorderRadius.circular(60.0),
             ),
             child: Icon(
               Icons.add,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).primaryColor.withOpacity(0.8),
               size: 21.0,
             ),
           ),

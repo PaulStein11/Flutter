@@ -4,8 +4,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
-import 'package:bonfire_newbonfire/screens/HomePage.dart';
+import 'package:bonfire_newbonfire/screens/Home/HomePage.dart';
 import 'package:bonfire_newbonfire/screens/MusicVisualizer.dart';
+import 'package:bonfire_newbonfire/service/cloud_storage_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,14 +94,13 @@ class _RecordTileState extends State<RecordTile> {
                 var _userData = _snapshot.data;
 
                 return Dialog(
-                    backgroundColor: Colors.black54,
+                    backgroundColor: Theme.of(context).backgroundColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                          color: Colors.transparent,
                           height: MediaQuery.of(context).size.height * 0.48,
                           width: MediaQuery.of(context).size.width * 0.85,
                           child: _isRecorded
@@ -240,7 +240,8 @@ class _RecordTileState extends State<RecordTile> {
                                                           BorderRadius.circular(
                                                               30.0),
                                                       border: Border.all(
-                                                        color: Colors.grey.shade700,
+                                                        color: Colors
+                                                            .grey.shade700,
                                                       ),
                                                     ),
                                                     child: Padding(
@@ -261,25 +262,35 @@ class _RecordTileState extends State<RecordTile> {
                                                                       _onPlayButtonPressed();
                                                                     },
                                                                     child:
-                                                                    Material(
-                                                                      elevation: 4.0,
+                                                                        Material(
+                                                                      elevation:
+                                                                          4.0,
                                                                       borderRadius:
-                                                                      BorderRadius.circular(20.0),
-                                                                      child: Container(
-                                                                        height: 30.0,
-                                                                        width: 30.0,
-                                                                        decoration: BoxDecoration(
-                                                                          color: Colors.grey
-                                                                              .shade800,
-                                                                          borderRadius:
                                                                           BorderRadius.circular(
                                                                               20.0),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            30.0,
+                                                                        width:
+                                                                            30.0,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade800,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(20.0),
                                                                         ),
-                                                                        child: Icon(
-                                                                          Icons.play_arrow,
-                                                                          color: Colors.white70,
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .play_arrow,
+                                                                          color:
+                                                                              Colors.white70,
                                                                           //Theme.of(context).primaryColor,
-                                                                          size: 20.0,
+                                                                          size:
+                                                                              20.0,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -376,11 +387,14 @@ class _RecordTileState extends State<RecordTile> {
                                                             Text(
                                                               '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
                                                               style: TextStyle(
-                                                                  fontSize: 15.0,
-                                                                  color: Colors.grey
+                                                                  fontSize:
+                                                                      15.0,
+                                                                  color: Colors
+                                                                      .grey
                                                                       .shade500,
-                                                                  fontWeight: FontWeight
-                                                                      .w600),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
                                                             )
                                                           ],
                                                         ),
@@ -401,13 +415,13 @@ class _RecordTileState extends State<RecordTile> {
                                                   width: 47.0,
                                                   decoration: BoxDecoration(
                                                       color: Theme.of(context)
-                                                          .accentColor,
+                                                          .indicatorColor,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               50.0)),
                                                   child: IconButton(
                                                     color: Theme.of(context)
-                                                        .backgroundColor,
+                                                        .primaryColor,
                                                     icon: Icon(Icons.replay),
                                                     onPressed:
                                                         _onRecordAgainButtonPressed,
@@ -416,25 +430,6 @@ class _RecordTileState extends State<RecordTile> {
                                                 SizedBox(
                                                   width: 30.0,
                                                 ),
-                                                /*Container(
-                                      height: 40.0,
-                                      width: 40.0,
-                                      decoration: BoxDecoration(
-                                          color:
-                                          Theme.of(context).accentColor,
-                                          borderRadius:
-                                          BorderRadius.circular(50.0)),
-                                      child: IconButton(
-                                        color: Theme.of(context).cardColor,
-                                        icon: Icon(_isPlaying
-                                            ? Icons.pause
-                                            : Icons.play_arrow),
-                                        onPressed: _onPlayButtonPressed,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 15.0,
-                                    ),*/
                                                 Container(
                                                   height: 47.0,
                                                   width: 47.0,
@@ -446,12 +441,23 @@ class _RecordTileState extends State<RecordTile> {
                                                               50.0)),
                                                   child: IconButton(
                                                     color: Theme.of(context)
-                                                        .backgroundColor,
+                                                        .primaryColor,
                                                     icon: Icon(Icons.done),
-                                                    onPressed: () {
+                                                    onPressed: () async {
                                                       if (_formKey.currentState
                                                           .validate()) {
-                                                        _onFileUploadButtonPressed(
+                                                        var _audioFile =
+                                                            await CloudStorageService
+                                                                .instance
+                                                                .uploadInteraction(
+                                                                    title,
+                                                                    File(
+                                                                        _filePath));
+                                                        var _audioURL =
+                                                            await _audioFile.ref
+                                                                .getDownloadURL();
+                                                        await _onFileUploadButtonPressed(
+                                                            _audioURL,
                                                             title,
                                                             _userData
                                                                 .profileImage,
@@ -595,16 +601,13 @@ class _RecordTileState extends State<RecordTile> {
     );
   }
 
-  Future<void> _onFileUploadButtonPressed(
-      String _title, String profileImage, String uid, String name) async {
+  Future<void> _onFileUploadButtonPressed(var _audioURL, String _title,
+      String profileImage, String uid, String name) async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
     setState(() {
       _isUploading = true;
     });
     try {
-      await firebaseStorage.ref().child(_title).putFile(File(_filePath));
-      widget.onUploadComplete;
-
       await FutureService.instance.createInteraction(
           '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
           uid,
@@ -614,7 +617,7 @@ class _RecordTileState extends State<RecordTile> {
           bfTitle,
           interactionId,
           title,
-          _filePath);
+          _audioURL.toString());
       await Firestore.instance.collection("Bonfire").document(bfId).updateData({
         "audience": FieldValue.increment(1),
       });
@@ -660,7 +663,6 @@ class _RecordTileState extends State<RecordTile> {
       _isRecorded = false;
       _audioRecorder.stop();
       _isRecording = false;
-
     });
   }
 
@@ -682,7 +684,7 @@ class _RecordTileState extends State<RecordTile> {
 
   Future<void> _startRecording() async {
     final bool hasRecordingPermission =
-    await FlutterAudioRecorder2.hasPermissions;
+        await FlutterAudioRecorder2.hasPermissions;
 
     if (hasRecordingPermission ?? false) {
       Directory directory = await getApplicationDocumentsDirectory();
@@ -712,8 +714,7 @@ class _RecordTileState extends State<RecordTile> {
         });
       });
       _filePath = filepath;
-      setState(() {
-      });
+      setState(() {});
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -745,6 +746,4 @@ class _RecordTileState extends State<RecordTile> {
     }
     setState(() {});
   }
-
-
 }

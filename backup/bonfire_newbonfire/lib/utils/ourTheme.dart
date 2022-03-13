@@ -8,7 +8,7 @@ class OurTheme {
   Color _primaryFont = Colors.grey.shade100; //BF titles, user names and timestamps
   Color _headingTitles = Color(0xffe2e2e2); // Heading titles on categories
   Color _secondaryFont = Color(0xffe2e2e2);
-  Color _accentColor = Colors.amber.shade800; 
+  Color _accentColor = Colors.amber.shade900.withOpacity(0.9);
 
   ThemeData buildTheme() {
     return ThemeData(
@@ -55,9 +55,9 @@ class OurTheme {
       textTheme: TextTheme(
         //MAIN TITLES OF BONFIRES
         headline1: TextStyle(
-            fontSize: 16,
+            fontSize: 15.8,
             color: Colors.grey.shade200,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.6),
         //USER NAMES ALONG THE APP
         headline2: TextStyle(

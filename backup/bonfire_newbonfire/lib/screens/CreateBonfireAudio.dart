@@ -538,7 +538,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                 .profileImage,
                                                             _userData.uid,
                                                             _userData.name,
-                                                            ["f0408c16-9850-11ec-ae2b-7e4b4e57e8f2", "519b75f2-9d8d-11ec-9bee-7a8e62eb08a3"]);
+                                                            ["f0408c16-9850-11ec-ae2b-7e4b4e57e8f2", "519b75f2-9d8d-11ec-9bee-7a8e62eb08a3", "18d34314-9e71-11ec-9225-fe650c1e4161", "04ab2362-9dda-11ec-8089-3263ecb3ce79"]);
                                                       },
                                                     ),
                                                   )

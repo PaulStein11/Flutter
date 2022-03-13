@@ -10,7 +10,7 @@ import 'package:bonfire_newbonfire/model/notif_updated.dart';
 import 'package:bonfire_newbonfire/screens/BonfirePage.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurOutlinedButton.dart';
-import 'package:bonfire_newbonfire/screens/Profile/others_profile.dart';
+import 'package:bonfire_newbonfire/screens/Profile/Others_profile.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

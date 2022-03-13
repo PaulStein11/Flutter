@@ -37,6 +37,7 @@ class FutureService {
         "likes": {},
         "dislikes": {},
         "upgrades": {},
+        "report": 0,
         "file": _file,
         "duration": _duration
       });

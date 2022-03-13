@@ -12,7 +12,7 @@ import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/screens/BonfirePage.dart';
 import 'package:bonfire_newbonfire/screens/MusicVisualizer.dart';
 import 'package:bonfire_newbonfire/screens/Profile/ProfilePage.dart';
-import 'package:bonfire_newbonfire/screens/Profile/others_profile.dart';
+import 'package:bonfire_newbonfire/screens/Profile/Others_profile.dart';
 import 'package:bonfire_newbonfire/service/dynamic_link_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -154,10 +154,11 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
   Map likes;
 
   String _linkMessage;
+  String a_linkMessage;
   bool _isCreatingLink = false;
 
   /*Audio Played*/
-  bool isPlaying = false;
+  bool _isPlaying = false;
   AudioPlayer audioPlayer;
   double _percent = 0.0;
   int _totalTime;
@@ -181,8 +182,18 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _isPlaying = false;
     audioPlayer = AudioPlayer();
     WidgetsBinding.instance.addObserver(this);
+  }
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await audioPlayer.stop();
+    WidgetsBinding.instance.removeObserver(this);
+    if (_timerLink != null) {
+      _timerLink.cancel();
+    }
   }
 
   @override
@@ -197,15 +208,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    audioPlayer = AudioPlayer();
-    WidgetsBinding.instance.removeObserver(this);
-    if (_timerLink != null) {
-      _timerLink.cancel();
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -375,11 +378,11 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                   children: [
                                     Row(
                                       children: [
-                                        isPlaying == false
+                                        _isPlaying == false
                                             ? InkWell(
                                                 onTap: () async {
                                                   setState(() {
-                                                    isPlaying = true;
+                                                    _isPlaying = true;
                                                   });
                                                   audioPlayer.play(file);
                                                   audioPlayer.onDurationChanged
@@ -403,7 +406,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                   audioPlayer.onPlayerCompletion
                                                       .listen((duration) {
                                                     setState(() {
-                                                      isPlaying = false;
+                                                      _isPlaying = false;
                                                       _percent = 0;
                                                     });
                                                   });
@@ -425,9 +428,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                   child: Icon(
                                                     Icons.play_arrow,
                                                     color: Theme.of(context)
-                                                        .indicatorColor,
-
-                                                    //Theme.of(context).primaryColor,
+                                                        .backgroundColor,
                                                     size: 20.0,
                                                   ),
                                                 ),
@@ -435,7 +436,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                             : InkWell(
                                                 onTap: () async {
                                                   setState(() {
-                                                    isPlaying = false;
+                                                    _isPlaying = false;
                                                   });
                                                   audioPlayer.pause();
                                                 },
@@ -446,7 +447,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                   width: 35.0,
                                                   decoration: BoxDecoration(
                                                       color:
-                                                          Colors.grey.shade600,
+                                                      Theme.of(context).cardColor,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20.0),
@@ -457,7 +458,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                                   .cardColor)),
                                                   child: MusicVisualizer(
                                                     numBars: 4,
-                                                    barHeight: 10.0,
+                                                    barHeight: 15.0,
                                                   ),
                                                 ),
                                               ),
@@ -492,10 +493,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                     onTap: () {
                                                       showDialog<String>(
                                                           barrierColor:
-                                                              Theme.of(context)
-                                                                  .cardColor
-                                                                  .withOpacity(
-                                                                      0.8),
+                                                              Colors.transparent,
                                                           context: context,
                                                           builder: (BuildContext
                                                               context) {
@@ -541,19 +539,6 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                                   .createDynamicLink());
                                                     },
                                                   ),
-                                                  /*ListTile(
-                                                    leading: new Icon(
-                                                      Icons.cancel,
-                                                      color: Colors.white,
-                                                    ),
-                                                    title: new Text('Cancel',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4),
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),*/
                                                 ],
                                               ),
                                             );

@@ -1,5 +1,6 @@
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
+import 'package:bonfire_newbonfire/screens/Login/widgets/TermsWidget.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/textForm.dart';
 import 'package:bonfire_newbonfire/service/cloud_storage_service.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
@@ -208,46 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  text: "By tapping 'Register account' you accept Bonfire ",
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 15.0,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "Privacy policy",
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontSize: 15.0,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          // code to open / launch terms of service link here
-                        },
-                    ),
-                    TextSpan(
-                        text: ' and ',
-                        style:
-                        TextStyle(fontSize: 15, color: Colors.white70),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'Terms & Conditions',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  // code to open / launch privacy policy link here
-                                })
-                        ]),
-                  ],
-                ),
-                maxLines: 4,
-              ),
+              TermsOfPrivacyForUsers(context),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03,)
             ],
           ),
