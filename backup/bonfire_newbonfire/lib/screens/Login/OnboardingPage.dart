@@ -1,6 +1,5 @@
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurOutlinedButton.dart';
-import 'package:bonfire_newbonfire/widgets/OurIconBtn.dart';
 import 'package:flutter/material.dart';
 
 import '../../my_flutter_app_icons.dart';
@@ -101,11 +100,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       context: context,
                       txtColor: Theme.of(context).primaryColor,
                       btnColor: Theme.of(context).primaryColor),*/
-                  OurIconBtn(
-                    hasIcon: false,
+                  OurFilledButton(
                     text: "Continue",
                     context: context,
-                    txtColor: Theme.of(context).accentColor,
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(

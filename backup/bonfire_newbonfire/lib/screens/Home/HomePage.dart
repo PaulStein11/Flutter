@@ -4,7 +4,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:badges/badges.dart';
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
 import 'package:bonfire_newbonfire/components/AudienceWidget.dart';
-import 'package:bonfire_newbonfire/components/DrawerComponents.dart';
 import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/screens/Home/widgets/OurFloatingButton.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
@@ -205,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                           child: ListTile(
                             leading: Image.asset("assets/images/logo.png",
                                 fit: BoxFit.cover, height: 40.0, width: 40.0),
-                            title: appTitle(),
+                            title: Text("bonfire"),
                           ),
                         ),
                       ),
@@ -214,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: 5.0,
                     ),
-                    drawerListTile(
+                    _drawerListTile(
                       icon: Icons.house_outlined,
                       text: "Home",
                       onPressed: () {
@@ -226,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    drawerListTile(
+                    _drawerListTile(
                       icon: Icons.dashboard_outlined,
                       text: "Groups",
                       onPressed: () {
@@ -239,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     Divider(color: Colors.grey.shade800),
-                    drawerListTile(
+                    _drawerListTile(
                       icon: Icons.door_back_door_outlined,
                       text: "Onboarding page",
                       onPressed: () {
@@ -251,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    drawerListTile(
+                    _drawerListTile(
                       icon: Icons.feedback_rounded,
                       text: "Send feedback",
                       onPressed: () {
@@ -267,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    drawerListTile(
+                    _drawerListTile(
                       icon: Icons.exit_to_app,
                       text: "Sign out",
                       onPressed: () async {
@@ -383,6 +382,26 @@ class _HomePageState extends State<HomePage> {
           );
         }
       },
+    );
+  }
+  _drawerListTile({IconData icon, String text, Function onPressed}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: ListTile(
+          leading: Icon(
+            icon,
+            color: Colors.grey.shade400,
+            size: 28.0,
+          ),
+          title: Text(
+            text,
+            style: TextStyle(
+                fontSize: 15.5,
+                color: Colors.grey.shade400,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.6),
+          ),
+          onTap: onPressed),
     );
   }
 }
