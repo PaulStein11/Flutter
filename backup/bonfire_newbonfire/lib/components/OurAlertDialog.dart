@@ -9,17 +9,19 @@ Future<bool> showAlertDialog(BuildContext context,
     @required String content,
     String cancelActionText,
     bool getRequiredLinkbool,
-    @required Future<void> getRequiredLink,
+    Future<void> getRequiredLink,
     @required String defaultActionText,
     @required onPressed}) {
   if (!Platform.isIOS) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Color(0xff383838),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        backgroundColor: Theme.of(context).cardColor,
         title: Text(title,
             style: TextStyle(
-                color: Colors.grey,
+                color: Color(0xffe2e2e2),
                 fontWeight: FontWeight.w600,
                 fontSize: 16.5)),
         content: Text(
@@ -27,7 +29,7 @@ Future<bool> showAlertDialog(BuildContext context,
           style: TextStyle(
             fontSize: 15.5,
             fontWeight: FontWeight.w400,
-            color: Color(0xffe2e2e2),
+            color: Color(0xffe2e2e2).withOpacity(0.85),
           ),
         ),
         actions: <Widget>[
@@ -41,10 +43,11 @@ Future<bool> showAlertDialog(BuildContext context,
             ),
           getRequiredLinkbool == false
               ? FlatButton(
-            color: Theme.of(context).accentColor,
-            child: Text(
+                  child: Text(
                     defaultActionText,
-                    style: Theme.of(context).textTheme.headline1,
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.w700),
                   ),
                   onPressed: onPressed,
                 )
@@ -54,19 +57,23 @@ Future<bool> showAlertDialog(BuildContext context,
                     if (snapshot.hasData) {
                       Uri uri = snapshot.data;
                       return FlatButton(
-                        color: Theme.of(context).accentColor,
                         onPressed: () => Share.share(uri.toString()),
                         child: Text(
                           defaultActionText,
-                          style: Theme.of(context).textTheme.headline1,
+                          style: Theme.of(context).textTheme.headline1.copyWith(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.w700),
                         ),
                       );
                     } else {
                       return FlatButton(
-                        color: Theme.of(context).backgroundColor,
+                        color: Colors.transparent,
+                        onPressed: onPressed,
                         child: Text(
                           defaultActionText,
-                          style: Theme.of(context).textTheme.headline1,
+                          style: Theme.of(context).textTheme.headline1.copyWith(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.w700),
                         ),
                       );
                     }

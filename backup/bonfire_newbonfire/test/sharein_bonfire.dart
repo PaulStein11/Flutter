@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:bonfire_newbonfire/providers/auth.dart';
-import 'package:bonfire_newbonfire/screens/HomePage.dart';
+import 'package:bonfire_newbonfire/screens/Home/HomePage.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

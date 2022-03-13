@@ -50,7 +50,7 @@ class _CallPageState extends State<CallPage> {
     if (APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
-          'APP_ID missing, please provide your APP_ID in settings.dart',
+          'APP_ID missing, please provide your APP_ID in Settings.dart',
         );
         _infoStrings.add('Agora Engine is not starting');
       });

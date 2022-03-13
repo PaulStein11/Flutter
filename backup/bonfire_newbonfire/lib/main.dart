@@ -32,6 +32,7 @@ void main() {
   runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.instance.navigatorKey,
       theme: OurTheme().buildTheme(),
-      darkTheme: ThemeData.dark().copyWith(),
       initialRoute: "splash",
       onGenerateRoute: (settings) {
         return MaterialPageRoute(

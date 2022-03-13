@@ -498,7 +498,7 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                                     cancelActionText: 'Cancel',
                                                     defaultActionText:
                                                         'Yes report',
-                                                    onPressed: () {
+                                                    onPressed: ()  {
                                                       Firestore.instance
                                                           .collection("Bonfire")
                                                           .document(bfId)
@@ -509,16 +509,23 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                                         },
                                                       );
                                                       Navigator.pop(context);
-                                                      Navigator.pop(context);
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
                                                         SnackBar(
-                                                          backgroundColor:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: new BorderRadius.all(new Radius.circular(12)),
+                                                          ),
                                                           content: Text(
-                                                              'Reporting Bonfire'),
+                                                            "Done! You have reported this bonfire",
+                                                            style: TextStyle(
+                                                                color: Theme.of(context).cardColor.withOpacity(0.85),
+                                                                fontFamily: "Poppins",
+                                                                fontWeight: FontWeight.w600,
+                                                                letterSpacing: 0.5),
+                                                          ),
+                                                          backgroundColor: Theme.of(context).primaryColor,
+                                                          duration: Duration(seconds: 2),
                                                         ),
                                                       );
                                                     },
@@ -526,7 +533,7 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                                 },
                                                 icon: Icon(
                                                   MyFlutterApp.attention,
-                                                  color: Colors.white70,
+                                                  color: Colors.amber.shade700.withAlpha(175),
                                                 ),
                                               ),
                                               /*CircleAddButton(

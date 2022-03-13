@@ -20,7 +20,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text("Settings", style: TextStyle(color: Theme.of(context).primaryColor),),
+        title: Text(
+          "Settings",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
         centerTitle: true,
       ),
       body: ChangeNotifierProvider<AuthProvider>.value(
@@ -39,7 +42,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
                     /*GestureDetector(
                       onTap: () {},
                       child: Padding(
@@ -65,19 +70,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),*/
                     GestureDetector(
-                      onTap: () async {
-                        await showAlertDialog(
-                            context,
-                            title: 'Logout',
-                            content: 'Are you sure that you want to logout?',
-                            cancelActionText: 'Cancel',
-                            getRequiredLinkbool: false,
-                            defaultActionText: 'Logout',
-                            onPressed: () {
-                              return _auth.logoutUser(() {}, context);
-                            }
-                        );
-
+                      onTap: () {
+                        Navigator.pushNamed(context, "edit_profile");
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -86,16 +80,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.exit_to_app,
+                            Icon(
+                              Icons.account_circle_outlined,
                               size: 28.0,
-                              color: Theme.of(context).accentColor,
+                              color: Colors.grey.shade600,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Text(
-                                  "LOG OUT",
-                                  style: Theme.of(context).textTheme.headline3.copyWith(fontSize: 15.0)
+                                "Edit profile",
+                                style: TextStyle(
+                                    fontSize: 15.5,
+                                    color: Colors.grey.shade300,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.6),
                               ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        await showAlertDialog(context,
+                            title: 'Logout',
+                            content: 'Are you sure that you want to logout?',
+                            cancelActionText: 'Cancel',
+                            getRequiredLinkbool: false,
+                            defaultActionText: 'Logout', onPressed: () {
+                          return _auth.logoutUser(() {}, context);
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.exit_to_app,
+                              size: 28.0,
+                              color: Colors.grey.shade600,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text("Log Out",
+                                  style: TextStyle(
+                                      fontSize: 15.5,
+                                      color: Colors.grey.shade300,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.6),),
                             )
                           ],
                         ),

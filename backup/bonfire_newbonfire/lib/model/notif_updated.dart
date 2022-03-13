@@ -4,12 +4,13 @@ import 'package:bonfire_newbonfire/model/bonfire.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/screens/BonfirePage.dart';
+import 'package:bonfire_newbonfire/screens/Interaction_feed.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../my_flutter_app_icons.dart';
-import '../screens/Profile/others_profile.dart';
+import '../screens/Profile/Others_profile.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 MyUserModel currentUser;
@@ -127,9 +128,12 @@ class _notif_updatedState extends State<notif_updated> {
                   return OurLoadingWidget(context);
                 }
                 return InkWell(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BonfirePage( bfId: bfId,
-                    bfTitle: bfTitle,
-                  ),) ),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            InteractionFeed(interactionTitle: interactionTitle),
+                      )),
                   child: Container(
                     decoration: BoxDecoration(
                         color: Theme.of(context).backgroundColor,
@@ -145,7 +149,8 @@ class _notif_updatedState extends State<notif_updated> {
                           hasImage: username == "Mr Anonymous" ? false : true,
                           imageFile: userImg,
                           onPressed: userId != _auth.user.uid
-                              ? () => showOtherProfile(context, profileId: userId)
+                              ? () =>
+                                  showOtherProfile(context, profileId: userId)
                               : userId == _auth.user.uid &&
                                       username != "Mr Anonymous"
                                   ? () => showProfile(context)

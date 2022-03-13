@@ -1,6 +1,8 @@
 import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurOutlinedButton.dart';
+import 'package:bonfire_newbonfire/screens/Login/widgets/TermsWidget.dart';
+import 'package:bonfire_newbonfire/screens/Privacy/TermsPrivacyPage.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -20,8 +22,6 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   bool isAuth = false;
   bool isLoading = false;
-  final String privacytext = "Privacy Policy";
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,7 @@ class _WelcomePageState extends State<WelcomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.02,
+                  height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 Column(
                   children: <Widget>[
@@ -62,9 +59,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: Text(
                         "Join the bonfire",
                         style: TextStyle(
-                            color: Theme
-                                .of(context)
-                                .primaryColor,
+                            color: Theme.of(context).primaryColor,
                             fontSize: 35.0,
                             fontWeight: FontWeight.w600),
                       ),
@@ -80,10 +75,9 @@ class _WelcomePageState extends State<WelcomePage> {
                           fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.05,),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -92,9 +86,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           text: 'Continue with Google',
                           hasIcon: true,
                           icon: FontAwesomeIcons.google,
-                          color: Theme
-                              .of(context)
-                              .primaryColor,
+                          color: Theme.of(context).primaryColor,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -113,9 +105,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           text: 'Continue with email',
                           hasIcon: true,
                           icon: Icons.email,
-                          color: Theme
-                              .of(context)
-                              .primaryColor,
+                          color: Theme.of(context).primaryColor,
                           onPressed: () =>
                               Navigator.pushNamed(context, "login"),
                         ),
@@ -125,28 +115,23 @@ class _WelcomePageState extends State<WelcomePage> {
                         Row(children: <Widget>[
                           Expanded(
                               child: Divider(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                              )),
+                            color: Theme.of(context).primaryColor,
+                          )),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               "Or",
                               style: TextStyle(
-                                  color: Theme
-                                      .of(context)
+                                  color: Theme.of(context)
                                       .primaryColor
                                       .withOpacity(0.7)),
                             ),
                           ),
                           Expanded(
                               child: Divider(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                              )),
+                            color: Theme.of(context).primaryColor,
+                          )),
                         ]),
                         SizedBox(
                           height: 15.0,
@@ -157,9 +142,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             Text(
                               "Don't have an account?",
                               style: TextStyle(
-                                  color: Theme
-                                      .of(context)
-                                      .primaryColor,
+                                  color: Theme.of(context).primaryColor,
                                   fontSize: 16.0),
                             ),
                             FlatButton(
@@ -167,9 +150,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               child: Text(
                                 "Sign up",
                                 style: TextStyle(
-                                    color: Theme
-                                        .of(context)
-                                        .accentColor,
+                                    color: Theme.of(context).accentColor,
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -182,86 +163,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
                   ],
                 ),
-
-
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: "By tapping 'Continue with Google or Email' you accept Bonfire ",
-                      style:
-                      TextStyle(color: Colors.white70, fontSize: 15.0,),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: privacytext,
-                          style: TextStyle(
-                            color: Theme
-                                .of(context)
-                                .accentColor,
-                            fontSize: 15.0,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              await showAlertDialog(
-                                  context,
-                                  title:
-                                  privacytext,
-                                  content:
-                                  'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-                                  cancelActionText:
-                                  'Go back',
-                                  defaultActionText:
-                                  'OK', onPressed: () {
-                                Navigator.of(context).pop(false);
-                                print("Open the privacy and policy terms");
-                              });
-                            },
-                        ),
-                        TextSpan(
-                            text: ' and ',
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.white70),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'Terms & Conditions',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Theme
-                                        .of(context)
-                                        .accentColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // code to open / launch privacy policy link here
-                                    })
-                            ]),
-                        /*TextSpan(
-                            text: '. Check ',
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.white70),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'easy peasy',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // code to open / launch privacy policy link here
-                                    })
-                            ]),
-                        TextSpan(
-                          text: ' version on how we manage your data in our platform and with respect of third party',
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.white70),
-                        ),*/
-                      ],
-                    ),
-                    maxLines: 4,
-                  ),
-                ),
+                TermsOfPrivacyForUsers(context)
               ],
             ),
           );
