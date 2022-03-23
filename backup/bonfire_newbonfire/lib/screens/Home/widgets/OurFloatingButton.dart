@@ -5,11 +5,11 @@ Widget OurFloatingButton({BuildContext context, Function onPressed}) {
   return Material(
     color: Colors.transparent,
     child: Container(
-      height: 65.0,
-      width: 65.0,
+      height: 55.0,
+      width: 55.0,
       child: FittedBox(
         child: FloatingActionButton(
-          backgroundColor: Theme.of(context).indicatorColor,
+          backgroundColor: Theme.of(context).accentColor,
           //hoverColor: Theme.of(context).accentColor,
           elevation: 10.0,
           onPressed: onPressed,
@@ -21,7 +21,7 @@ Widget OurFloatingButton({BuildContext context, Function onPressed}) {
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   image: DecorationImage(
-                    image: AssetImage("assets/images/icon_amber.png")
+                    image: AssetImage("assets/images/flame_sharp_white.png")
                   )
                 ),
               )),

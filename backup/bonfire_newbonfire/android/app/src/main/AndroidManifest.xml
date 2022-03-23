@@ -18,8 +18,11 @@
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
-
               />
+            <meta-data
+                android:name="com.onesignal.messaging.default_notification_icon"
+                android:resource="@mipmap/ic_stat_onesignal_default"
+            />
 
             <meta-data
                 android:name="com.onesignal.NotificationAccentColor.DEFAULT"
@@ -54,7 +57,7 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
-            android:value="1" />
+            android:value="2" />
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

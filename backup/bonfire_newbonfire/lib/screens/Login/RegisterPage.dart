@@ -1,3 +1,4 @@
+import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/TermsWidget.dart';
@@ -106,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               fit: BoxFit.cover,
                               image: _image != null
                                   ? FileImage(_image)
-                                  : NetworkImage(""),
+                                  : AssetImage(""),
                             ),
                           ),
                           child: _image != null
@@ -222,7 +223,10 @@ class _RegisterPageState extends State<RegisterPage> {
     return _auth.status == AuthStatus.Authenticating
         ? Align(
             alignment: Alignment.center,
-            child: CircularProgressIndicator(),
+            child:CircularProgressIndicator(
+              color: Theme.of(context).accentColor,
+              backgroundColor: Theme.of(context).indicatorColor,
+            ),
           )
         : Center(
             child: OurFilledButton(

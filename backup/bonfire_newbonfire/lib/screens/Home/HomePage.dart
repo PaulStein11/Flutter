@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:badges/badges.dart';
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
 import 'package:bonfire_newbonfire/components/AudienceWidget.dart';
+import 'package:bonfire_newbonfire/components/DrawerComponents.dart';
 import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/screens/Home/widgets/OurFloatingButton.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
@@ -15,10 +16,13 @@ import 'package:bonfire_newbonfire/screens/AllUsers.dart';
 import 'package:bonfire_newbonfire/screens/CreateBonfire.dart';
 import 'package:bonfire_newbonfire/screens/FunPage.dart';
 import 'package:bonfire_newbonfire/screens/GroupsPage.dart';
+import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../model/user.dart';
 import '../../model/notif_updated.dart';
@@ -44,6 +48,12 @@ class _HomePageState extends State<HomePage> {
   int loadMoreMsgs = 10; // at first it will load only 10
   int addXMore = 10;
   AudioPlayer _audioPlayer;
+
+  // -------------------------
+  // FOR USER TEST ONLY
+  // -------------------------
+  final _formKey = GlobalKey<FormState>();
+  String _feedback = "";
 
   @override
   void initState() {
@@ -126,69 +136,166 @@ class _HomePageState extends State<HomePage> {
                 preferredSize: Size.fromHeight(60.0),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: AppBar(
-                    elevation: 0.0,
-                    centerTitle: true,
-                    backgroundColor: Colors.transparent.withOpacity(0.0),
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15.0),
-                        child: InkWell(
-                            onTap: () {
+                  child: InkWell(
+                    onDoubleTap: () {
+                      print("Hello world");
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              backgroundColor:
+                                  Theme.of(context).backgroundColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                                width: MediaQuery.of(context).size.width * 0.85,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Text(
+                                          "Sharing feedback",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 30.0),
+                                        child: Form(
+                                          key: _formKey,
+                                          onChanged: () =>
+                                              _formKey.currentState.save(),
+                                          child: TextFormField(
+                                            maxLines: 3,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade200,
+                                                fontSize: 15.0),
+                                            validator: (input) {
+                                              return input.isEmpty
+                                                  ? "Need to add something"
+                                                  : null;
+                                            },
+                                            onSaved: (input) {
+                                              _feedback = input;
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      OurFilledButton(
+                                          context: context,
+                                          text: "Submit",
+                                          onPressed: () async {
+                                            if (_formKey.currentState
+                                                .validate()) {
+                                              final Email email = Email(
+                                                body: _feedback,
+                                                subject:
+                                                    "Feedback - HomeScreen",
+                                                recipients: [
+                                                  "pablerillas.11.pb@gmail.com"
+                                                ],
+                                              );
+
+                                              String platformResponse;
+
+                                              try {
+                                                await FlutterEmailSender.send(
+                                                    email);
+                                                platformResponse = 'success';
+                                              } catch (error) {
+                                                platformResponse =
+                                                    error.toString();
+                                              }
+
+                                              /*if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    backgroundColor:
+                                                    Theme.of(context).accentColor,
+                                                    content: Text(
+                                                        'Thanks for your feedback!'),
+                                                  ),
+                                                );    */
+                                            }
+                                          })
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: AppBar(
+                      elevation: 0.0,
+                      centerTitle: true,
+                      backgroundColor: Colors.transparent.withOpacity(0.0),
+                      actions: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15.0),
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NotificationPage(
+                                      userId: _userData.uid,
+                                    ),
+                                  ),
+                                );
+                                FutureService.instance
+                                    .feedSeeCount(_userData.uid);
+                              },
+                              child: _userData.unseenCount == 0
+                                  ? Icon(
+                                      MyFlutterApp.inbox,
+                                      color: Colors.grey.shade400,
+                                      size: 27.0,
+                                    )
+                                  : Badge(
+                                      badgeColor: Colors.blueAccent,
+                                      position: BadgePosition(top: -1, end: -1),
+                                      badgeContent: Text(""),
+                                      child: Icon(
+                                        MyFlutterApp.bell_1,
+                                        color: Colors.grey.shade400,
+                                        size: 27.0,
+                                      ),
+                                    )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14.0, vertical: 5.0),
+                          child: AppUserProfile(
+                            icon: Icons.person,
+                            hasImage:
+                                _userData.profileImage.isEmpty ? false : true,
+                            imageFile: _userData.profileImage,
+                            size: 19,
+                            color: _userData.name[0] == "P"
+                                ? Colors.orangeAccent
+                                : Colors.blueAccent,
+                            iconSize: 28.0,
+                            onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => NotificationPage(
-                                    userId: _userData.uid,
-                                  ),
+                                  builder: (context) => ProfilePage(),
                                 ),
                               );
-                              FutureService.instance
-                                  .feedSeeCount(_userData.uid);
                             },
-                            child: _userData.unseenCount == 0
-                                ? Icon(
-                                    MyFlutterApp.bell_1,
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.8),
-                                    size: 27.0,
-                                  )
-                                : Badge(
-                                    badgeColor: Colors.blueAccent,
-                                    position: BadgePosition(top: -1, end: -1),
-                                    badgeContent: Text(""),
-                                    child: Icon(
-                                      MyFlutterApp.bell_1,
-                                      color: Colors.grey.shade400,
-                                      size: 27.0,
-                                    ),
-                                  )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14.0, vertical: 5.0),
-                        child: AppUserProfile(
-                          icon: Icons.person,
-                          hasImage:
-                              _userData.profileImage.isEmpty ? false : true,
-                          imageFile: _userData.profileImage,
-                          size: 19.5,
-                          color: _userData.name[0] == "P"
-                              ? Colors.orangeAccent
-                              : Colors.blueAccent,
-                          iconSize: 28.0,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfilePage(),
-                              ),
-                            );
-                          },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -204,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                           child: ListTile(
                             leading: Image.asset("assets/images/logo.png",
                                 fit: BoxFit.cover, height: 40.0, width: 40.0),
-                            title: Text("bonfire"),
+                            title: appTitle(),
                           ),
                         ),
                       ),
@@ -213,7 +320,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: 5.0,
                     ),
-                    _drawerListTile(
+                    drawerListTile(
                       icon: Icons.house_outlined,
                       text: "Home",
                       onPressed: () {
@@ -225,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    _drawerListTile(
+                    drawerListTile(
                       icon: Icons.dashboard_outlined,
                       text: "Groups",
                       onPressed: () {
@@ -238,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     Divider(color: Colors.grey.shade800),
-                    _drawerListTile(
+                    drawerListTile(
                       icon: Icons.door_back_door_outlined,
                       text: "Onboarding page",
                       onPressed: () {
@@ -250,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    _drawerListTile(
+                    drawerListTile(
                       icon: Icons.feedback_rounded,
                       text: "Send feedback",
                       onPressed: () {
@@ -266,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    _drawerListTile(
+                    drawerListTile(
                       icon: Icons.exit_to_app,
                       text: "Sign out",
                       onPressed: () async {
@@ -336,7 +443,6 @@ class _HomePageState extends State<HomePage> {
                                       height: 10.0,
                                     ),
                                     buildSkeleton(context),
-
                                   ],
                                 );
                               }
@@ -382,26 +488,6 @@ class _HomePageState extends State<HomePage> {
           );
         }
       },
-    );
-  }
-  _drawerListTile({IconData icon, String text, Function onPressed}) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
-      child: ListTile(
-          leading: Icon(
-            icon,
-            color: Colors.grey.shade400,
-            size: 28.0,
-          ),
-          title: Text(
-            text,
-            style: TextStyle(
-                fontSize: 15.5,
-                color: Colors.grey.shade400,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.6),
-          ),
-          onTap: onPressed),
     );
   }
 }

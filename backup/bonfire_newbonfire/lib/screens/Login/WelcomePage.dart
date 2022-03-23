@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,9 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   bool isAuth = false;
-  bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+  String _feedback = "";
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +47,106 @@ class _WelcomePageState extends State<WelcomePage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Container(
-                        width: 100,
-                        height: 90.0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/logo.png'),
-                            fit: BoxFit.fill,
+                      child: GestureDetector(
+                        onDoubleTap: () {
+                          print("Hello world");
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  backgroundColor:
+                                      Theme.of(context).backgroundColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.85,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 8.0),
+                                            child: Text(
+                                              "Sharing feedback",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline2,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 30.0),
+                                            child: Form(
+                                              key: _formKey,
+                                              onChanged: () =>
+                                                  _formKey.currentState.save(),
+                                              child: TextFormField(
+                                                maxLines: 3,
+                                                style: TextStyle(color: Colors.grey.shade200, fontSize: 15.0),
+                                                validator: (input) {
+                                                  return input.isEmpty
+                                                      ? "Need to add something"
+                                                      : null;
+                                                },
+                                                onSaved: (input) {
+                                                  _feedback = input;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          OurFilledButton(
+                                            context: context,
+                                            text: "Submit",
+                                            onPressed: () async {
+                                              if(_formKey.currentState.validate()) {
+                                                final Email email  = Email(
+                                                  body: _feedback,
+                                                  subject: "Feedback - Welcome Screen",
+                                                  recipients: [
+                                                    "pablerillas.11.pb@gmail.com"
+                                                  ],
+                                                );
+
+                                                String platformResponse;
+
+                                                try {
+                                                  await FlutterEmailSender.send(email);
+                                                  platformResponse = 'success';
+                                                } catch (error) {
+                                                  platformResponse = error.toString();
+                                                }
+
+                                                /*if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    backgroundColor:
+                                                    Theme.of(context).accentColor,
+                                                    content: Text(
+                                                        'Thanks for your feedback!'),
+                                                  ),
+                                                );    */                                          }
+                                            }
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 90.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/logo.png'),
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ),
@@ -88,13 +184,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           icon: FontAwesomeIcons.google,
                           color: Theme.of(context).primaryColor,
                           onPressed: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
                             await _auth.googleSignIn();
-                            setState(() {
-                              isLoading = false;
-                            });
                           },
                         ),
                         SizedBox(

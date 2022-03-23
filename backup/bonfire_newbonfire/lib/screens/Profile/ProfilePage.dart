@@ -63,10 +63,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () => Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => HomePage()),
-                    (route) => false),
-                icon: Icon(
-                  Icons.arrow_back,
-                ),
+                        (route) => false),
+                icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
               ),
               automaticallyImplyLeading: false,
               actions: [

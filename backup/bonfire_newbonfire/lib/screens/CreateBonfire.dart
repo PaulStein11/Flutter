@@ -41,12 +41,13 @@ class _CreateNewBonfireState extends State<CreateNewBonfire> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        /*appBar: AppBar(
+        appBar: AppBar(
           elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: true,
-          centerTitle: true,
-        ),*/
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
+          ),
+        ),
         body: CustomScrollView(
       slivers: [
         SliverList(
@@ -65,7 +66,7 @@ class _CreateNewBonfireState extends State<CreateNewBonfire> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2),
+                          height: MediaQuery.of(context).size.height * 0.1),
                       Text(
                         "Start a Bonfire",
                         style: TextStyle(
@@ -76,10 +77,10 @@ class _CreateNewBonfireState extends State<CreateNewBonfire> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        "Don't feel shy and make it anonymous or share your thoughts with others!",
+                        "You are hosting people to participate",
                         style: TextStyle(
                             color: Colors.grey,
-                            fontSize: 13.0,
+                            fontSize: 13.5,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 0.5),
                         textAlign: TextAlign.center,

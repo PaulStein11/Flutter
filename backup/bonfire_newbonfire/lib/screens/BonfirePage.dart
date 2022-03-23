@@ -156,7 +156,7 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                   return OurLoadingWidget(context);
                 }
                 return Scaffold(
-                  backgroundColor: Theme.of(context).cardColor,
+                  backgroundColor: Color(0xff2A2827),
                   body: CustomScrollView(
                     slivers: [
                       SliverList(
@@ -350,14 +350,32 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                                             ),
                                                           ),
                                                         ),
-                                                  Container(
+                                                 isPlaying == false
+                                                      ? Container(
+                                                    width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                        0.6,
+                                                    height: 3,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey.shade300,
+                                                      borderRadius:
+                                                      BorderRadius.circular(5),
+                                                    ),
+                                                  ): Container(
                                                     width:
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width *
                                                             0.6,
-                                                    height: 3,
-                                                    child: SliderTheme(
+                                                    child:  MusicVisualizer(
+                                                      numBars: 24,
+                                                      barHeight: 12,
+                                                    ),
+                                                  ),
+
+                                                  /*----------------------SLIDER INSTEAD OF DOTS
+                                                  * /*SliderTheme(
                                                       data: SliderTheme.of(
                                                               context)
                                                           .copyWith(
@@ -395,8 +413,8 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                                               value = value;
                                                             });
                                                           }),
-                                                    ),
-                                                  ),
+                                                    ),*/
+                                                  * */
                                                   isPlaying
                                                       ? Container(
                                                         child: ConstrainedBox(

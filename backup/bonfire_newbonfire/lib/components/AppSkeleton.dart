@@ -3,11 +3,11 @@ import 'package:skeleton_text/skeleton_text.dart';
 
 
 Widget buildSkeleton(BuildContext context) => Padding(
-  padding: const EdgeInsets.all(8.0),
+  padding: const EdgeInsets.only(bottom: 5.0),
   child: Container(
     decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey.shade800),
-      borderRadius: BorderRadius.circular(10.0),
+      border: Border.symmetric(horizontal: BorderSide(color: Colors.grey.shade800)),
+      //borderRadius: BorderRadius.circular(10.0),
     ),
     child: Padding(
       padding: const EdgeInsets.all(10.0),
