@@ -280,7 +280,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                 }
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 13.0),
+                      vertical: 4.0, horizontal: 0.0),
                   child: GestureDetector(
                     onTap: () => Navigator.push(
                       context,
@@ -298,12 +298,12 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                       ),
                     ),
                     child: Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(10.0),
+                      elevation: 1.0,
+                      //borderRadius: BorderRadius.circular(10.0),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(10.0),
+                          //borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -336,33 +336,55 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                 .withOpacity(0.82)
                                             : Colors.blueAccent,
                                     size: 18.0),
-                                title: Transform.translate(
-                                  offset: const Offset(-5.0, 1.0),
-                                  child: Text(
-                                      ownerName == "Mr Anonymous"
-                                          ? "Mr Anonymous"
-                                          : _userData.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline2),
-                                ),
-                                subtitle: Transform.translate(
-                                  offset: const Offset(-5.0, -4.5),
-                                  child: RichText(
-                                    text: new TextSpan(
-                                      children: <TextSpan>[
-                                        //new TextSpan(text: user.email, style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).accentColor)),
-                                        new TextSpan(
-                                            text: /*" - " + */ timeago.format(
-                                              timestamp.toDate(),
-                                            ),
+                                title: IntrinsicHeight(
+                                  child: Row(
+                                    children: [
+                                      Transform.translate(
+                                        offset: const Offset(-7.0, 0.0),
+                                        child: Text(
+                                            ownerName == "Mr Anonymous"
+                                                ? "Mr Anonymous"
+                                                : _userData.name,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline3),
-                                      ],
-                                    ),
+                                                .headline2),
+                                      ),
+                                      VerticalDivider(color: Colors.grey.shade600, thickness: 1.5, indent: 7, endIndent: 7,),
+                                      SizedBox(width: 5.0,),
+                                      RichText(
+                                        text: new TextSpan(
+                                          children: <TextSpan>[
+                                            //new TextSpan(text: user.email, style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).accentColor)),
+                                            new TextSpan(
+                                                text: /*" - " + */ timeago.format(
+                                                  timestamp.toDate(),
+                                                ).replaceAll("a day ago", "1 d").replaceAll("days ago", "d").replaceAll("minutes ago", "min").replaceAll("hours ago", "h"),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                /*subtitle: Transform.translate(
+                                      offset: const Offset(-5.0, -4.5),
+                                      child: RichText(
+                                        text: new TextSpan(
+                                          children: <TextSpan>[
+                                            //new TextSpan(text: user.email, style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).accentColor)),
+                                            new TextSpan(
+                                                text: /*" - " + */ timeago.format(
+                                                  timestamp.toDate(),
+                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3),
+                                          ],
+                                        ),
+                                      ),
+                                    ),*/
                               ),
                               buildTitle(),
                               SizedBox(
@@ -586,7 +608,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
 
   buildTitle() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 17.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,

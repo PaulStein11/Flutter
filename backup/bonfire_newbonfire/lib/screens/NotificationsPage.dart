@@ -36,13 +36,8 @@ class _NotificationPageState extends State<NotificationPage> {
           title: Text("Activity Feed"),
           centerTitle: true,
           leading: IconButton(
-            onPressed: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-                (route) => false),
-            icon: Icon(
-              Icons.arrow_back,
-            ),
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
           ),
         ),
         body: StreamBuilder<List<notif_updated>>(

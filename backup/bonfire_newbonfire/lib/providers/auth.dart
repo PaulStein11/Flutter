@@ -63,7 +63,6 @@ class AuthProvider extends ChangeNotifier {
       );
       AuthResult _result = await _auth.signInWithCredential(credential);
       user = _result.user;
-
       if (_result.additionalUserInfo.isNewUser) {
         var tokenId =
             await OneSignal.shared.getDeviceState().then((deviceState) {
@@ -80,8 +79,15 @@ class AuthProvider extends ChangeNotifier {
       }
     } on AuthException catch (e) {
       status = AuthStatus.Error;
+      notifyListeners();
       print(e.message);
+      await _googleSignIn.disconnect();
       throw e;
+    } catch (e) {
+      status = AuthStatus.NotAuthenticated;
+      notifyListeners();
+      print("DISCONNECTING GOOGLE SIGN IN");
+      _googleSignIn.disconnect();
     }
     notifyListeners();
   }
@@ -104,7 +110,8 @@ class AuthProvider extends ChangeNotifier {
           MaterialPageRoute(builder: (BuildContext context) => HomePage()));
     } catch (error) {
       status = AuthStatus.Error;
-
+      status = AuthStatus.NotAuthenticated;
+      notifyListeners();
       if (user == null) {
         SnackBarService.instance
             .showSnackBarError("Account doesn't exist", context);
@@ -128,14 +135,16 @@ class AuthProvider extends ChangeNotifier {
       await onSuccess(user.uid);
       user.sendEmailVerification();
       NavigationService.instance.navigateToReplacement("email_verification");
-
     } catch (error) {
       status = AuthStatus.Error;
-      user = null;
-      SnackBarService.instance
-          .showSnackBarError("Error while registering user", context);
-    }
-    notifyListeners();
+      notifyListeners();
+      print(error.code.toString());
+      if (error.code == "ERROR_EMAIL_ALREADY_IN_USE") {
+        SnackBarService.instance.showSnackBarError(
+            "Email already exist", context);
+        }
+      }
+      notifyListeners();
   }
 
   void logoutUser(Future<void> onSuccess(), BuildContext context) async {

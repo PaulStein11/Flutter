@@ -1,3 +1,4 @@
+import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/textForm.dart';
 import 'package:flutter/gestures.dart';
@@ -125,34 +126,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 50.0,
                 ),
-                /*Padding(
-                  padding: const EdgeInsets.only(left: 0.0),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        splashRadius: 0.1,
-                        onPressed: _toggle,
-                        icon: _obscureText
-                            ? Icon(
-                                Icons.check_box_outline_blank,
-                                color: Colors.white70,
-                              )
-                            : Icon(
-                                Icons.check_box,
-                                color: Colors.white70,
-                              ),
-                      ),
-                      Text(
-                        "Show password",
-                        style: TextStyle(color: Colors.white, fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),*/
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0),
                   child: Center(child: loginButton()),
@@ -170,10 +143,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginButton() {
     return _auth.status == AuthStatus.Authenticating
-        ? Align(
-            alignment: Alignment.center,
-            child: CircularProgressIndicator(),
-          )
+        ?Align(
+      alignment: Alignment.center,
+      child:CircularProgressIndicator(
+        color: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).indicatorColor,
+      ),
+    )
         : OurFilledButton(
             context: context,
             text: "Sign into account",

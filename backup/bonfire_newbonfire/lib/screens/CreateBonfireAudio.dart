@@ -102,6 +102,10 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                       elevation: 0.0,
                       centerTitle: true,
                       title: Text("Your Bonfire"),
+                      leading: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
+                      ),
                     ),
                     body: Center(
                       child: Column(
@@ -157,34 +161,6 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      /*Text(
-                                                        "Title",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4
-                                                            .copyWith(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade200,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),*/
-
-                                                      /*Text(
-                                                        "Add 3 keywords to tag your answer",
-                                                        style: TextStyle(
-                                                            fontSize: 14.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: Colors
-                                                                .grey.shade400,
-                                                            letterSpacing: 0.5),
-                                                        textAlign: TextAlign.center,
-                                                      ),*/
                                                     ],
                                                   ),
                                                   Padding(
@@ -352,13 +328,13 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                         BoxDecoration(
                                                                       color: Theme.of(
                                                                               context)
-                                                                          .cardColor,
+                                                                          .indicatorColor,
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                               20.0),
                                                                     ),
-                                                                    height: 40,
-                                                                    width: 40,
+                                                                    height: 42,
+                                                                    width: 42,
                                                                     child: IconButton(
                                                                         onPressed: _onRecordAgainButtonPressed,
                                                                         icon: Icon(
@@ -412,13 +388,13 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                       child:
                                                                           Container(
                                                                         height:
-                                                                            50.0,
+                                                                            42.0,
                                                                         width:
-                                                                            50.0,
+                                                                            42.0,
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           color:
-                                                                              Theme.of(context).cardColor,
+                                                                              Theme.of(context).indicatorColor,
                                                                           borderRadius:
                                                                               BorderRadius.circular(100.0),
                                                                         ),
@@ -427,11 +403,11 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                           child: _isSpeed == false
                                                                               ? Text(
                                                                                   "1 x",
-                                                                                  style: Theme.of(context).textTheme.headline5,
+                                                                            style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 14),
                                                                                 )
                                                                               : Text(
                                                                                   "1.5 x",
-                                                                                  style: Theme.of(context).textTheme.headline5,
+                                                                                  style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 14),
                                                                                 ),
                                                                         ),
                                                                       ),
@@ -456,7 +432,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(
+                                                  /*SizedBox(
                                                     height:
                                                         MediaQuery.of(context)
                                                                 .size
@@ -507,13 +483,13 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
+                                                  ),*/
                                                   SizedBox(
                                                     height:
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.06,
+                                                            0.15,
                                                   ),
                                                   Center(
                                                     child: OurFilledButton(
@@ -538,7 +514,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                 .profileImage,
                                                             _userData.uid,
                                                             _userData.name,
-                                                            ["f0408c16-9850-11ec-ae2b-7e4b4e57e8f2", "519b75f2-9d8d-11ec-9bee-7a8e62eb08a3", "18d34314-9e71-11ec-9225-fe650c1e4161", "04ab2362-9dda-11ec-8089-3263ecb3ce79"]);
+                                                            [ "85959b44-a5a3-11ec-95fb-0a00cce17e15", "abeaafec-a7b9-11ec-ab09-f2b244986104"]);//"e3852bc6-a002-11ec-a660-ea3b24c7a590","04ab2362-9dda-11ec-8089-3263ecb3ce79"]);
                                                       },
                                                     ),
                                                   )
@@ -578,7 +554,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                           color: _isRecording
                                                               ? Theme.of(
                                                                       context)
-                                                                  .primaryColor
+                                                                  .accentColor
                                                               : Colors.grey
                                                                   .shade700,
                                                           width: 7.0)),
@@ -595,7 +571,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                           color: _isRecording
                                                               ? Theme.of(
                                                                       context)
-                                                                  .primaryColor
+                                                                  .accentColor
                                                               : Colors.grey,
                                                           borderRadius:
                                                               BorderRadius
@@ -695,12 +671,12 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         //tokenIdList Is the List of All the Token Id to to Whom notification must be sent.
 
         // android_accent_color reprsent the color of the heading text in the notifiction
-        "android_accent_color": "FF9976D2",
+        "android_accent_color": "FFFB8C00",
 
         //"small_icon":"res/drawable-ic_launcher",
 
-        "large_icon":
-            "https://www.filepicker.io/api/file/zPloHSmnQsix82nlj9Aj?filename=name.jpg",
+        /*"large_icon":
+            "https://www.filepicker.io/api/file/zPloHSmnQsix82nlj9Aj?filename=name.jpg",*/
 
         "headings": {"en": heading},
 
@@ -724,7 +700,6 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         _audioURL.toString(),
         '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
       );
-      await getCloudFirestoreUsers();
       await sendNotification(tokenId, title, "$name created Bonfire");
       await Firestore.instance
           .collection("Users")

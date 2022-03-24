@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class OurTheme {
   Color _backgroundColor = Color(0xff1E1C1A);
-  Color _boxColor = Color(0xff2A2827);//Colors.grey.shade800.withOpacity(0.70);//
+  Color _boxColor = Color(0xff2A2827).withOpacity(0.7);//Colors.grey.shade800.withOpacity(0.70);//
   Color _audioBtns = Color(0xff383838);
   Color _canvasColor = Color(0xff383838).withOpacity(0.85); //Drawer menu etc
   Color _primaryFont = Colors.grey.shade100; //BF titles, user names and timestamps
   Color _headingTitles = Color(0xffe2e2e2); // Heading titles on categories
   Color _secondaryFont = Color(0xffe2e2e2);
-  Color _accentColor = Colors.amber.shade900.withOpacity(0.9);
+  Color _accentColor = Colors.amber.shade800;
 
   ThemeData buildTheme() {
     return ThemeData(
@@ -55,13 +55,13 @@ class OurTheme {
       textTheme: TextTheme(
         //MAIN TITLES OF BONFIRES
         headline1: TextStyle(
-            fontSize: 15.8,
+            fontSize: 15,
             color: Colors.grey.shade200,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             letterSpacing: 0.6),
         //USER NAMES ALONG THE APP
         headline2: TextStyle(
-            color: Colors.grey.shade300,
+            color: Colors.grey.shade400,
             fontWeight: FontWeight.bold,
             fontSize: 12.0,
             fontFamily: "PalanquinDark",

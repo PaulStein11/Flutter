@@ -59,6 +59,12 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
+        debug {
+            defaultConfig {
+                manifestPlaceholders = [onesignal_app_id               : "a97b81df-e138-4954-87e8-5ebe6a5ca49b",
+                                        onesignal_google_project_number: "AAAA7lAGtag:APA91bGm22rezVzwl2yaJyscxnJDIHHAFk3vUYdOGyd1cP4s2w0_PfJoVKytrnT5bLpU9CLqASNsLAAilp9bslYiL9dBxoZ6e6dpjfF28rDuoetBYC-TV2DM1og5OxzsHL22JM43RvDZ"]
+            }
+        }
     }
 }
 

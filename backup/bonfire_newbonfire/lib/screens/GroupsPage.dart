@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:badges/badges.dart';
+import 'package:bonfire_newbonfire/components/DrawerComponents.dart';
 import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
@@ -76,6 +77,10 @@ class _GroupsPageState extends State<GroupsPage> {
           return Scaffold(
             appBar: AppBar(
               elevation: 0.0,
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
+              ),
               title: Text(
                 "Groups",
                 style: TextStyle(color: Colors.grey.shade300),
