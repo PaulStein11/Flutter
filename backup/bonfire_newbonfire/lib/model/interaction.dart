@@ -222,7 +222,8 @@ class _InteractionState extends State<Interaction> {
 
         "small_icon": "ic_launcher",
 
-        "large_icon": "https://firebasestorage.googleapis.com/v0/b/bonfire-e573e.appspot.com/o/icon_amber_1.png?alt=media&token=88afb73e-bfbb-44a5-bb93-643ace490925",
+        "large_icon":
+            "https://firebasestorage.googleapis.com/v0/b/bonfire-e573e.appspot.com/o/icon_amber_1.png?alt=media&token=88afb73e-bfbb-44a5-bb93-643ace490925",
         "headings": {"en": heading},
 
         "contents": {"en": contents},
@@ -244,400 +245,390 @@ class _InteractionState extends State<Interaction> {
         Navigator.pop(context);
         // Navigator.pushReplacementNamed(context, "home");
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-        child: ChangeNotifierProvider<AuthProvider>.value(
-          value: AuthProvider.instance,
-          child: Builder(
-            builder: (BuildContext context) {
-              _auth = Provider.of<AuthProvider>(context);
-              bool isPostOwner = _auth.user.uid == ownerId;
-              isLiked = (likes[_auth.user.uid] == true);
-              print("the owner of the post is" + ownerId);
-              return StreamBuilder<MyUserModel>(
-                stream: StreamService.instance.getUserData(_auth.user.uid),
-                builder: (context, snapshot) {
-                  var userData = snapshot.data;
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ChangeNotifierProvider<AuthProvider>.value(
+        value: AuthProvider.instance,
+        child: Builder(
+          builder: (BuildContext context) {
+            _auth = Provider.of<AuthProvider>(context);
+            bool isPostOwner = _auth.user.uid == ownerId;
+            isLiked = (likes[_auth.user.uid] == true);
+            print("the owner of the post is" + ownerId);
+            return StreamBuilder<MyUserModel>(
+              stream: StreamService.instance.getUserData(_auth.user.uid),
+              builder: (context, snapshot) {
+                var _userData = snapshot.data;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 1.5, horizontal: 0.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                ownerName,
-                                style: Theme.of(context).textTheme.headline2,
-                                textAlign: TextAlign.start,
-                              ),
-                              Text(
-                                  /*" - " + */
-                                  timeago.format(
-                                    timestamp.toDate(),
-                                  ),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3
-                                      .copyWith(fontSize: 10)),
-                            ],
-                          ),
-                          isPostOwner == true
-                              ? IconButton(
-                                  onPressed: () async {
-                                    FutureService.instance
-                                        .deleteInteractionInDB(
-                                            bfId, interactionId);
-                                    await showAlertDialog(context,
-                                        title: 'Delete',
-                                        content:
-                                            'Are you sure that you want delete your interaction',
-                                        cancelActionText: 'Cancel',
-                                        getRequiredLinkbool: false,
-                                        defaultActionText: 'Delete',
-                                        onPressed: () async {
-                                      await Firestore.instance
-                                          .collection("Bonfire")
-                                          .document(bfId)
-                                          .updateData({
-                                        "audience": FieldValue.increment(-1)
-                                      });
-                                      Navigator.pop(context);
-                                      /*Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) => HomePage()),
-                                          (Route<dynamic> route) => false);*/
-                                    });
-                                  },
-                                  icon: Icon(
-                                    FontAwesomeIcons.ellipsisH,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                  iconSize: 20.0,
-                                )
-                              : Text("")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Text(interactionTitle,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
-                                        fontSize: 15.5,
-                                        fontWeight: FontWeight.normal)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.0),
-                          border: Border.all(
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Row(
-                            //mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: AppUserProfile(
-                                    icon: ownerName == "Mr Anonymous"
-                                        ? MyFlutterApp.user_secret
-                                        : Icons.person,
-                                    hasImage: ownerName == "Mr Anonymous"
-                                        ? false
-                                        : true,
-                                    imageFile: ownerImage,
-                                    onPressed: () => showOtherProfile(context,
-                                        profileId: ownerId),
-                                    iconSize: 26.0,
-                                    color: Colors.grey.shade400,
-                                    size: 18.0),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                          ListTile(
+                            leading: AppUserProfile(
+                                icon: ownerName == "Mr Anonymous"
+                                    ? MyFlutterApp.user_secret
+                                    : Icons.person,
+                                hasImage: ownerName == "Mr Anonymous"
+                                    ? false
+                                    : true,
+                                imageFile: _userData.profileImage,
+                                onPressed: ownerId != _auth.user.uid
+                                    ? () => showOtherProfile(context,
+                                    profileId: ownerId)
+                                    : ownerId == _auth.user.uid &&
+                                    ownerName != "Mr Anonymous"
+                                    ? () => showProfile(context)
+                                    : () => print("Tapping anonymous"),
+                                iconSize: 32.0,
+                                color: ownerName[0] == "P"
+                                    ? Colors.orangeAccent
+                                    : ownerName == "Mr Anonymous"
+                                    ? Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.82)
+                                    : Colors.blueAccent,
+                                size: 18.0),
+                            title: IntrinsicHeight(
+                              child: Row(
                                 children: [
-                                  isPlaying == false
-                                      ? InkWell(
-                                          onTap: () async {
-                                            setState(() {
-                                              isPlaying = true;
-                                            });
-                                            if (audioPlayer.play(file) ==
-                                                audioPlayer.play(file)) {
-                                              audioPlayer.play(file);
-                                              audioPlayer.onDurationChanged
-                                                  .listen((duration) {
-                                                setState(() {
-                                                  _totalTime =
-                                                      duration.inMicroseconds;
-                                                });
-                                              });
-                                              audioPlayer.onAudioPositionChanged
-                                                  .listen((duration) {
-                                                setState(() {
-                                                  _currentTime =
-                                                      duration.inMicroseconds;
-                                                  _percent =
-                                                      _currentTime.toDouble() /
-                                                          _totalTime.toDouble();
-                                                });
-                                              });
-                                              audioPlayer.onPlayerCompletion
-                                                  .listen((duration) {
-                                                setState(() {
-                                                  isPlaying = false;
-                                                  _percent = 0;
-                                                });
-                                              });
-                                            } else {
-                                              audioPlayer.stop();
-                                              audioPlayer.play(file);
-                                              audioPlayer.onDurationChanged
-                                                  .listen((duration) {
-                                                setState(() {
-                                                  _totalTime =
-                                                      duration.inMicroseconds;
-                                                });
-                                              });
-                                              audioPlayer.onAudioPositionChanged
-                                                  .listen((duration) {
-                                                setState(() {
-                                                  _currentTime =
-                                                      duration.inMicroseconds;
-                                                  _percent =
-                                                      _currentTime.toDouble() /
-                                                          _totalTime.toDouble();
-                                                });
-                                              });
-                                              audioPlayer.onPlayerCompletion
-                                                  .listen((duration) {
-                                                setState(() {
-                                                  isPlaying = false;
-                                                  _percent = 0;
-                                                });
-                                              });
-                                            }
-                                          },
-                                          child: Material(
-                                            elevation: 4.0,
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            child: Container(
-                                              height: 30.0,
-                                              width: 30.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.shade800,
-                                                borderRadius:
-                                                    BorderRadius.circular(20.0),
-                                              ),
-                                              child: Icon(
-                                                Icons.play_arrow,
-                                                color: Colors.white70,
-                                                //Theme.of(context).primaryColor,
-                                                size: 20.0,
-                                              ),
+                                  Transform.translate(
+                                    offset: const Offset(-7.0, 0.0),
+                                    child: Text(
+                                        ownerName == "Mr Anonymous"
+                                            ? "Mr Anonymous"
+                                            : _userData.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2),
+                                  ),
+                                  Text("\u2022", style: TextStyle(color: Colors.grey),),//VerticalDivider(color: Colors.grey.shade600, thickness: 1.5, indent: 7, endIndent: 7,),
+                                  SizedBox(width: 5.0,),
+                                  RichText(
+                                    text: new TextSpan(
+                                      children: <TextSpan>[
+                                        //new TextSpan(text: user.email, style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).accentColor)),
+                                        new TextSpan(
+                                            text: /*" - " + */ timeago.format(
+                                              timestamp.toDate(),
+                                            ).replaceAll("a day ago", "1 d").replaceAll("days ago", "d").replaceAll("minutes ago", "min").replaceAll("hours ago", "h"),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            subtitle: Transform.translate(
+                                offset: const Offset(-7.0, 0.0),child: Text(interactionTitle, style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 13.5))),
+                            /*subtitle: Transform.translate(
+                                          offset: const Offset(-5.0, -4.5),
+                                          child: RichText(
+                                            text: new TextSpan(
+                                              children: <TextSpan>[
+                                                //new TextSpan(text: user.email, style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).accentColor)),
+                                                new TextSpan(
+                                                    text: /*" - " + */ timeago.format(
+                                                      timestamp.toDate(),
+                                                    ),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3),
+                                              ],
                                             ),
                                           ),
-                                        )
-                                      : InkWell(
-                                          onTap: () async {
-                                            setState(() {
-                                              audioPlayer.stop();
-                                              isPlaying = false;
+                                        ),*/
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Transform.translate(
+                            offset: const Offset(-7.0, 0.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    children: [
+                                      isPlaying == false
+                                          ? InkWell(
+                                        onTap: () async {
+                                          setState(() {
+                                            isPlaying = true;
+                                          });
+                                          if (audioPlayer.play(file) ==
+                                              audioPlayer.play(file)) {
+                                            audioPlayer.play(file);
+                                            audioPlayer.onDurationChanged
+                                                .listen((duration) {
+                                              setState(() {
+                                                _totalTime = duration
+                                                    .inMicroseconds;
+                                              });
                                             });
-                                            audioPlayer.pause();
-                                          },
-                                          splashColor:
-                                              Theme.of(context).accentColor,
+                                            audioPlayer
+                                                .onAudioPositionChanged
+                                                .listen((duration) {
+                                              setState(() {
+                                                _currentTime = duration
+                                                    .inMicroseconds;
+                                                _percent = _currentTime
+                                                    .toDouble() /
+                                                    _totalTime.toDouble();
+                                              });
+                                            });
+                                            audioPlayer.onPlayerCompletion
+                                                .listen((duration) {
+                                              setState(() {
+                                                isPlaying = false;
+                                                _percent = 0;
+                                              });
+                                            });
+                                          } else {
+                                            audioPlayer.stop();
+                                            audioPlayer.play(file);
+                                            audioPlayer.onDurationChanged
+                                                .listen((duration) {
+                                              setState(() {
+                                                _totalTime = duration
+                                                    .inMicroseconds;
+                                              });
+                                            });
+                                            audioPlayer
+                                                .onAudioPositionChanged
+                                                .listen((duration) {
+                                              setState(() {
+                                                _currentTime = duration
+                                                    .inMicroseconds;
+                                                _percent = _currentTime
+                                                    .toDouble() /
+                                                    _totalTime.toDouble();
+                                              });
+                                            });
+                                            audioPlayer.onPlayerCompletion
+                                                .listen((duration) {
+                                              setState(() {
+                                                isPlaying = false;
+                                                _percent = 0;
+                                              });
+                                            });
+                                          }
+                                        },
+                                        child: Material(
+                                          elevation: 4.0,
+                                          borderRadius:
+                                          BorderRadius.circular(20.0),
                                           child: Container(
                                             height: 30.0,
                                             width: 30.0,
                                             decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .indicatorColor,
+                                              color: Colors.grey.shade800,
                                               borderRadius:
-                                                  BorderRadius.circular(20.0),
+                                              BorderRadius.circular(
+                                                  20.0),
                                             ),
                                             child: Icon(
-                                              Icons.pause,
+                                              Icons.play_arrow,
                                               color: Colors.white70,
+                                              //Theme.of(context).primaryColor,
                                               size: 20.0,
                                             ),
                                           ),
                                         ),
-                                  SizedBox(
-                                    width: 15.0,
-                                  ),
-                                  isPlaying == false
-                                      ? Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.47,
-                                          height: 3,
+                                      )
+                                          : InkWell(
+                                        onTap: () async {
+                                          setState(() {
+                                            audioPlayer.stop();
+                                            isPlaying = false;
+                                          });
+                                          audioPlayer.pause();
+                                        },
+                                        splashColor:
+                                        Theme.of(context).accentColor,
+                                        child: Container(
+                                          height: 30.0,
+                                          width: 30.0,
                                           decoration: BoxDecoration(
-                                            color: Colors.grey.shade300,
+                                            color: Theme.of(context)
+                                                .indicatorColor,
                                             borderRadius:
-                                                BorderRadius.circular(5),
+                                            BorderRadius.circular(
+                                                20.0),
                                           ),
-                                        )
-                                      : Container(
+                                          child: Icon(
+                                            Icons.pause,
+                                            color: Colors.white70,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15.0,
+                                      ),
+                                      isPlaying == false
+                                          ? Container(
+                                        width: MediaQuery.of(context)
+                                            .size
+                                            .width *
+                                            0.35,
+                                        height: 3,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade300,
+                                          borderRadius:
+                                          BorderRadius.circular(5),
+                                        ),
+                                      )
+                                          : Container(
                                           width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.47,
+                                              .size
+                                              .width *
+                                              0.35,
                                           child: MusicVisualizer(
-                                            numBars: 24,
+                                            numBars: 20,
                                             barHeight: 12,
                                           ) /*LinearProgressIndicator(
-                                                      minHeight: 5,
-                                                      backgroundColor: Colors.grey,
-                                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                                          Theme.of(context).accentColor),
-                                                      value: _percent,
-                                                    ),*/
-                                          ),
-                                  SizedBox(
-                                    width: 12.5,
+                                                                    minHeight: 5,
+                                                                    backgroundColor: Colors.grey,
+                                                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                                                        Theme.of(context).accentColor),
+                                                                    value: _percent,
+                                                                  ),*/
+                                      ),
+                                      SizedBox(
+                                        width: 12.5,
+                                      ),
+                                      Text(
+                                        duration.toString(),
+                                        style: TextStyle(
+                                            fontSize: 15.0,
+                                            color: Colors.grey.shade300,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    ],
                                   ),
-                                  Text(
-                                    duration.toString(),
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: Colors.grey.shade300,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            iconSize: 28.0,
-                            icon: Icon(Icons.reply, color: Colors.white70),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            textBaseline: TextBaseline.ideographic,
-                            children: [
-                              IconButton(
-                                onPressed: () async {
-                                  bool _isLiked = likes[userData.uid] == true;
-                                  if (_isLiked) {
-                                    Firestore.instance
-                                        .collection("Interactions")
-                                        .document(bfId)
-                                        .collection('usersInteraction')
-                                        .document(interactionId)
-                                        .updateData(
-                                            {'likes.${userData.uid}': false});
-                                    //removeLikeFromActivityFeed();
-                                    setState(() {
-                                      isLiked = false;
-                                      likeCount -= 1;
-                                      likes[userData.uid] = false;
-                                    });
-                                    //Delete feed while unliking
-                                    //Delete feed only when OTHER user dislikes our interaction
-                                    bool isNotPostOwner =
-                                        userData.uid != ownerId;
-
-                                    if (isNotPostOwner) {
-                                      await FutureService.instance
-                                          .deleteFeed(ownerId, bfId);
-                                    }
-                                    print(
-                                        "interaction disliked by user ${userData.uid}");
-                                  } else if (!_isLiked) {
-                                    Firestore.instance
-                                        .collection("Interactions")
-                                        .document(bfId)
-                                        .collection('usersInteraction')
-                                        .document(interactionId)
-                                        .updateData(
-                                            {'likes.${userData.uid}': true});
-                                    setState(() {
-                                      isLiked = true;
-                                      likeCount += 1;
-                                      likes[userData.uid] = true;
-                                    });
-                                    //Create Feed while liking
-                                    //Add notification only if OTHER user is liking our interaction
-                                    bool isNotPostOwner =
-                                        userData.uid != ownerId;
-                                    if (isNotPostOwner == true) {
-                                      print("Paul ${userData.uid}");
-
-                                      await FutureService.instance.createFeed(
-                                          ownerId,
-                                          userData.uid,
-                                          userData.name,
-                                          userData.profileImage,
-                                          bfId,
-                                          bfTitle,
-                                          interactionTitle,
-                                          interactionId);
-
-                                      await FutureService.instance
-                                          .feedCount(ownerId);
-                                      await sendNotification([
-                                        userData.tokenId
-                                      ], "${userData.name} liked your interaction",
-                                          "$interactionTitle");
-                                    }
-                                  }
-                                  print(
-                                      "interaction liked by user ${userData.uid}");
-                                },
-                                iconSize: 27.0,
-                                icon: Icon(
-                                  Icons.local_fire_department_outlined,
-                                  color: isLiked
-                                      ? Theme.of(context).accentColor
-                                      : Colors.white70,
                                 ),
-                              ),
-                              Text("${likeCount.toInt()}",
-                                  style: Theme.of(context).textTheme.headline5),
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    textBaseline: TextBaseline.ideographic,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          bool _isLiked =
+                                              likes[_userData.uid] == true;
+                                          if (_isLiked) {
+                                            Firestore.instance
+                                                .collection("Interactions")
+                                                .document(bfId)
+                                                .collection('usersInteraction')
+                                                .document(interactionId)
+                                                .updateData({
+                                              'likes.${_userData.uid}': false
+                                            });
+                                            //removeLikeFromActivityFeed();
+                                            setState(() {
+                                              isLiked = false;
+                                              likeCount -= 1;
+                                              likes[_userData.uid] = false;
+                                            });
+                                            //Delete feed while unliking
+                                            //Delete feed only when OTHER user dislikes our interaction
+                                            bool isNotPostOwner =
+                                                _userData.uid != ownerId;
+
+                                            if (isNotPostOwner) {
+                                              await FutureService.instance
+                                                  .deleteFeed(ownerId, bfId);
+                                            }
+                                            print(
+                                                "interaction disliked by user ${_userData.uid}");
+                                          } else if (!_isLiked) {
+                                            Firestore.instance
+                                                .collection("Interactions")
+                                                .document(bfId)
+                                                .collection('usersInteraction')
+                                                .document(interactionId)
+                                                .updateData({
+                                              'likes.${_userData.uid}': true
+                                            });
+                                            setState(() {
+                                              isLiked = true;
+                                              likeCount += 1;
+                                              likes[_userData.uid] = true;
+                                            });
+                                            //Create Feed while liking
+                                            //Add notification only if OTHER user is liking our interaction
+                                            bool isNotPostOwner =
+                                                _userData.uid != ownerId;
+                                            if (isNotPostOwner == true) {
+                                              print("Paul ${_userData.uid}");
+
+                                              await FutureService.instance
+                                                  .createFeed(
+                                                  ownerId,
+                                                  _userData.uid,
+                                                  _userData.name,
+                                                  _userData.profileImage,
+                                                  bfId,
+                                                  bfTitle,
+                                                  interactionTitle,
+                                                  interactionId);
+
+                                              await FutureService.instance
+                                                  .feedCount(ownerId);
+                                              await sendNotification([
+                                                _userData.tokenId
+                                              ], "${_userData.name} liked your interaction",
+                                                  "$interactionTitle");
+                                            }
+                                          }
+                                          print(
+                                              "interaction liked by user ${_userData.uid}");
+                                        },
+                                        iconSize: 25.0,
+                                        icon: Icon(
+                                          Icons.local_fire_department_outlined,
+                                          color: isLiked
+                                              ? Theme.of(context).accentColor
+                                              : Colors.white70,
+                                        ),
+                                      ),
+                                      Transform.translate(
+                                        offset: const Offset(-5.0, 3.0),
+                                        child: Text(
+                                          "${likeCount.toInt()}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                              color: Colors.grey.shade400,
+                                              fontSize: 15.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      Divider(
-                        color: Colors.grey.shade800,
-                      )
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

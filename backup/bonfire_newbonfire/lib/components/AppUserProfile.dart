@@ -20,11 +20,14 @@ Widget AppUserProfile(
         //color: Colors.grey.shade400, //Color(0xff1a1a1a).withOpacity(0.7),
       ),
       child: hasImage == false
-          ? Icon(
+          ? Transform.translate(
+        offset: const Offset(5.0, 0.0),
+            child: Icon(
         icon,
         size: iconSize,
         color: color,
-      )
+      ),
+          )
           : CircleAvatar(
         backgroundColor: Colors.grey.shade700,
        radius: size,

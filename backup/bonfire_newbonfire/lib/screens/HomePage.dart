@@ -179,54 +179,57 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                drawer: Drawer(
-                  child: ListView(
-                    // Important: Remove any padding from the ListView.
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        child: DrawerHeader(
-                          child: ListTile(
-                            leading: Image.asset("assets/images/logo.png",
-                                fit: BoxFit.cover, height: 40.0, width: 40.0),
-                            title: _appTitle(),
+                drawer: Transform.translate(
+                  offset: const Offset(-7.0, 0.0),
+                  child: Drawer(
+                    child: ListView(
+                      // Important: Remove any padding from the ListView.
+                      padding: EdgeInsets.zero,
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.12,
+                          child: DrawerHeader(
+                            child: ListTile(
+                              leading: Image.asset("assets/images/logo.png",
+                                  fit: BoxFit.cover, height: 40.0, width: 40.0),
+                              title: _appTitle(),
+                            ),
                           ),
                         ),
-                      ),
-                      Divider(color: Colors.white),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      _drawerListTile(
-                        icon: Icons.feedback_rounded,
-                        text: "Send feedback",
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SendFeedback(
-                                id: _userData.uid,
-                                name: _userData.name,
-                                email: _userData.email,
+                        Divider(color: Colors.white),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        _drawerListTile(
+                          icon: Icons.feedback_rounded,
+                          text: "Send feedback",
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SendFeedback(
+                                  id: _userData.uid,
+                                  name: _userData.name,
+                                  email: _userData.email,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                      _drawerListTile(
-                        icon: Icons.feedback_rounded,
-                        text: "Onboarding",
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OnboardingPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                            );
+                          },
+                        ),
+                        _drawerListTile(
+                          icon: Icons.feedback_rounded,
+                          text: "Onboarding",
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OnboardingPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 body: NotificationListener<OverscrollIndicatorNotification>(
@@ -246,25 +249,7 @@ class _HomePageState extends State<HomePage> {
                               if (!_snapshot.hasData) {
                                 return Column(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets.only(left: 13.0),
-                                            child: Text(
-                                              "What's happening",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4
-                                                  .copyWith(fontSize: 18.0),
-                                              textAlign: TextAlign.start,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+
                                     SizedBox(
                                       height: 10.0,
                                     ),
@@ -287,25 +272,7 @@ class _HomePageState extends State<HomePage> {
                               print(_data);
                               return Column(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 13.0),
-                                          child: Text(
-                                            "What's happening",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4
-                                                .copyWith(fontSize: 18.0),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+
                                   Column(
                                     children: _data.toList(),
                                   ),

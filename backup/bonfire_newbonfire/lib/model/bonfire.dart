@@ -280,7 +280,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                 }
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                      vertical: 4.0, horizontal: 0.0),
+                      vertical: 1.5, horizontal: 0.0),
                   child: GestureDetector(
                     onTap: () => Navigator.push(
                       context,
@@ -306,7 +306,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                           //borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(5.0),
+                          padding: const EdgeInsets.all(3.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +327,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                 ownerName != "Mr Anonymous"
                                             ? () => showProfile(context)
                                             : () => print("Tapping anonymous"),
-                                    iconSize: 32.0,
+                                    iconSize: 29.0,
                                     color: ownerName[0] == "P"
                                         ? Colors.orangeAccent
                                         : ownerName == "Mr Anonymous"
@@ -349,7 +349,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                                 .textTheme
                                                 .headline2),
                                       ),
-                                      VerticalDivider(color: Colors.grey.shade600, thickness: 1.5, indent: 7, endIndent: 7,),
+                                      Text("\u2022", style: TextStyle(color: Colors.grey),),//VerticalDivider(color: Colors.grey.shade600, thickness: 1.5, indent: 7, endIndent: 7,),
                                       SizedBox(width: 5.0,),
                                       RichText(
                                         text: new TextSpan(
@@ -368,6 +368,8 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                     ],
                                   ),
                                 ),
+                                subtitle: Transform.translate(
+                                    offset: const Offset(-7.0, 0.0),child: Text(title, style: Theme.of(context).textTheme.headline1)),
                                 /*subtitle: Transform.translate(
                                       offset: const Offset(-5.0, -4.5),
                                       child: RichText(
@@ -386,107 +388,102 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
                                       ),
                                     ),*/
                               ),
-                              buildTitle(),
-                              SizedBox(
-                                height: 15.0,
-                              ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                    const EdgeInsets.symmetric(vertical: 10.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceEvenly,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
+                                    AudienceWidget(context, audience),
                                     Row(
                                       children: [
                                         _isPlaying == false
                                             ? InkWell(
-                                                onTap: () async {
-                                                  setState(() {
-                                                    _isPlaying = true;
-                                                  });
-                                                  audioPlayer.play(file);
-                                                  audioPlayer.onDurationChanged
-                                                      .listen((duration) {
-                                                    setState(() {
-                                                      _totalTime = duration
-                                                          .inMicroseconds;
-                                                    });
-                                                  });
-                                                  audioPlayer
-                                                      .onAudioPositionChanged
-                                                      .listen((duration) {
-                                                    setState(() {
-                                                      _currentTime = duration
-                                                          .inMicroseconds;
-                                                      _percent = _currentTime
-                                                              .toDouble() /
-                                                          _totalTime.toDouble();
-                                                    });
-                                                  });
-                                                  audioPlayer.onPlayerCompletion
-                                                      .listen((duration) {
-                                                    setState(() {
-                                                      _isPlaying = false;
-                                                      _percent = 0;
-                                                    });
-                                                  });
-                                                },
-                                                child: Container(
-                                                  height: 35.0,
-                                                  width: 35.0,
-                                                  decoration: BoxDecoration(
-                                                      color:
-                                                          Colors.grey.shade400,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0),
-                                                      border: Border.all(
-                                                          width: 2,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .cardColor)),
-                                                  child: Icon(
-                                                    Icons.play_arrow,
-                                                    color: Theme.of(context)
-                                                        .backgroundColor,
-                                                    size: 20.0,
-                                                  ),
-                                                ),
-                                              )
+                                          onTap: () async {
+                                            setState(() {
+                                              _isPlaying = true;
+                                            });
+                                            audioPlayer.play(file);
+                                            audioPlayer.onDurationChanged
+                                                .listen((duration) {
+                                              setState(() {
+                                                _totalTime = duration
+                                                    .inMicroseconds;
+                                              });
+                                            });
+                                            audioPlayer
+                                                .onAudioPositionChanged
+                                                .listen((duration) {
+                                              setState(() {
+                                                _currentTime = duration
+                                                    .inMicroseconds;
+                                                _percent = _currentTime
+                                                    .toDouble() /
+                                                    _totalTime.toDouble();
+                                              });
+                                            });
+                                            audioPlayer.onPlayerCompletion
+                                                .listen((duration) {
+                                              setState(() {
+                                                _isPlaying = false;
+                                                _percent = 0;
+                                              });
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 35.0,
+                                            width: 35.0,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                Theme.of(context).indicatorColor,
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20.0),
+                                                /*border: Border.all(
+                                                    width: 2,
+                                                    color:
+                                                    Theme.of(context)
+                                                        .cardColor)*/),
+                                            child: Icon(
+                                              Icons.play_arrow,
+                                              color: Colors.grey.shade400,
+                                              size: 20.0,
+                                            ),
+                                          ),
+                                        )
                                             : InkWell(
-                                                onTap: () async {
-                                                  setState(() {
-                                                    _isPlaying = false;
-                                                  });
-                                                  audioPlayer.pause();
-                                                },
-                                                splashColor: Theme.of(context)
-                                                    .accentColor,
-                                                child: Container(
-                                                  height: 35.0,
-                                                  width: 35.0,
-                                                  decoration: BoxDecoration(
-                                                      color:
-                                                      Theme.of(context).cardColor,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0),
-                                                      border: Border.all(
-                                                          width: 2,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .cardColor)),
-                                                  child: MusicVisualizer(
-                                                    numBars: 4,
-                                                    barHeight: 15.0,
-                                                  ),
-                                                ),
-                                              ),
+                                          onTap: () async {
+                                            setState(() {
+                                              _isPlaying = false;
+                                            });
+                                            audioPlayer.pause();
+                                          },
+                                          splashColor: Theme.of(context)
+                                              .accentColor,
+                                          child: Container(
+                                            height: 35.0,
+                                            width: 35.0,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                Theme.of(context).cardColor,
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20.0),
+                                                border: Border.all(
+                                                    width: 2,
+                                                    color:
+                                                    Theme.of(context)
+                                                        .cardColor)),
+                                            child: MusicVisualizer(
+                                              numBars: 4,
+                                              barHeight: 15.0,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                    AudienceWidget(context, audience),
                                     CircleAddButton(
                                       context,
                                       onPressed: () {
@@ -607,29 +604,9 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
   }
 
   buildTitle() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                child: Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: Text(title,
-                          style: Theme.of(context).textTheme.headline1),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return Flexible(
+      child: Text(title,
+          style: Theme.of(context).textTheme.headline1),
     );
   }
 }

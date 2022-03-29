@@ -18,7 +18,7 @@ Future<bool> showAlertDialog(BuildContext context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        backgroundColor: Theme.of(context).cardColor,
+        backgroundColor: Color(0xff2A2827),
         title: Text(title,
             style: TextStyle(
                 color: Color(0xffe2e2e2),

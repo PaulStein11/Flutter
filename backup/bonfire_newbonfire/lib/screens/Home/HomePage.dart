@@ -265,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                                       position: BadgePosition(top: -1, end: -1),
                                       badgeContent: Text(""),
                                       child: Icon(
-                                        MyFlutterApp.bell_1,
+                                        MyFlutterApp.inbox,
                                         color: Colors.grey.shade400,
                                         size: 27.0,
                                       ),
@@ -414,7 +414,7 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 13.0),
+                                                left: 8.0),
                                             child: Text(
                                               "What's happening",
                                               style: Theme.of(context)
@@ -455,7 +455,7 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(left: 13.0),
+                                              const EdgeInsets.only(left: 8.0, bottom: 10),
                                           child: Text(
                                             "What's happening",
                                             style: Theme.of(context)

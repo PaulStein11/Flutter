@@ -129,7 +129,7 @@ class FutureService {
           "bfId": _bfId,
           "bfTitle": _bfTitle,
           "interactionId": _interactionId,
-          "interactionTitle": '#$_interactionTitle',
+          "interactionTitle": _interactionTitle,
           "file": _file,
           "timestamp": Timestamp.now(),
           "duration": _duration,

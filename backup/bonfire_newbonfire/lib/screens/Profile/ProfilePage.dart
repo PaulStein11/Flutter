@@ -59,13 +59,13 @@ class _ProfilePageState extends State<ProfilePage> {
             SliverAppBar(
               backgroundColor: Colors.transparent,
               expandedHeight: 40.0,
-              leading: IconButton(
+              /*leading: IconButton(
                 onPressed: () => Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => HomePage()),
                         (route) => false),
                 icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
-              ),
+              ),*/
               automaticallyImplyLeading: false,
               actions: [
                 _settingsIcon(onPressed: () {

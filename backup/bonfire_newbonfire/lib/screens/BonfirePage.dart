@@ -9,15 +9,12 @@ import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/components/RecordingTile.dart';
 import 'package:bonfire_newbonfire/model/interaction.dart';
-import 'package:bonfire_newbonfire/model/bonfire.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/service/dynamic_link_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,9 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'Home/HomePage.dart';
 import 'MusicVisualizer.dart';
-import 'Profile/Others_profile.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 AuthProvider _auth;
 
@@ -156,7 +152,6 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                   return OurLoadingWidget(context);
                 }
                 return Scaffold(
-                  backgroundColor: Color(0xff2A2827),
                   body: CustomScrollView(
                     slivers: [
                       SliverList(
@@ -169,53 +164,50 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                   color: Theme.of(context).backgroundColor,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0, vertical: 10.0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 5.0),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          Row(
-                                            children: [
-                                              AppUserProfile(
-                                                  icon: ownerName ==
-                                                          "Mr Anonymous"
-                                                      ? MyFlutterApp.user_secret
-                                                      : Icons.person,
-                                                  hasImage: ownerName ==
-                                                          "Mr Anonymous"
-                                                      ? false
-                                                      : true,
-                                                  imageFile: profileImage,
-                                                  onPressed: () {
-                                                    /*showProfile(context,
+                                        horizontal: 15.0, vertical: 20.0),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10.0,
+                                        ),
+                                        Row(
+                                          children: [
+                                            AppUserProfile(
+                                                icon: ownerName ==
+                                                    "Mr Anonymous"
+                                                    ? MyFlutterApp.user_secret
+                                                    : Icons.person,
+                                                hasImage: ownerName ==
+                                                    "Mr Anonymous"
+                                                    ? false
+                                                    : true,
+                                                imageFile: profileImage,
+                                                onPressed: () {
+                                                  /*showProfile(context,
                                                         profileId: ownerId);*/
-                                                  },
-                                                  iconSize: 29.0,
-                                                  color: ownerName[0] == "P"
-                                                      ? Colors.orangeAccent
-                                                      : ownerName ==
-                                                              "Mr Anonymous"
-                                                          ? Theme.of(context)
-                                                              .primaryColor
-                                                          : Colors.blueAccent,
-                                                  size: 18.0),
-                                              SizedBox(
-                                                width: 12.0,
-                                              ),
-                                              Text(ownerName,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline2)
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 25.0,
-                                          ),
-                                          Row(
+                                                },
+                                                iconSize: 29.0,
+                                                color: ownerName[0] == "P"
+                                                    ? Colors.orangeAccent
+                                                    : ownerName ==
+                                                    "Mr Anonymous"
+                                                    ? Theme.of(context)
+                                                    .primaryColor
+                                                    : Colors.blueAccent,
+                                                size: 18.0),
+                                            SizedBox(
+                                              width: 12.0,
+                                            ),
+                                            Text(ownerName,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline2),
+                                            VerticalDivider(color: Colors.grey.shade600, thickness: 1.5, indent: 7, endIndent: 7,),
+                                            SizedBox(width: 5.0,),],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                          child: Row(
                                             children: [
                                               Flexible(
                                                 child: Text(
@@ -228,153 +220,152 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(
-                                            height: 25.0,
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                              border: Border.all(
-                                                color: Colors.grey.shade700,
-                                              ),
+                                        ),
+
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(30.0),
+                                            border: Border.all(
+                                              color: Colors.grey.shade700,
                                             ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  isPlaying == false
-                                                      ? InkWell(
-                                                          onTap: () async {
-                                                            setState(() {
-                                                              isPlaying = true;
-                                                            });
-                                                            audioPlayer
-                                                                .play(file);
-                                                            audioPlayer
-                                                                .onDurationChanged
-                                                                .listen(
-                                                                    (duration) {
-                                                              setState(() {
-                                                                _totalTime =
-                                                                    duration
-                                                                        .inMicroseconds;
-                                                              });
-                                                            });
-                                                            audioPlayer
-                                                                .onAudioPositionChanged
-                                                                .listen(
-                                                                    (duration) {
-                                                              setState(() {
-                                                                _currentTime =
-                                                                    duration
-                                                                        .inMicroseconds;
-                                                                _percent = _currentTime
-                                                                        .toDouble() /
-                                                                    _totalTime
-                                                                        .toDouble();
-                                                              });
-                                                            });
-                                                            audioPlayer
-                                                                .onPlayerCompletion
-                                                                .listen(
-                                                                    (duration) {
-                                                              setState(() {
-                                                                isPlaying =
-                                                                    false;
-                                                                _percent = 0;
-                                                              });
-                                                            });
-                                                          },
-                                                          child: Material(
-                                                            elevation: 4.0,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20.0),
-                                                            child: Container(
-                                                              height: 30.0,
-                                                              width: 30.0,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade800,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20.0),
-                                                              ),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .play_arrow,
-                                                                color: Colors
-                                                                    .white70,
-                                                                //Theme.of(context).primaryColor,
-                                                                size: 20.0,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : InkWell(
-                                                          onTap: () async {
-                                                            setState(() {
-                                                              isPlaying = false;
-                                                            });
-                                                            audioPlayer.pause();
-                                                          },
-                                                          splashColor:
-                                                              Theme.of(context)
-                                                                  .accentColor,
-                                                          child: Container(
-                                                            height: 30.0,
-                                                            width: 30.0,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade800,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20.0),
-                                                            ),
-                                                            child: Icon(
-                                                              Icons.pause,
-                                                              color: Colors
-                                                                  .white70,
-                                                              size: 20.0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                 isPlaying == false
-                                                      ? Container(
-                                                    width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                        0.6,
-                                                    height: 3,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey.shade300,
-                                                      borderRadius:
-                                                      BorderRadius.circular(5),
-                                                    ),
-                                                  ): Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.6,
-                                                    child:  MusicVisualizer(
-                                                      numBars: 24,
-                                                      barHeight: 12,
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                            const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceEvenly,
+                                              children: [
+                                                isPlaying == false
+                                                    ? InkWell(
+                                                  onTap: () async {
+                                                    setState(() {
+                                                      isPlaying = true;
+                                                    });
+                                                    audioPlayer
+                                                        .play(file);
+                                                    audioPlayer
+                                                        .onDurationChanged
+                                                        .listen(
+                                                            (duration) {
+                                                          setState(() {
+                                                            _totalTime =
+                                                                duration
+                                                                    .inMicroseconds;
+                                                          });
+                                                        });
+                                                    audioPlayer
+                                                        .onAudioPositionChanged
+                                                        .listen(
+                                                            (duration) {
+                                                          setState(() {
+                                                            _currentTime =
+                                                                duration
+                                                                    .inMicroseconds;
+                                                            _percent = _currentTime
+                                                                .toDouble() /
+                                                                _totalTime
+                                                                    .toDouble();
+                                                          });
+                                                        });
+                                                    audioPlayer
+                                                        .onPlayerCompletion
+                                                        .listen(
+                                                            (duration) {
+                                                          setState(() {
+                                                            isPlaying =
+                                                            false;
+                                                            _percent = 0;
+                                                          });
+                                                        });
+                                                  },
+                                                  child: Material(
+                                                    elevation: 4.0,
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(
+                                                        20.0),
+                                                    child: Container(
+                                                      height: 30.0,
+                                                      width: 30.0,
+                                                      decoration:
+                                                      BoxDecoration(
+                                                        color: Colors
+                                                            .grey
+                                                            .shade800,
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            20.0),
+                                                      ),
+                                                      child: Icon(
+                                                        Icons
+                                                            .play_arrow,
+                                                        color: Colors
+                                                            .white70,
+                                                        //Theme.of(context).primaryColor,
+                                                        size: 20.0,
+                                                      ),
                                                     ),
                                                   ),
+                                                )
+                                                    : InkWell(
+                                                  onTap: () async {
+                                                    setState(() {
+                                                      isPlaying = false;
+                                                    });
+                                                    audioPlayer.pause();
+                                                  },
+                                                  splashColor:
+                                                  Theme.of(context)
+                                                      .accentColor,
+                                                  child: Container(
+                                                    height: 30.0,
+                                                    width: 30.0,
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors.grey
+                                                          .shade800,
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          20.0),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.pause,
+                                                      color: Colors
+                                                          .white70,
+                                                      size: 20.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                isPlaying == false
+                                                    ? Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                      0.6,
+                                                  height: 3,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                    BorderRadius.circular(5),
+                                                  ),
+                                                ): Container(
+                                                  width:
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                      0.6,
+                                                  child:  MusicVisualizer(
+                                                    numBars: 24,
+                                                    barHeight: 12,
+                                                  ),
+                                                ),
 
-                                                  /*----------------------SLIDER INSTEAD OF DOTS
+                                                /*----------------------SLIDER INSTEAD OF DOTS
                                                   * /*SliderTheme(
                                                       data: SliderTheme.of(
                                                               context)
@@ -415,313 +406,223 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                                           }),
                                                     ),*/
                                                   * */
-                                                  isPlaying
-                                                      ? Container(
-                                                        child: ConstrainedBox(
-                                                          constraints: BoxConstraints(
-                                                            minWidth: 20,
-                                                            maxWidth: 30.0,
-                                                            minHeight: 0.0,
-                                                            maxHeight: 50.0,
-                                                          ),
-                                                          child: Text(
+                                                isPlaying
+                                                    ? Container(
+                                                  child: ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      minWidth: 20,
+                                                      maxWidth: 30.0,
+                                                      minHeight: 0.0,
+                                                      maxHeight: 50.0,
+                                                    ),
+                                                    child: Text(
 
-                                                              '${_position.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_position.inSeconds.remainder(60).toString().padLeft(2, '0')}',
-                                                              style: TextStyle(
-                                                                  fontSize: 13.0,
-                                                                  color: Colors.grey
-                                                                      .shade300,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            ),
-                                                        ),
-                                                      )
-                                                      : Text(
-                                                          duration.toString(),
-                                                          style: TextStyle(
-                                                              fontSize: 13.0,
-                                                              color: Colors.grey
-                                                                  .shade300,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                ],
-                                              ),
+                                                      '${_position.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_position.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                                                      style: TextStyle(
+                                                          fontSize: 13.0,
+                                                          color: Colors.grey
+                                                              .shade300,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w600),
+                                                    ),
+                                                  ),
+                                                )
+                                                    : Text(
+                                                  duration.toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 13.0,
+                                                      color: Colors.grey
+                                                          .shade300,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 25.0,
-                                          ),
-                                          Row(
+                                        ),
+                                        SizedBox(
+                                          height: 20.0,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                          child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                             textBaseline:
-                                                TextBaseline.ideographic,
+                                            TextBaseline.ideographic,
                                             children: [
                                               AudienceWidget(context, audience),
-                                              IconButton(
-                                                onPressed: () {
-                                                  showDialog<String>(
+
+                                              CircleAddButton(
+                                                  context,
+                                                  onPressed: () {
+                                                    showModalBottomSheet(
+                                                      barrierColor: Colors
+                                                          .grey.shade800
+                                                          .withOpacity(0.8),
                                                       context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return RecordTile(
-                                                          onUploadComplete:
-                                                              _onUploadComplete(),
-                                                          ownerId: ownerId,
-                                                          ownerName: ownerName,
-                                                          ownerImage:
-                                                              profileImage,
-                                                          bfId: bfId,
-                                                          bfTitle: bfTitle,
-                                                          timestamp:
-                                                              DateTime.now(),
-                                                        );
-                                                      });
-                                                },
-                                                icon: Icon(
-                                                  MyFlutterApp.chat_empty,
-                                                  color: Colors.white70,
-                                                  size: 28,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () async {
-                                                  await showAlertDialog(context,
-                                                      title: 'Share Bonfire!',
-                                                      content:
-                                                          'Get link to share with others',
-                                                      cancelActionText:
-                                                          'Cancel',
-                                                      defaultActionText:
-                                                          'Get link',
-                                                      getRequiredLink:
-                                                          _dynamicLinkService
-                                                              .createDynamicLink());
-                                                },
-                                                icon: Icon(
-                                                  Icons.share,
-                                                  color: Colors.white70,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () async {
-                                                  await showAlertDialog(
-                                                    context,
-                                                    title: 'Report content',
-                                                    content:
-                                                        'You want to report this Bonfire to alert the team about its content. Continue proceeding?',
-                                                    cancelActionText: 'Cancel',
-                                                    defaultActionText:
-                                                        'Yes report',
-                                                    onPressed: ()  {
-                                                      Firestore.instance
-                                                          .collection("Bonfire")
-                                                          .document(bfId)
-                                                          .updateData(
-                                                        {
-                                                          "report": FieldValue
-                                                              .increment(1)
-                                                        },
-                                                      );
-                                                      Navigator.pop(context);
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius: new BorderRadius.all(new Radius.circular(12)),
-                                                          ),
-                                                          content: Text(
-                                                            "Done! You have reported this bonfire",
-                                                            style: TextStyle(
-                                                                color: Theme.of(context).cardColor.withOpacity(0.85),
-                                                                fontFamily: "Poppins",
-                                                                fontWeight: FontWeight.w600,
-                                                                letterSpacing: 0.5),
-                                                          ),
-                                                          backgroundColor: Theme.of(context).primaryColor,
-                                                          duration: Duration(seconds: 2),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                icon: Icon(
-                                                  MyFlutterApp.attention,
-                                                  color: Colors.amber.shade700.withAlpha(175),
-                                                ),
-                                              ),
-                                              /*CircleAddButton(
-                                                context,
-                                                onPressed: () {
-                                                  showModalBottomSheet(
-                                                    barrierColor: Colors
-                                                        .grey.shade800
-                                                        .withOpacity(0.8),
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 10.0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: <Widget>[
-                                                            ListTile(
-                                                              leading: new Icon(
-                                                                MyFlutterApp
-                                                                    .chat_empty,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 28,
-                                                              ),
-                                                              title: new Text(
-                                                                  'Reply',
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline4),
-                                                              onTap: () {
-                                                                showDialog<
-                                                                        String>(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return RecordTile(
-                                                                        onUploadComplete:
-                                                                            _onUploadComplete(),
-                                                                        ownerId:
-                                                                            ownerId,
-                                                                        ownerName:
-                                                                            ownerName,
-                                                                        ownerImage:
-                                                                            profileImage,
-                                                                        bfId:
-                                                                            bfId,
-                                                                        bfTitle:
-                                                                            bfTitle,
-                                                                        timestamp:
-                                                                            DateTime.now(),
-                                                                      );
-                                                                    });
-                                                              },
-                                                            ),
-                                                            ListTile(
-                                                              leading: new Icon(
-                                                                Icons.share,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                              title: new Text(
-                                                                  'Share',
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline4),
-                                                              onTap: () async {
-                                                                await showAlertDialog(
-                                                                    context,
-                                                                    title:
-                                                                        'Share Bonfire!',
-                                                                    content:
-                                                                        'Get link to share with others',
-                                                                    cancelActionText:
-                                                                        'Cancel',
-                                                                    defaultActionText:
-                                                                        'Get link',
-                                                                    getRequiredLink:
-                                                                        _dynamicLinkService
-                                                                            .createDynamicLink());
-                                                              },
-                                                            ),
-                                                            ListTile(
-                                                              leading: new Icon(
-                                                                MyFlutterApp
-                                                                    .attention,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .accentColor,
-                                                              ),
-                                                              title: new Text(
-                                                                  'Report',
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline4),
-                                                              onTap: () async {
-                                                                await showAlertDialog(
-                                                                  context,
-                                                                  title:
-                                                                      'Report content',
-                                                                  content:
-                                                                      'You want to report this Bonfire to alert the team about its content. Continue proceeding?',
-                                                                  cancelActionText:
-                                                                      'Cancel',
-                                                                  defaultActionText:
-                                                                      'Report',
-                                                                  onPressed:
-                                                                      () {
-                                                                    Firestore
-                                                                        .instance
-                                                                        .collection(
-                                                                            "Bonfire")
-                                                                        .document(
-                                                                            bfId)
-                                                                        .updateData(
-                                                                      {
-                                                                        "report":
-                                                                            FieldValue.increment(1)
-                                                                      },
-                                                                    );
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(
-                                                                      SnackBar(
-                                                                        backgroundColor:
-                                                                            Theme.of(context).accentColor,
-                                                                        content:
-                                                                            Text('Reporting Bonfire'),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                );
-                                                              },
-                                                            ),
-                                                            /*ListTile(
+                                                      builder: (context) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 10.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize.min,
+                                                            children: <Widget>[
+                                                              ListTile(
                                                                 leading: new Icon(
-                                                                  Icons.cancel,
-                                                                  color: Colors.white,
+                                                                  MyFlutterApp
+                                                                      .chat_empty,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  size: 28,
                                                                 ),
-                                                                title: new Text('Cancel',
-                                                                    style: Theme.of(context)
+                                                                title: new Text(
+                                                                    'Reply',
+                                                                    style: Theme.of(
+                                                                            context)
                                                                         .textTheme
                                                                         .headline4),
                                                                 onTap: () {
-                                                                  Navigator.pop(context);
+                                                                  showDialog<
+                                                                          String>(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        return RecordTile(
+                                                                          onUploadComplete:
+                                                                              _onUploadComplete(),
+                                                                          ownerId:
+                                                                              ownerId,
+                                                                          ownerName:
+                                                                              ownerName,
+                                                                          ownerImage:
+                                                                              profileImage,
+                                                                          bfId:
+                                                                              bfId,
+                                                                          bfTitle:
+                                                                              bfTitle,
+                                                                          timestamp:
+                                                                              DateTime.now(),
+                                                                        );
+                                                                      });
                                                                 },
-                                                              ),*/
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),*/
+                                                              ),
+                                                              ListTile(
+                                                                leading: new Icon(
+                                                                  Icons.share,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                title: new Text(
+                                                                    'Share',
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline4),
+                                                                onTap: () async {
+                                                                  await showAlertDialog(
+                                                                      context,
+                                                                      title:
+                                                                          'Share Bonfire!',
+                                                                      content:
+                                                                          'Get link to share with others',
+                                                                      cancelActionText:
+                                                                          'Cancel',
+                                                                      defaultActionText:
+                                                                          'Get link',
+                                                                      getRequiredLink:
+                                                                          _dynamicLinkService
+                                                                              .createDynamicLink());
+                                                                },
+                                                              ),
+                                                              ListTile(
+                                                                leading: new Icon(
+                                                                  MyFlutterApp
+                                                                      .attention,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .accentColor,
+                                                                ),
+                                                                title: new Text(
+                                                                    'Report',
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline4),
+                                                                onTap: () async {
+                                                                  await showAlertDialog(
+                                                                    context,
+                                                                    title:
+                                                                        'Report content',
+                                                                    content:
+                                                                        'You want to report this Bonfire to alert the team about its content. Continue proceeding?',
+                                                                    cancelActionText:
+                                                                        'Cancel',
+                                                                    defaultActionText:
+                                                                        'Report',
+                                                                    onPressed:
+                                                                        () {
+                                                                      Firestore
+                                                                          .instance
+                                                                          .collection(
+                                                                              "Bonfire")
+                                                                          .document(
+                                                                              bfId)
+                                                                          .updateData(
+                                                                        {
+                                                                          "report":
+                                                                              FieldValue.increment(1)
+                                                                        },
+                                                                      );
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                        SnackBar(
+                                                                          backgroundColor:
+                                                                              Theme.of(context).accentColor,
+                                                                          content:
+                                                                              Text('Reporting Bonfire'),
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  );
+                                                                },
+                                                              ),
+                                                              /*ListTile(
+                                                                  leading: new Icon(
+                                                                    Icons.cancel,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                  title: new Text('Cancel',
+                                                                      style: Theme.of(context)
+                                                                          .textTheme
+                                                                          .headline4),
+                                                                  onTap: () {
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                ),*/
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
                                             ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -794,54 +695,21 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                   );
                                 }
                                 return _snapshot.hasData
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 15.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 8),
-                                              child: Text(
-                                                "Responses",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline1
-                                                    .copyWith(
-                                                      fontSize: 15.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Theme.of(context)
-                                                          .accentColor
-                                                          .withOpacity(0.8),
-                                                    ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8.0),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Column(
-                                                  children:
-                                                      _interactionData.toList(),
-                                                ),
-                                                SizedBox(
-                                                  height: 25,
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                    ? Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children:
+                                      _interactionData.toList(),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                  ],
+                                )
                                     : OurLoadingWidget(context);
                               },
                             ),
@@ -960,3 +828,96 @@ class _BonfirePageState extends State<BonfirePage> with WidgetsBindingObserver {
                                       ),
                                     ),
                                   ),*/
+/*IconButton(
+                                                onPressed: () {
+                                                  showDialog<String>(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                      context) {
+                                                        return RecordTile(
+                                                          onUploadComplete:
+                                                          _onUploadComplete(),
+                                                          ownerId: ownerId,
+                                                          ownerName: ownerName,
+                                                          ownerImage:
+                                                          profileImage,
+                                                          bfId: bfId,
+                                                          bfTitle: bfTitle,
+                                                          timestamp:
+                                                          DateTime.now(),
+                                                        );
+                                                      });
+                                                },
+                                                icon: Icon(
+                                                  MyFlutterApp.chat_empty,
+                                                  color: Colors.white70,
+                                                  size: 28,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () async {
+                                                  await showAlertDialog(context,
+                                                      title: 'Share Bonfire!',
+                                                      content:
+                                                      'Get link to share with others',
+                                                      cancelActionText:
+                                                      'Cancel',
+                                                      defaultActionText:
+                                                      'Get link',
+                                                      getRequiredLink:
+                                                      _dynamicLinkService
+                                                          .createDynamicLink());
+                                                },
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: Colors.white70,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () async {
+                                                  await showAlertDialog(
+                                                    context,
+                                                    title: 'Report content',
+                                                    content:
+                                                    'You want to report this Bonfire to alert the team about its content. Continue proceeding?',
+                                                    cancelActionText: 'Cancel',
+                                                    defaultActionText:
+                                                    'Yes report',
+                                                    onPressed: ()  {
+                                                      Firestore.instance
+                                                          .collection("Bonfire")
+                                                          .document(bfId)
+                                                          .updateData(
+                                                        {
+                                                          "report": FieldValue
+                                                              .increment(1)
+                                                        },
+                                                      );
+                                                      Navigator.pop(context);
+                                                      ScaffoldMessenger.of(
+                                                          context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: new BorderRadius.all(new Radius.circular(12)),
+                                                          ),
+                                                          content: Text(
+                                                            "Done! You have reported this bonfire",
+                                                            style: TextStyle(
+                                                                color: Theme.of(context).cardColor.withOpacity(0.85),
+                                                                fontFamily: "Poppins",
+                                                                fontWeight: FontWeight.w600,
+                                                                letterSpacing: 0.5),
+                                                          ),
+                                                          backgroundColor: Theme.of(context).primaryColor,
+                                                          duration: Duration(seconds: 2),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  MyFlutterApp.attention,
+                                                  color: Colors.white70,
+                                                ),
+                                              ),*/

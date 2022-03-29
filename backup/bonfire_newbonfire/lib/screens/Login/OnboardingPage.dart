@@ -94,7 +94,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
-                child: GlassMorphism(
+                child: GlassCard(
                   start: 0.0,
                   end: 1.0,
                   child: Column(

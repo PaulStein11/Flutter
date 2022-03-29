@@ -7,6 +7,7 @@ import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/screens/FunPage.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
+import 'package:bonfire_newbonfire/widgets/GlassCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../my_flutter_app_icons.dart';
@@ -77,10 +78,11 @@ class _GroupsPageState extends State<GroupsPage> {
           return Scaffold(
             appBar: AppBar(
               elevation: 0.0,
-              leading: IconButton(
+              automaticallyImplyLeading: false,
+              /*leading: IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
-              ),
+              ),*/
               title: Text(
                 "Groups",
                 style: TextStyle(color: Colors.grey.shade300),
@@ -98,122 +100,60 @@ class _GroupsPageState extends State<GroupsPage> {
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          color: Theme.of(context).cardColor,
-                          child: Expanded(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Fired up",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .copyWith(
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                          SizedBox(width: 12.0,),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius: BorderRadius.circular(50.0),
-                                            ),
-                                            height: 10.0,
-                                            width: 10.0,
-                                          )
-                                        ],
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        size: 20,
-                                        color: Theme.of(context).primaryColor,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                      Container(
+                        color: Theme.of(context).cardColor,
+                        child: Expanded(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Container(
-                                            height: 100,
-                                            width: 100,
+                                        Text(
+                                          "Future",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        SizedBox(width: 12.0,),
+                                        /*Container(
+                                          decoration: BoxDecoration(
                                             color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(50.0),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 20.0,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Container(
-                                            height: 100,
-                                            width: 100,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 20.0,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Container(
-                                            height: 100,
-                                            width: 100,
-                                            color: Colors.greenAccent,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 20.0,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Container(
-                                            height: 100,
-                                            width: 100,
-                                            color: Colors.amber,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 20.0,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Container(
-                                            height: 100,
-                                            width: 100,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
+                                          height: 10.0,
+                                          width: 10.0,
+                                        )*/
                                       ],
                                     ),
-                                  ),
+                                    Icon(
+                                      Icons.arrow_forward_ios_outlined,
+                                      size: 20,
+                                      color: Theme.of(context).primaryColor,
+                                    )
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(30.0),
+                                child: GlassCard(
+                                  height: 200.0,
+                                  width: 400.0,
+                                  start: 0.0,
+                                  end: 1.0,
+
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

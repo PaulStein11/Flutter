@@ -55,13 +55,13 @@ class OurTheme {
       textTheme: TextTheme(
         //MAIN TITLES OF BONFIRES
         headline1: TextStyle(
-            fontSize: 15,
+            fontSize: 14.0,
             color: Colors.grey.shade200,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.6),
         //USER NAMES ALONG THE APP
         headline2: TextStyle(
-            color: Colors.grey.shade400,
+            color: Colors.grey.shade500,
             fontWeight: FontWeight.bold,
             fontSize: 12.0,
             fontFamily: "PalanquinDark",

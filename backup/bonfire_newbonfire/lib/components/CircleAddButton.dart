@@ -19,7 +19,7 @@ Widget CircleAddButton(BuildContext context, {Function onPressed}) {
             ),
             child: Icon(
               Icons.add,
-              color: Theme.of(context).primaryColor.withOpacity(0.8),
+              color: Colors.grey,
               size: 21.0,
             ),
           ),
