@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:http/http.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
@@ -257,6 +258,9 @@ class _InteractionState extends State<Interaction> {
               stream: StreamService.instance.getUserData(_auth.user.uid),
               builder: (context, snapshot) {
                 var _userData = snapshot.data;
+                if(!snapshot.hasData) {
+                  return OurLoadingWidget(context);
+                }
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 1.5, horizontal: 0.0),
@@ -353,7 +357,7 @@ class _InteractionState extends State<Interaction> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Transform.translate(
-                            offset: const Offset(-7.0, 0.0),
+                                  offset: const Offset(-7.0, 0.0),
                                   child: Row(
                                     mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -597,7 +601,7 @@ class _InteractionState extends State<Interaction> {
                                         },
                                         iconSize: 25.0,
                                         icon: Icon(
-                                          Icons.local_fire_department_outlined,
+                                          MyFlutterApp.thumbs_up,
                                           color: isLiked
                                               ? Theme.of(context).accentColor
                                               : Colors.white70,

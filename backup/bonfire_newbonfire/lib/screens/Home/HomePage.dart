@@ -3,33 +3,26 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:badges/badges.dart';
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
-import 'package:bonfire_newbonfire/components/AudienceWidget.dart';
 import 'package:bonfire_newbonfire/components/DrawerComponents.dart';
 import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/screens/Home/widgets/OurFloatingButton.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
-import 'package:bonfire_newbonfire/model/activity.dart';
 import 'package:bonfire_newbonfire/model/bonfire.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
-import 'package:bonfire_newbonfire/screens/AllUsers.dart';
-import 'package:bonfire_newbonfire/screens/CreateBonfire.dart';
-import 'package:bonfire_newbonfire/screens/FunPage.dart';
+import 'package:bonfire_newbonfire/screens/Home/CreateBonfire.dart';
 import 'package:bonfire_newbonfire/screens/GroupsPage.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../model/user.dart';
-import '../../model/notif_updated.dart';
-import '../InboxPage.dart';
 import '../NotificationsPage.dart';
 import '../SendFeedback.dart';
-import '../WIDGET_Groups.dart';
 import '../screens.dart';
 
 AuthProvider _auth;
@@ -54,6 +47,9 @@ class _HomePageState extends State<HomePage> {
   // -------------------------
   final _formKey = GlobalKey<FormState>();
   String _feedback = "";
+
+  List<String> usersNotificationToken = [];
+
 
   @override
   void initState() {
@@ -80,6 +76,19 @@ class _HomePageState extends State<HomePage> {
     await _audioPlayer.stop();
   }
 
+  void uploadUserTokens() async {
+    List<String> userTokensList = [];
+    QuerySnapshot snapshot = await Firestore.instance.collection("Users").getDocuments();
+    snapshot.documents.forEach((DocumentSnapshot documentSnap) {
+      Map<String, dynamic> data = documentSnap.data;
+      userTokensList.add(data["tokenId"]);
+    });
+    setState(() {
+      usersNotificationToken = userTokensList;
+      print(" printing list of tokens $usersNotificationToken");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AuthProvider>.value(
@@ -98,6 +107,7 @@ class _HomePageState extends State<HomePage> {
       stream: StreamService.instance.getUserData(_auth.user.uid),
       builder: (_context, _snapshot) {
         var _userData = _snapshot.data;
+        uploadUserTokens();
         if (!_snapshot.hasData) {
           return OurLoadingWidget(context);
         } else {
@@ -137,86 +147,86 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: InkWell(
+                    // -----------------------------------------------
+                    // Adding double tap to send feedback from users
+                    // ------------------------------------------------
                     onDoubleTap: () {
                       print("Hello world");
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                              backgroundColor:
-                                  Theme.of(context).backgroundColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                width: MediaQuery.of(context).size.width * 0.85,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
-                                        child: Text(
-                                          "Sharing feedback",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline2,
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            backgroundColor: Theme.of(context).backgroundColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.85,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: Text(
+                                        "Sharing feedback",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 30.0),
+                                      child: Form(
+                                        key: _formKey,
+                                        onChanged: () =>
+                                            _formKey.currentState.save(),
+                                        child: TextFormField(
+                                          maxLines: 3,
+                                          style: TextStyle(
+                                              color: Colors.grey.shade200,
+                                              fontSize: 15.0),
+                                          validator: (input) {
+                                            return input.isEmpty
+                                                ? "Need to add something"
+                                                : null;
+                                          },
+                                          onSaved: (input) {
+                                            _feedback = input;
+                                          },
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 30.0),
-                                        child: Form(
-                                          key: _formKey,
-                                          onChanged: () =>
-                                              _formKey.currentState.save(),
-                                          child: TextFormField(
-                                            maxLines: 3,
-                                            style: TextStyle(
-                                                color: Colors.grey.shade200,
-                                                fontSize: 15.0),
-                                            validator: (input) {
-                                              return input.isEmpty
-                                                  ? "Need to add something"
-                                                  : null;
-                                            },
-                                            onSaved: (input) {
-                                              _feedback = input;
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      OurFilledButton(
-                                          context: context,
-                                          text: "Submit",
-                                          onPressed: () async {
-                                            if (_formKey.currentState
-                                                .validate()) {
-                                              final Email email = Email(
-                                                body: _feedback,
-                                                subject:
-                                                    "Feedback - HomeScreen",
-                                                recipients: [
-                                                  "pablerillas.11.pb@gmail.com"
-                                                ],
-                                              );
+                                    ),
+                                    OurFilledButton(
+                                        context: context,
+                                        text: "Submit",
+                                        onPressed: () async {
+                                          if (_formKey.currentState
+                                              .validate()) {
+                                            final Email email = Email(
+                                              body: _feedback,
+                                              subject: "Feedback - HomeScreen",
+                                              recipients: [
+                                                "pablerillas.11.pb@gmail.com"
+                                              ],
+                                            );
 
-                                              String platformResponse;
+                                            String platformResponse;
 
-                                              try {
-                                                await FlutterEmailSender.send(
-                                                    email);
-                                                platformResponse = 'success';
-                                              } catch (error) {
-                                                platformResponse =
-                                                    error.toString();
-                                              }
+                                            try {
+                                              await FlutterEmailSender.send(
+                                                  email);
+                                              platformResponse = 'success';
+                                            } catch (error) {
+                                              platformResponse =
+                                                  error.toString();
+                                            }
 
-                                              /*if (!mounted) return;
+                                            /*if (!mounted) return;
                                                 ScaffoldMessenger.of(context).showSnackBar(
                                                   SnackBar(
                                                     backgroundColor:
@@ -225,14 +235,15 @@ class _HomePageState extends State<HomePage> {
                                                         'Thanks for your feedback!'),
                                                   ),
                                                 );    */
-                                            }
-                                          })
-                                    ],
-                                  ),
+                                          }
+                                        })
+                                  ],
                                 ),
                               ),
-                            );
-                          });
+                            ),
+                          );
+                        },
+                      );
                     },
                     child: AppBar(
                       elevation: 0.0,
@@ -454,8 +465,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Row(
                                       children: [
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0, bottom: 10),
+                                          padding: const EdgeInsets.only(
+                                              left: 8.0, bottom: 10),
                                           child: Text(
                                             "What's happening",
                                             style: Theme.of(context)

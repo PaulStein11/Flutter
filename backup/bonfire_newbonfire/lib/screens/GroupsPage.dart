@@ -5,7 +5,6 @@ import 'package:bonfire_newbonfire/components/OurAlertDialog.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
-import 'package:bonfire_newbonfire/screens/FunPage.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:bonfire_newbonfire/widgets/GlassCard.dart';
 import 'package:flutter/material.dart';

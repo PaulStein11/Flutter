@@ -35,7 +35,7 @@ class SplashScreen extends StatelessWidget {
               child:Container(
                 alignment: Alignment.center,
                 child: DecoratedIcon(
-                  MyFlutterApp.fire_alt,
+                  FontAwesomeIcons.fireAlt,
                   color: Theme.of(context).cardColor.withOpacity(0.85),
                   size: 60.0,
                   shadows: [

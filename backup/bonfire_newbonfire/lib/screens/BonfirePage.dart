@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
 import 'package:bonfire_newbonfire/components/AudienceWidget.dart';
