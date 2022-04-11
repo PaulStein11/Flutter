@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bonfire_newbonfire/components/RecordingTile.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
-import 'package:bonfire_newbonfire/screens/MusicVisualizer.dart';
+import 'package:bonfire_newbonfire/widgets/MusicVisualizer.dart';
 import 'package:bonfire_newbonfire/service/cloud_storage_service.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -68,6 +68,18 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
 
   List<String> usersNotificationToken = [];
 
+  void uploadUserTokens() async {
+    List<String> userTokensList = [];
+    QuerySnapshot snapshot = await Firestore.instance.collection("Users").getDocuments();
+    snapshot.documents.forEach((DocumentSnapshot documentSnap) {
+      Map<String, dynamic> data = documentSnap.data;
+      userTokensList.add(data["tokenId"]);
+    });
+    setState(() {
+      usersNotificationToken = userTokensList;
+      print(" printing list of tokens $usersNotificationToken");
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -95,6 +107,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
       child: Builder(
         builder: (BuildContext _context) {
           _auth = Provider.of<AuthProvider>(_context);
+          uploadUserTokens();
           return StreamBuilder<MyUserModel>(
               stream: StreamService.instance.getUserData(_auth.user.uid),
               builder: (_context, _snapshot) {
@@ -106,7 +119,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                       title: Text("Your Bonfire"),
                       leading: IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
+                        icon: Icon(Icons.arrow_back_ios, color: Colors.grey.shade200, size: 22.0,),
                       ),
                     ),
                     body: Center(
@@ -509,7 +522,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                         var _audioURL =
                                                             await _audioFile.ref
                                                                 .getDownloadURL();
-                                                        await uploadUserTokens();
+                                                        //await uploadUserTokens();
                                                         await _onFileUploadButtonPressed(
                                                             _audioURL,
                                                             widget.title,
@@ -517,7 +530,8 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
                                                                 .profileImage,
                                                             _userData.uid,
                                                             _userData.name,
-                                                            usersNotificationToken);//"e3852bc6-a002-11ec-a660-ea3b24c7a590","04ab2362-9dda-11ec-8089-3263ecb3ce79"]);
+                                                            usersNotificationToken
+                                                        );
                                                       },
                                                     ),
                                                   )
@@ -659,21 +673,8 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
     );
   }
 
-  void uploadUserTokens() async {
-    List<String> userTokensList = [];
-    QuerySnapshot snapshot = await Firestore.instance.collection("Users").getDocuments();
-    snapshot.documents.forEach((DocumentSnapshot documentSnap) {
-      Map<String, dynamic> data = documentSnap.data;
-      userTokensList.add(data["tokenId"]);
-    });
-    setState(() {
-      usersNotificationToken = userTokensList;
-      print(usersNotificationToken);
-    });
-  }
-
   Future<Response> sendNotification(
-      usersNotificationToken, String contents, String heading) async {
+      List<String> tokenIdList, String contents, String heading) async {
     return await post(
       Uri.parse('https://onesignal.com/api/v1/notifications'),
       headers: <String, String>{
@@ -683,7 +684,7 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         "app_id": appId,
         //kAppId is the App Id that one get from the OneSignal When the application is registered.
 
-        "include_player_ids": usersNotificationToken,
+        "include_player_ids": tokenIdList,
         //tokenIdList Is the List of All the Token Id to to Whom notification must be sent.
 
         // android_accent_color reprsent the color of the heading text in the notifiction
@@ -716,7 +717,9 @@ class _CreateBonfireAudioState extends State<CreateBonfireAudio> {
         _audioURL.toString(),
         '${_current.duration.inMinutes.remainder(60).toString().padLeft(1, '0')}:${_current.duration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
       );
+      await uploadUserTokens();
       await sendNotification(tokenId, title, "$name created Bonfire");
+      print("PAUL STEIN CONFIRMS $usersNotificationToken");
       await Firestore.instance
           .collection("Users")
           .document(widget.id)

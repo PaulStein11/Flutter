@@ -105,7 +105,6 @@ class AuthProvider extends ChangeNotifier {
       SnackBarService.instance
           .showSnackBarSuccess("Welcome ${user.email}", context);
       //TODO: Update lastSeen
-      //NavigationService.instance.navigateToReplacement("loading");
       Navigator.push(context,
           MaterialPageRoute(builder: (BuildContext context) => HomePage()));
     } catch (error) {
@@ -157,6 +156,27 @@ class AuthProvider extends ChangeNotifier {
       await NavigationService.instance.navigateToReplacement("welcome");
     } catch (e) {
       SnackBarService.instance.showSnackBarError("Error Logging Out", context);
+    }
+    notifyListeners();
+  }
+
+  void changePassword(String _email, BuildContext context) async{
+    status = AuthStatus.Authenticating;
+    notifyListeners();
+    try {
+      await _auth.sendPasswordResetEmail(email: _email);
+      status = AuthStatus.Authenticated;
+      SnackBarService.instance
+          .showSnackBarSuccess("An email was sent to reset your password", context);
+      Navigator.pop(context);
+    } catch(e) {
+      status = AuthStatus.Error;
+      status = AuthStatus.NotAuthenticated;
+      notifyListeners();
+      if (user == null) {
+        SnackBarService.instance
+            .showSnackBarError("Account doesn't exist", context);
+      }
     }
     notifyListeners();
   }

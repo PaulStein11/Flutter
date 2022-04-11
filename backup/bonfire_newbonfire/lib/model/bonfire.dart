@@ -10,7 +10,7 @@ import 'package:bonfire_newbonfire/components/RecordingTile.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/screens/BonfirePage.dart';
-import 'package:bonfire_newbonfire/screens/MusicVisualizer.dart';
+import 'package:bonfire_newbonfire/widgets/MusicVisualizer.dart';
 import 'package:bonfire_newbonfire/screens/Profile/ProfilePage.dart';
 import 'package:bonfire_newbonfire/screens/Profile/Others_profile.dart';
 import 'package:bonfire_newbonfire/service/dynamic_link_service.dart';

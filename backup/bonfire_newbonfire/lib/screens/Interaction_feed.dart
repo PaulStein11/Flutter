@@ -1,5 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire_newbonfire/components/AppUserProfile.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
+import 'package:bonfire_newbonfire/model/bonfire.dart';
+import 'package:bonfire_newbonfire/model/interaction.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
@@ -7,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../my_flutter_app_icons.dart';
 import 'Profile/ProfilePage.dart';
 
 AuthProvider _auth;
@@ -27,7 +31,7 @@ class InteractionFeed extends StatefulWidget {
       this.interactionTitle,
       this.userId,
       this.username,
-      this.userImg});
+      this.userImg,});
 
   @override
   _InteractionFeedState createState() => _InteractionFeedState(
@@ -35,9 +39,10 @@ class InteractionFeed extends StatefulWidget {
       bfTitle: this.bfTitle,
       interactionId: this.interactionId,
       interactionTitle: this.interactionTitle,
-      userId: this.userId,
+    userId: this.userId,
       username: this.username,
-      userImg: this.userImg);
+      userImg: this.userImg,
+  );
 }
 
 class _InteractionFeedState extends State<InteractionFeed> {
@@ -50,6 +55,24 @@ class _InteractionFeedState extends State<InteractionFeed> {
   final String userImg;
   Map interactionLikes;
   dynamic likes;
+  bool isPlaying = false;
+
+  AudioPlayer audioPlayer;
+  double _percent = 0.0;
+  int _totalTime;
+  int _currentTime;
+
+  @override
+  void initState() {
+    super.initState();
+    isPlaying = false;
+    audioPlayer = AudioPlayer();
+  }
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await audioPlayer.stop();
+  }
 
   double getLikeCount(likes) {
     //if no likes, return 0
@@ -73,7 +96,8 @@ class _InteractionFeedState extends State<InteractionFeed> {
       this.interactionTitle,
       this.userId,
       this.username,
-      this.userImg});
+      this.userImg,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -99,38 +123,330 @@ class _InteractionFeedState extends State<InteractionFeed> {
             return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
-                elevation: 0.0,
-                title: SizedBox(
-                  child: Row(
-                    children: [
-                      AppUserProfile(
-                        icon: Icons.person,
-                        hasImage: _userData.profileImage.isEmpty ? false : true,
-                        imageFile: _userData.profileImage,
-                        size: 19.5,
-                        color: _userData.name[0] == "P"
-                            ? Colors.orangeAccent
-                            : Colors.blueAccent,
-                        iconSize: 28.0,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfilePage(),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(
-                        width: 17.0,
-                      ),
-                      Text(_userData.name),
-                    ],
+                leading: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.grey.shade200,
+                    size: 22.0,
                   ),
                 ),
+                elevation: 0.0,
               ),
-              body: Column(
-                children: [Text(interactionTitle)],
+              body: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Your interaction",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(fontSize: 16.0, letterSpacing: 0.75),
+                        ),
+
+                        /*isPlaying == false
+                            ? InkWell(
+                          onTap: () async {
+                            setState(() {
+                              isPlaying = true;
+                            });
+                            if (audioPlayer.play(
+                                file) ==
+                                audioPlayer.play(
+                                    file)) {
+                              audioPlayer
+                                  .play(file);
+                              audioPlayer.onDurationChanged
+                                  .listen((duration) {
+                                setState(() {
+                                  _totalTime =
+                                      duration.inMicroseconds;
+                                });
+                              });
+                              audioPlayer.onAudioPositionChanged
+                                  .listen((duration) {
+                                setState(() {
+                                  _currentTime =
+                                      duration.inMicroseconds;
+                                  _percent =
+                                      _currentTime.toDouble() /
+                                          _totalTime.toDouble();
+                                });
+                              });
+                              audioPlayer.onPlayerCompletion
+                                  .listen((duration) {
+                                setState(() {
+                                  isPlaying = false;
+                                  _percent = 0;
+                                });
+                              });
+                            } else {
+                              audioPlayer.stop();
+                              audioPlayer
+                                  .play(file);
+                              audioPlayer.onDurationChanged
+                                  .listen((duration) {
+                                setState(() {
+                                  _totalTime =
+                                      duration.inMicroseconds;
+                                });
+                              });
+                              audioPlayer.onAudioPositionChanged
+                                  .listen((duration) {
+                                setState(() {
+                                  _currentTime =
+                                      duration.inMicroseconds;
+                                  _percent =
+                                      _currentTime.toDouble() /
+                                          _totalTime.toDouble();
+                                });
+                              });
+                              audioPlayer.onPlayerCompletion
+                                  .listen((duration) {
+                                setState(() {
+                                  isPlaying = false;
+                                  _percent = 0;
+                                });
+                              });
+                            }
+                          },
+                          child: Material(
+                            elevation: 4.0,
+                            borderRadius:
+                            BorderRadius.circular(20.0),
+                            child: Container(
+                              height: 30.0,
+                              width: 30.0,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade800,
+                                borderRadius:
+                                BorderRadius.circular(20.0),
+                              ),
+                              child: Icon(
+                                Icons.play_arrow,
+                                color: Colors.white70,
+                                //Theme.of(context).primaryColor,
+                                size: 20.0,
+                              ),
+                            ),
+                          ),
+                        )
+                            : InkWell(
+                          onTap: () async {
+                            setState(() {
+                              audioPlayer.stop();
+                              isPlaying = false;
+                            });
+                            audioPlayer.pause();
+                          },
+                          splashColor:
+                          Theme.of(context).accentColor,
+                          child: Container(
+                            height: 30.0,
+                            width: 30.0,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .indicatorColor,
+                              borderRadius:
+                              BorderRadius.circular(20.0),
+                            ),
+                            child: Icon(
+                              Icons.pause,
+                              color: Colors.white70,
+                              size: 20.0,
+                            ),
+                          ),
+                        ),*/
+                      ],
+                    ),
+                    Divider(
+                      color: Theme.of(context).indicatorColor,
+                    ),
+                    Row(
+                      children: [
+                        StreamBuilder<Interaction>(
+                            stream: StreamService.instance.getInteraction(bfId, interactionId),builder: (_context, _snapshot) {
+                          var _interactionData = _snapshot.data;
+                          print("Path for file ${_interactionData.file} and the interactionId is $interactionId");
+
+                          if(!_snapshot.hasData) {
+                            return OurLoadingWidget(context);
+                          }
+                          else {
+                            return isPlaying == false
+                                ? InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  isPlaying = true;
+                                });
+                                if (audioPlayer.play(
+                                    _interactionData.file) ==
+                                    audioPlayer.play(
+                                        _interactionData.file)) {
+                                  audioPlayer
+                                      .play(_interactionData.file);
+                                  audioPlayer.onDurationChanged
+                                      .listen((duration) {
+                                    setState(() {
+                                      _totalTime =
+                                          duration.inMicroseconds;
+                                    });
+                                  });
+                                  audioPlayer.onAudioPositionChanged
+                                      .listen((duration) {
+                                    setState(() {
+                                      _currentTime =
+                                          duration.inMicroseconds;
+                                      _percent =
+                                          _currentTime.toDouble() /
+                                              _totalTime.toDouble();
+                                    });
+                                  });
+                                  audioPlayer.onPlayerCompletion
+                                      .listen((duration) {
+                                    setState(() {
+                                      isPlaying = false;
+                                      _percent = 0;
+                                    });
+                                  });
+                                } else {
+                                  audioPlayer.stop();
+                                  audioPlayer
+                                      .play(_interactionData.file);
+                                  audioPlayer.onDurationChanged
+                                      .listen((duration) {
+                                    setState(() {
+                                      _totalTime =
+                                          duration.inMicroseconds;
+                                    });
+                                  });
+                                  audioPlayer.onAudioPositionChanged
+                                      .listen((duration) {
+                                    setState(() {
+                                      _currentTime =
+                                          duration.inMicroseconds;
+                                      _percent =
+                                          _currentTime.toDouble() /
+                                              _totalTime.toDouble();
+                                    });
+                                  });
+                                  audioPlayer.onPlayerCompletion
+                                      .listen((duration) {
+                                    setState(() {
+                                      isPlaying = false;
+                                      _percent = 0;
+                                    });
+                                  });
+                                }
+                              },
+                              child: Material(
+                                elevation: 4.0,
+                                borderRadius:
+                                BorderRadius.circular(20.0),
+                                child: Container(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).indicatorColor,
+                                    borderRadius:
+                                    BorderRadius.circular(20.0),
+                                  ),
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    color: Theme.of(context).primaryColor,
+                                    //Theme.of(context).primaryColor,
+                                    size: 20.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                                : InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  audioPlayer.stop();
+                                  isPlaying = false;
+                                });
+                                audioPlayer.pause();
+                              },
+                              splashColor:
+                              Theme.of(context).accentColor,
+                              child: Container(
+                                height: 30.0,
+                                width: 30.0,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).indicatorColor,
+                                  borderRadius:
+                                  BorderRadius.circular(20.0),
+                                ),
+                                child: Icon(
+                                  Icons.pause,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 20.0,
+                                ),
+                              ),
+                            );
+                          }
+                        }),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                          child: Text(
+                            interactionTitle,
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Reactions",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(fontSize: 16.0, letterSpacing: 0.75),
+                        )
+                      ],
+                    ),
+                    Divider(
+                      color: Theme.of(context).indicatorColor,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          AppUserProfile(
+                              icon: username == "Mr Anonymous"
+                                  ? MyFlutterApp.user_secret
+                                  : Icons.person,
+                              hasImage:
+                                  username == "Mr Anonymous" ? false : true,
+                              imageFile: userImg,
+                              onPressed: () {},
+                              iconSize: 32.0,
+                              color: username[0] == "P"
+                                  ? Colors.orangeAccent
+                                  : username == "Mr Anonymous"
+                                      ? Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.82)
+                                      : Colors.blueAccent,
+                              size: 24.0),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }

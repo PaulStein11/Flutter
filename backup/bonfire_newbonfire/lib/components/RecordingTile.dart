@@ -5,7 +5,7 @@ import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
 import 'package:bonfire_newbonfire/providers/auth.dart';
 import 'package:bonfire_newbonfire/screens/Home/HomePage.dart';
-import 'package:bonfire_newbonfire/screens/MusicVisualizer.dart';
+import 'package:bonfire_newbonfire/widgets/MusicVisualizer.dart';
 import 'package:bonfire_newbonfire/service/cloud_storage_service.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:bonfire_newbonfire/service/future_service.dart';
@@ -624,22 +624,6 @@ class _RecordTileState extends State<RecordTile> {
       await Firestore.instance.collection("Users").document(uid).updateData({
         "interactions": FieldValue.increment(1),
       });
-      await Firestore.instance
-          .collection("Feed")
-          .document(ownerId)
-          .collection("feedItems")
-          .document(bfId)
-          .setData({
-        "type": "interaction",
-        "username": name,
-        "userId": uid,
-        "userProfileImg": profileImage,
-        "bfId": bfId,
-        "bfTitle": bfTitle,
-        //"timestamp": timestamp,
-      });
-      await FutureService.instance
-          .createActivity(uid, ownerName, this.ownerImage, bfId, bfTitle);
     } catch (error) {
       print('Error occured while uplaoding to Firebase ${error.toString()}');
       ScaffoldMessenger.of(context).showSnackBar(

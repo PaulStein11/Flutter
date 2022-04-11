@@ -45,7 +45,7 @@ class _CreateNewBonfireState extends State<CreateNewBonfire> {
           elevation: 0.0,
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
+            icon: Icon(Icons.arrow_back_ios, color: Colors.grey.shade200, size: 22.0,),
           ),
         ),
         body: CustomScrollView(

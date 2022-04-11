@@ -13,6 +13,7 @@ class FutureService {
   String _userCollection = "Users";
   String _bfCollection = "Bonfire";
   String _interactionCollection = "Interactions";
+  String _feedCollection = "Feed";
   String _commentsCollection = "Message";
   String _conversationsCollection = "Conversations";
 
@@ -55,26 +56,6 @@ class FutureService {
   Future<void> deleteBFInDB(String _bfId, _postId) async {
     try {
       return await _db.collection(_bfCollection).document(_bfId).get().then(
-        (doc) {
-          if (doc.exists) {
-            doc.reference.delete();
-          }
-        },
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> deleteInteractionInDB(String _bfId, _interactionId) async {
-    try {
-      return await _db
-          .collection(_interactionCollection)
-          .document(_bfId)
-          .collection("usersInteraction")
-          .document(_interactionId)
-          .get()
-          .then(
         (doc) {
           if (doc.exists) {
             doc.reference.delete();
@@ -141,6 +122,26 @@ class FutureService {
     }
   }
 
+  Future<void> deleteInteractionInDB(String _bfId, _interactionId) async {
+    try {
+      return await _db
+          .collection(_interactionCollection)
+          .document(_bfId)
+          .collection("usersInteraction")
+          .document(_interactionId)
+          .get()
+          .then(
+            (doc) {
+          if (doc.exists) {
+            doc.reference.delete();
+          }
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> createFeed(
     String mainUser,
     String _ownerId,
@@ -153,7 +154,7 @@ class FutureService {
   ) async {
     try {
       return await _db
-        ..collection("Feed")
+        ..collection(_feedCollection)
             .document(mainUser)
             .collection("FeedItems")
             .document(_bfId)
@@ -230,39 +231,6 @@ class FutureService {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<void> createActivity(
-    String _uid,
-    String _ownerName,
-    String _ownerImage,
-    String _bfId,
-    String _title,
-  ) async {
-    try {
-      return await _db
-          .collection("Activity")
-          .document(_uid)
-          .collection("usersActivity")
-          .document(_bfId)
-          .setData({
-        "ownerId": _uid,
-        "ownerName": _ownerName,
-        "ownerImage": _ownerImage,
-        "bfId": _bfId,
-        "title": _title,
-        "audience": 0,
-        "timestamp": Timestamp.now(),
-      });
-    } catch (e) {
-      print(e);
-    }
-
-    await Firestore.instance.collection("Users").document(_uid).updateData(
-      {
-        "posts": FieldValue.increment(1),
-      },
-    );
   }
 
   Future<void> createOrGetConversartion(String _currentID, String _recepientID,

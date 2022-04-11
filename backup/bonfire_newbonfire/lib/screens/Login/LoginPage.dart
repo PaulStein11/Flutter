@@ -1,6 +1,8 @@
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
+import 'package:bonfire_newbonfire/screens/Login/ResetPassPage.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/textForm.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bonfire_newbonfire/service/snackbar_service.dart';
@@ -38,6 +40,10 @@ class _LoginPageState extends State<LoginPage> {
         elevation: 0.0,
         title: Text("Sign in"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.grey.shade200, size: 22.0,),
+        ),
       ),
       resizeToAvoidBottomInset: false,
       body: Padding(
@@ -60,81 +66,93 @@ class _LoginPageState extends State<LoginPage> {
           onChanged: () {
             _formKey.currentState.save();
           },
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
+              OurTextForm("Email"),
+              TextFormField(
+                autofillHints: [AutofillHints.email],
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(color: Colors.grey.shade200, fontSize: 20.0),
+                textAlign: TextAlign.left,
+                validator: (_input) {
+                  return _input.length != 0 && _input.contains("@")
+                      ? null
+                      : "Please enter a valid email";
+                },
+                onSaved: (_input) {
+                  setState(() {
+                    _email = _input;
+                  });
+                  //Do something with the user input.
+                },
+                decoration: kTextFieldDecoration,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              OurTextForm("Password"),
+              TextFormField(
+                obscureText: _obscureText,
+                style: TextStyle(
+                  color: Colors.grey.shade200,
+                  fontSize: 20.0,
                 ),
-                OurTextForm("Email"),
-                TextFormField(
-                  autofillHints: [AutofillHints.email],
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.grey.shade200, fontSize: 20.0),
-                  textAlign: TextAlign.left,
-                  validator: (_input) {
-                    return _input.length != 0 && _input.contains("@")
-                        ? null
-                        : "Please enter a valid email";
-                  },
-                  onSaved: (_input) {
-                    setState(() {
-                      _email = _input;
-                    });
-                    //Do something with the user input.
-                  },
-                  decoration: kTextFieldDecoration,
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                OurTextForm("Password"),
-                TextFormField(
-                  obscureText: _obscureText,
-                  style: TextStyle(color: Colors.grey.shade200, fontSize: 20.0,),
-                  textAlign: TextAlign.left,
-                  validator: (_input) {
-                    return _input.length != 0 && _input.length > 6
-                        ? null
-                        : "Password need more than 6 characters";
-                  },
-                  onSaved: (_input) {
-                    //Do something with the user input.
-                    setState(() {
-                      _password = _input;
-                    });
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                    suffixIcon: IconButton(
-                      iconSize: 20.0,
-                      onPressed: _toggle,
-                      icon: _obscureText
-                          ? Icon(
-                        FontAwesomeIcons.solidEye,
-                        color: Colors.grey,
-                      )
-                          : Icon(
-                        FontAwesomeIcons.solidEyeSlash,
-                        color: Colors.white70,
-                      ),
-                      color: Colors.grey,
-                    ),
+                textAlign: TextAlign.left,
+                validator: (_input) {
+                  return _input.length != 0 && _input.length > 6
+                      ? null
+                      : "Password need more than 6 characters";
+                },
+                onSaved: (_input) {
+                  //Do something with the user input.
+                  setState(() {
+                    _password = _input;
+                  });
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                  suffixIcon: IconButton(
+                    iconSize: 20.0,
+                    onPressed: _toggle,
+                    icon: _obscureText
+                        ? Icon(
+                            FontAwesomeIcons.solidEye,
+                            color: Colors.grey,
+                          )
+                        : Icon(
+                            FontAwesomeIcons.solidEyeSlash,
+                            color: Colors.white70,
+                          ),
+                    color: Colors.grey,
                   ),
                 ),
-                SizedBox(
-                  height: 50.0,
+              ),InkWell(
+                onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPassPage()));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Forgot password?",
+                    style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Center(child: loginButton()),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.04,
-                ),
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 50.0,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Center(child: loginButton()),
+              ),
+            ],
           ),
         );
       },
@@ -143,13 +161,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginButton() {
     return _auth.status == AuthStatus.Authenticating
-        ?Align(
-      alignment: Alignment.center,
-      child:CircularProgressIndicator(
-        color: Theme.of(context).accentColor,
-        backgroundColor: Theme.of(context).indicatorColor,
-      ),
-    )
+        ? Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              color: Theme.of(context).accentColor,
+              backgroundColor: Theme.of(context).indicatorColor,
+            ),
+          )
         : OurFilledButton(
             context: context,
             text: "Sign into account",

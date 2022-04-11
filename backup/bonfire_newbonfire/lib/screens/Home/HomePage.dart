@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:provider/provider.dart';
 import '../../model/user.dart';
-import '../NotificationsPage.dart';
+import '../Inbox/ActivityFeedPage.dart';
 import '../SendFeedback.dart';
 import '../screens.dart';
 
@@ -48,9 +48,6 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   String _feedback = "";
 
-  List<String> usersNotificationToken = [];
-
-
   @override
   void initState() {
     _chatScrollController = ScrollController()
@@ -76,18 +73,6 @@ class _HomePageState extends State<HomePage> {
     await _audioPlayer.stop();
   }
 
-  void uploadUserTokens() async {
-    List<String> userTokensList = [];
-    QuerySnapshot snapshot = await Firestore.instance.collection("Users").getDocuments();
-    snapshot.documents.forEach((DocumentSnapshot documentSnap) {
-      Map<String, dynamic> data = documentSnap.data;
-      userTokensList.add(data["tokenId"]);
-    });
-    setState(() {
-      usersNotificationToken = userTokensList;
-      print(" printing list of tokens $usersNotificationToken");
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +92,6 @@ class _HomePageState extends State<HomePage> {
       stream: StreamService.instance.getUserData(_auth.user.uid),
       builder: (_context, _snapshot) {
         var _userData = _snapshot.data;
-        uploadUserTokens();
         if (!_snapshot.hasData) {
           return OurLoadingWidget(context);
         } else {
@@ -257,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NotificationPage(
+                                    builder: (context) => ActivityFeedPage(
                                       userId: _userData.uid,
                                     ),
                                   ),

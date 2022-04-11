@@ -6,7 +6,7 @@ import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
 import 'package:bonfire_newbonfire/components/RecordingTile.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/my_flutter_app_icons.dart';
-import 'package:bonfire_newbonfire/model/notif_updated.dart';
+import 'package:bonfire_newbonfire/model/UserFeed.dart';
 import 'package:bonfire_newbonfire/screens/BonfirePage.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurFilledButton.dart';
 import 'package:bonfire_newbonfire/screens/Login/widgets/OurOutlinedButton.dart';

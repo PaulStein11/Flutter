@@ -1,26 +1,26 @@
 import 'package:bonfire_newbonfire/components/AppSkeleton.dart';
 import 'package:bonfire_newbonfire/components/OurLoadingWidget.dart';
-import 'package:bonfire_newbonfire/model/notif_updated.dart';
+import 'package:bonfire_newbonfire/model/UserFeed.dart';
 import 'package:bonfire_newbonfire/service/stream_service.dart';
 import 'package:flutter/material.dart';
 
-import 'Home/HomePage.dart';
+import '../Home/HomePage.dart';
 
-class NotificationPage extends StatefulWidget {
+class ActivityFeedPage extends StatefulWidget {
   final String userId;
 
-  NotificationPage({this.userId});
+  ActivityFeedPage({this.userId});
 
   @override
-  _NotificationPageState createState() => _NotificationPageState(
+  _ActivityFeedPageState createState() => _ActivityFeedPageState(
         userId: this.userId,
       );
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _ActivityFeedPageState extends State<ActivityFeedPage> {
   final String userId;
 
-  _NotificationPageState({this.userId});
+  _ActivityFeedPageState({this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +37,10 @@ class _NotificationPageState extends State<NotificationPage> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.cancel, color: Colors.grey, size: 26.0,),
+            icon: Icon(Icons.arrow_back_ios, color: Colors.grey.shade200, size: 22.0,),
           ),
         ),
-        body: StreamBuilder<List<notif_updated>>(
+        body: StreamBuilder<List<UserFeed>>(
           stream: StreamService.instance.getNotifications(userId),
           builder: (context, _snapshot) {
             var _data = _snapshot.data;
@@ -74,6 +74,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
+                      SizedBox(height: 20.0,),
                       Column(
                         children: _data.toList(),
                       )

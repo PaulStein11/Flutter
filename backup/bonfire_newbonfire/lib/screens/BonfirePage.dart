@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'MusicVisualizer.dart';
+import '../widgets/MusicVisualizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 AuthProvider _auth;

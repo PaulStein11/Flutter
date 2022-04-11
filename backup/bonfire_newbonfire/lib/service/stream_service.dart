@@ -3,7 +3,7 @@ import 'package:bonfire_newbonfire/model/interaction.dart';
 import 'package:bonfire_newbonfire/model/notifications.dart';
 import 'package:bonfire_newbonfire/model/user.dart';
 import 'package:bonfire_newbonfire/model/bonfire.dart';
-import 'package:bonfire_newbonfire/model/notif_updated.dart';
+import 'package:bonfire_newbonfire/model/UserFeed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -21,6 +21,7 @@ class StreamService {
   String _bfCollection = "Bonfire";
   String _conversationsCollection = "Conversations";
   String _commentsCollection = "Message";
+  String _interactionCollection = "Interactions";
   String _feedItemsCollection = "Feed";
 
   Stream<List<MyUserModel>> getUsersInDB() {
@@ -32,9 +33,16 @@ class StreamService {
     });
   }
 
+  Stream<Interaction> getInteraction(String _bfId, String _interactionId) {
+    var _ref = _db.collection(_interactionCollection).document(_bfId).collection("usersInteraction").document(_interactionId);
+    return _ref.get().asStream().map((_snapshot) {
+      return Interaction.fromDocument(_snapshot);
+    });
+  }
+
   Stream<List<Interaction>> getInteractions(String _bfId) {
     var _ref = _db
-        .collection("Interactions")
+        .collection(_interactionCollection)
         .document(_bfId)
         .collection("usersInteraction")
         .orderBy("likes", descending: true);
@@ -105,7 +113,7 @@ class StreamService {
     });
   }
 
-  Stream<List<notif_updated>> getNotifications(String _userID) {
+  Stream<List<UserFeed>> getNotifications(String _userID) {
     var _ref = _db
         .collection(_feedItemsCollection)
         .document(_userID)
@@ -113,7 +121,7 @@ class StreamService {
         .orderBy("timestamp", descending: true).limit(30);
     return _ref.getDocuments().asStream().map((_snapshot) {
       return _snapshot.documents.map((_doc) {
-        return notif_updated.fromFirestore(_doc);
+        return UserFeed.fromFirestore(_doc);
       }).toList();
     });
   }

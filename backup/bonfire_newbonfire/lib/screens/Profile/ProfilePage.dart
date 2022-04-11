@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             "My Activity",
                             style: TextStyle(
                               color: Colors.grey.shade400,
-                              fontSize: 17.0,
+                              fontSize: 15.5,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -156,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             "Inbox",
                             style: TextStyle(
                               color: Colors.grey.shade400,
-                              fontSize: 17,
+                              fontSize: 15.5,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -264,10 +264,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.grey.shade400,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 1.5),
+                    letterSpacing: 1.8),
               ),
               SizedBox(
-                height: 20.0,
+                height: 10.0,
               ),
               /*Text(
                 email,
@@ -285,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _userBio({String bio}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 18.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,13 +309,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontSize: 16.0,
                           fontWeight: FontWeight.normal,
                           color: Colors.white70,
-                          letterSpacing: 0.6),
+                          ),
                     ),
                     Expanded(
                       child: Text(
                         "Define yourself shortly",
                         style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 15.0,
                             fontWeight: FontWeight.normal,
                             color: Colors.grey.shade500,
                             letterSpacing: 0.6),

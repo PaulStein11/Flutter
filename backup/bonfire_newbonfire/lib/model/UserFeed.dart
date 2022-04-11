@@ -15,7 +15,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 MyUserModel currentUser;
 
-class notif_updated extends StatefulWidget {
+class UserFeed extends StatefulWidget {
   final String bfId;
   final String bfTitle;
   final String interactionId;
@@ -24,10 +24,9 @@ class notif_updated extends StatefulWidget {
   final String userId;
   final String username;
   final String userImg;
-
   final Timestamp timestamp;
 
-  notif_updated(
+  UserFeed(
       {this.bfId,
       this.bfTitle,
       this.interactionId,
@@ -38,9 +37,9 @@ class notif_updated extends StatefulWidget {
       this.userImg,
       this.timestamp});
 
-  factory notif_updated.fromFirestore(DocumentSnapshot _snapshot) {
+  factory UserFeed.fromFirestore(DocumentSnapshot _snapshot) {
     var _data = _snapshot.data;
-    return notif_updated(
+    return UserFeed(
       bfId: _data['bfId'],
       bfTitle: _data['bfTitle'],
       interactionId: _data['interactionId'],
@@ -54,7 +53,7 @@ class notif_updated extends StatefulWidget {
   }
 
   @override
-  _notif_updatedState createState() => _notif_updatedState(
+  _UserFeedState createState() => _UserFeedState(
         bfId: this.bfId,
         bfTitle: this.bfTitle,
         interactionId: this.interactionId,
@@ -67,7 +66,7 @@ class notif_updated extends StatefulWidget {
       );
 }
 
-class _notif_updatedState extends State<notif_updated> {
+class _UserFeedState extends State<UserFeed> {
   AuthProvider _auth;
   final String currentUserId = currentUser?.uid;
 
@@ -79,10 +78,9 @@ class _notif_updatedState extends State<notif_updated> {
   final String userId;
   final String username;
   final String userImg;
-
   final Timestamp timestamp;
 
-  _notif_updatedState(
+  _UserFeedState(
       {this.bfId,
       this.bfTitle,
       this.interactionId,
@@ -105,7 +103,7 @@ class _notif_updatedState extends State<notif_updated> {
     return Builder(
       builder: (BuildContext context) {
         _auth = Provider.of<AuthProvider>(context);
-        return StreamBuilder<List<notif_updated>>(
+        return StreamBuilder<List<UserFeed>>(
           stream: StreamService.instance.getNotifications(_auth.user.uid),
           builder: (context, _snapshot) {
             var _activity = _snapshot.data;
@@ -131,8 +129,15 @@ class _notif_updatedState extends State<notif_updated> {
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            InteractionFeed(interactionTitle: interactionTitle),
+                        builder: (context) => InteractionFeed(
+                          bfId: bfId,
+                          bfTitle: bfTitle,
+                          interactionId: interactionId,
+                          interactionTitle: interactionTitle,
+                          userId: userId,
+                          username: username,
+                          userImg: userImg,
+                        ),
                       )),
                   child: Container(
                     decoration: BoxDecoration(
