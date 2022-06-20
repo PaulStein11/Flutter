@@ -40,6 +40,7 @@ class BF extends StatefulWidget {
   final String duration;
   final int audience;
   final Timestamp timestamp;
+  //final DateTime timestampClosure;
   final dynamic likes;
 
   BF(
@@ -50,6 +51,7 @@ class BF extends StatefulWidget {
       this.title,
       this.audience,
       this.timestamp,
+      //this.timestampClosure,
       this.likes,
       this.file,
       this.duration});
@@ -65,6 +67,7 @@ class BF extends StatefulWidget {
       title: _data['title'],
       audience: _data['audience'],
       timestamp: _data['timestamp'],
+      //timestampClosure: _data['timestampClosure'],
       likes: _data['likes'],
       file: _data['file'],
       duration: _data['duration'],
@@ -126,6 +129,7 @@ class BF extends StatefulWidget {
       title: this.title,
       audience: this.audience,
       timestamp: this.timestamp,
+      //timestampClosure: this.timestampClosure,
       likes: this.likes,
       likeCount: getLikeCount(this.likes),
       file: this.file,
@@ -147,6 +151,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
   final String duration;
   final int audience;
   final Timestamp timestamp;
+  //final DateTime timestampClosure;
   bool isLiked;
   bool isDisliked;
   bool isUpgraded;
@@ -172,6 +177,7 @@ class _BFState extends State<BF> with WidgetsBindingObserver {
       this.title,
       this.audience,
       this.timestamp,
+      //this.timestampClosure,
       this.likes,
       this.likeCount,
       this.file,

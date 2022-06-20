@@ -45,7 +45,7 @@ class StreamService {
         .collection(_interactionCollection)
         .document(_bfId)
         .collection("usersInteraction")
-        .orderBy("likes", descending: true);
+        .orderBy("likes", descending: false);
     return _ref.getDocuments().asStream().map((_snapshot) {
       return _snapshot.documents.map((_doc) {
         return Interaction.fromDocument(_doc);
@@ -68,16 +68,6 @@ class StreamService {
       }).toList();
     });
   }
-
-
-
-
-  /* Stream<List<BF>> getInteraction(String _interactionId) {
-    var _ref = _db.collection("FollowingTech").document(_userID);
-    return _ref.get().asStream().map((_snapshot) {
-      return UserModel.fromDocument(_snapshot);
-    });
-  }*/
 
   Stream<List<NotificationItem>> getNotificationsItem(String _userID) {
     var _ref = _db

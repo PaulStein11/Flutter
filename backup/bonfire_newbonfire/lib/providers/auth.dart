@@ -132,7 +132,7 @@ class AuthProvider extends ChangeNotifier {
       user = _result.user;
       status = AuthStatus.Authenticated;
       await onSuccess(user.uid);
-      user.sendEmailVerification();
+      user.();
       NavigationService.instance.navigateToReplacement("email_verification");
     } catch (error) {
       status = AuthStatus.Error;
@@ -152,6 +152,7 @@ class AuthProvider extends ChangeNotifier {
       await _googleSignIn.signOut();
       user = null;
       status = AuthStatus.NotAuthenticated;
+      notifyListeners();
       await onSuccess();
       await NavigationService.instance.navigateToReplacement("welcome");
     } catch (e) {
@@ -169,7 +170,9 @@ class AuthProvider extends ChangeNotifier {
       SnackBarService.instance
           .showSnackBarSuccess("An email was sent to reset your password", context);
       Navigator.pop(context);
-    } catch(e) {
+    }
+
+    catch(e) {
       status = AuthStatus.Error;
       status = AuthStatus.NotAuthenticated;
       notifyListeners();

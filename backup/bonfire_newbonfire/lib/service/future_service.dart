@@ -35,6 +35,7 @@ class FutureService {
         "title": _title,
         "audience": 0,
         "timestamp": DateTime.now(),
+        "timestampClosure": DateTime.now().add(new Duration(days: 7)),
         "likes": {},
         "dislikes": {},
         "upgrades": {},

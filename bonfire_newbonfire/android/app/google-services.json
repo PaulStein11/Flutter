@@ -1,304 +1,48 @@
 {
   "project_info": {
-    "project_number": "1023544833448",
-    "project_id": "bonfire-e573e",
-    "storage_bucket": "bonfire-e573e.appspot.com"
+    "project_number": "351533387923",
+    "project_id": "pagoda-7fac2",
+    "storage_bucket": "pagoda-7fac2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:ebdf685a1c24970239199d",
+        "mobilesdk_app_id": "1:351533387923:android:5ae07ae7e2564be1243d66",
         "android_client_info": {
-          "package_name": "com.app.firecamp.fire_camp"
+          "package_name": "com.example.bf_pagoda"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1023544833448-fjkrie69qqci12hk7u84bf98t6269175.apps.googleusercontent.com",
+          "client_id": "351533387923-25sgj7g9avg71b54iq0mche8h1e6haje.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.app.firecamp.fire_camp",
-            "certificate_hash": "25ab68e3fb0c56503146dce060067cf6b74621c0"
+            "package_name": "com.example.bf_pagoda",
+            "certificate_hash": "24e274866cf72c2a5e1c664eb48733a45c0cae19"
           }
         },
         {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
+          "client_id": "351533387923-s5morgjhmq14759r42ep7298epubdjij.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
+          "current_key": "AIzaSyCN14ECen_3XJKRUjOEvWYhBwpimsqIWwc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
+              "client_id": "351533387923-s5morgjhmq14759r42ep7298epubdjij.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
+              "client_id": "351533387923-5v8g3ergb5dmdt9hf5ju8rq77r4jl2oh.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:b612beeec4d6d83c39199d",
-        "android_client_info": {
-          "package_name": "com.company.test"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1023544833448-i21ar4eb8lmvnqouunvbg81mh1ltcp9b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.company.test",
-            "certificate_hash": "25ab68e3fb0c56503146dce060067cf6b74621c0"
-          }
-        },
-        {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:c4f649b6eafea5ae39199d",
-        "android_client_info": {
-          "package_name": "com.example.bf_getx"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1023544833448-bsed1fa7f4p9oslr1kqoj8r7ab9m0kb0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.bf_getx",
-            "certificate_hash": "25ab68e3fb0c56503146dce060067cf6b74621c0"
-          }
-        },
-        {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:a4fa21770c314c7239199d",
-        "android_client_info": {
-          "package_name": "com.example.bomfire_v3"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1023544833448-sivn7s4mphulgdhl9f60urbohiihrlla.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.bomfire_v3",
-            "certificate_hash": "25ab68e3fb0c56503146dce060067cf6b74621c0"
-          }
-        },
-        {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:49fee7a6b2dcecc539199d",
-        "android_client_info": {
-          "package_name": "com.example.bonfire"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1023544833448-f0q7ra4ebe9anhvl77ctu5qq62uhs8bo.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.bonfire",
-            "certificate_hash": "25ab68e3fb0c56503146dce060067cf6b74621c0"
-          }
-        },
-        {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:9c8f20738e80742f39199d",
-        "android_client_info": {
-          "package_name": "com.example.bonfire_newbonfire"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1023544833448:android:69a28103dd31457739199d",
-        "android_client_info": {
-          "package_name": "com.example.simply_bf"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1023544833448-i2kkpk79v88df3vib57tl9rgpmnm2qbf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.simply_bf",
-            "certificate_hash": "25ab68e3fb0c56503146dce060067cf6b74621c0"
-          }
-        },
-        {
-          "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAYJ4mgilywFj_zJrzSvuFJF3iSEGfDbFo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1023544833448-n9l5jf80pk6jt0l37cp4u4g3v75vte53.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1023544833448-nmn2daiuv59kp8hpfifvjmc8u57o2j6e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.bonfireNewbonfire"
+                "bundle_id": "com.example.bonfirev1"
               }
             }
           ]

@@ -1,6 +1,6 @@
-# bonfire_newbonfire
+# bf_pagoda
 
-A new Flutter application.
+A new Flutter project.
 
 ## Getting Started
 

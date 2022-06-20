@@ -30,7 +30,6 @@ class _CreateNewBonfireState extends State<CreateNewBonfire> {
   String id, name, bfId = Uuid().v4(), profileImage;
   String dropdownValue = 'Default';
   String _title = "";
-  String _anonymous = '👓';
   final _formKey = new GlobalKey<FormState>();
   bool isAnonymous = false;
   bool _light = false;

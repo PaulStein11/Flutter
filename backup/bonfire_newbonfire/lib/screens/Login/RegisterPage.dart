@@ -222,47 +222,47 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget registerButton() {
     return _auth.status == AuthStatus.Authenticating
         ? Align(
-            alignment: Alignment.center,
-            child:CircularProgressIndicator(
-              color: Theme.of(context).accentColor,
-              backgroundColor: Theme.of(context).indicatorColor,
-            ),
-          )
+      alignment: Alignment.center,
+      child:CircularProgressIndicator(
+        color: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).indicatorColor,
+      ),
+    )
         : Center(
-            child: OurFilledButton(
-              context: context,
-              text: "Register account",
-              onPressed: () {
-                //Implement registration functionality.
-                if (_formKey.currentState.validate() != null) {
-                  if (_image != null) {
-                    _auth.registerUserWithEmailAndPassword(
-                      context,
-                      _email,
-                      _password,
-                      (String _uid) async {
-                        var _result = await CloudStorageService.instance
-                            .uploadUserImage(_uid, _image);
-                        var _imageURL = await _result.ref.getDownloadURL();
-                        var tokenId = await OneSignal.shared
-                            .getDeviceState()
-                            .then((deviceState) {
-                          var userTokenId = deviceState.userId;
-                          print("$userTokenId");
-                          return userTokenId;
-                        });
-                        await FutureService.instance.createUserInDB(
-                            _uid, _name, _email, "", _imageURL, tokenId);
-                      },
-                    );
-                  }
-                  if (_image == null) {
-                    SnackBarService.instance
-                        .showSnackBarError("User image missing", context);
-                  }
-                }
-              },
-            ),
-          );
+      child: OurFilledButton(
+        context: context,
+        text: "Register account",
+        onPressed: () {
+          //Implement registration functionality.
+          if (_formKey.currentState.validate() != null) {
+            if (_image != null) {
+              _auth.registerUserWithEmailAndPassword(
+                context,
+                _email,
+                _password,
+                    (String _uid) async {
+                  var _result = await CloudStorageService.instance
+                      .uploadUserImage(_uid, _image);
+                  var _imageURL = await _result.ref.getDownloadURL();
+                  var tokenId = await OneSignal.shared
+                      .getDeviceState()
+                      .then((deviceState) {
+                    var userTokenId = deviceState.userId;
+                    print("$userTokenId");
+                    return userTokenId;
+                  });
+                  await FutureService.instance.createUserInDB(
+                      _uid, _name, _email, "", _imageURL, tokenId);
+                },
+              );
+            }
+            if (_image == null) {
+              SnackBarService.instance
+                  .showSnackBarError("User image missing", context);
+            }
+          }
+        },
+      ),
+    );
   }
 }

@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 
 class OurTheme {
-  Color _backgroundColor = Color(0xff1a1a1a);
-  Color _primaryFont = Color(0xffe2e2e2);
-  Color _secondaryFont = Colors.grey;
-  Color _canvasColor = Color(0xff383838).withOpacity(0.57);
-  Color _mainOrange = Color(0xffe65100);
-  Color _boxColor = Color(0xff2a2827);
+  Color _backgroundColor = Color(0xfff3f6f4);
+  Color _boxColor = Color(0xff2A2827).withOpacity(0.7);//Colors.grey.shade800.withOpacity(0.70);//
+  Color _audioBtns = Color(0xff383838);
+  Color _canvasColor = Color(0xff383838).withOpacity(0.85); //Drawer menu etc
+  Color _primaryFont = Color(0xff2A2827); //BF titles, user names and timestamps
+  Color _headingTitles = Color(0xffe2e2e2); // Heading titles on categories
+  Color _secondaryFont = Color(0xff2A2827).withOpacity(0.7);
+  Color _accentColor = Colors.amber.shade800;
 
   ThemeData buildTheme() {
     return ThemeData(
       backgroundColor: _backgroundColor,
-      canvasColor: _canvasColor,
+      canvasColor: _backgroundColor,
       primaryColor: _primaryFont,
-      accentColor: _mainOrange,
+      accentColor: _accentColor,
+      indicatorColor: _canvasColor,
+      unselectedWidgetColor: _accentColor,
       cardColor: _boxColor,
       secondaryHeaderColor: _secondaryFont,
       hintColor: _secondaryFont,
       fontFamily: "Poppins",
       appBarTheme: AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: _primaryFont),
         backgroundColor: _backgroundColor// 1
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -37,7 +41,9 @@ class OurTheme {
         ),
       ),
       buttonTheme: ButtonThemeData(
-        buttonColor: _mainOrange,
+        splashColor: Colors.grey,
+        disabledColor: _primaryFont.withOpacity(0.8),
+        buttonColor: _accentColor,
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         minWidth: 150,
         height: 40.0,
@@ -45,28 +51,45 @@ class OurTheme {
           borderRadius: BorderRadius.circular(20.0),
         ),
       ),
+
+      ////////////START /////////////  Headlines
       textTheme: TextTheme(
+        //MAIN TITLES OF BONFIRES
         headline1: TextStyle(
-          fontSize: 17.5,
-          fontWeight: FontWeight.w600,
-          color: Color(0xffe2e2e2),
-        ),
+            fontSize: 14.0,
+            color: Colors.grey.shade200,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.6),
+        //USER NAMES ALONG THE APP
         headline2: TextStyle(
-          fontSize: 16.5,
-          letterSpacing: 1,
-          color: Color(0xffe2e2e2),
-        ),
-        //Contains the status
+            color: Colors.grey.shade500,
+            fontWeight: FontWeight.bold,
+            fontSize: 12.0,
+            fontFamily: "PalanquinDark",
+            letterSpacing: 0.5),
+        //TIMESTAMPS ALONG THE APP
         headline3: TextStyle(
-            fontFamily: "Palanquin",
-            fontSize: 15,
-            letterSpacing: 0.5,
-            color: Colors.green,
-            fontWeight: FontWeight.w600
-        ),
+          fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: Colors.white70,
+            letterSpacing: 0.5),
+        // HEADLINE TITLES EX: WHATS HAPPENING, THAT'S FIRE, CHOOSE CATEGORY ETC
         headline4: TextStyle(
-          fontSize: 16,
-          color: Colors.white,
+            fontSize: 17,
+            letterSpacing: 0.5,
+            color: Colors.grey.shade50,
+            fontWeight: FontWeight.w800
+        ),
+        // ICONS DATA NUMBER
+        headline5: TextStyle(
+            color: Colors.grey.shade300,
+            fontSize: 16,
+            fontWeight: FontWeight.w600),
+        headline6: TextStyle(
+            fontSize: 16.5,
+            letterSpacing: 0.5,
+            color: Colors.grey.shade300,
+            fontWeight: FontWeight.w800
         ),
       ),
     );

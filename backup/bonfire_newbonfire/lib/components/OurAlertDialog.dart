@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
-Future<bool> showAlertDialog(BuildContext context,
-    {@required String title,
+Future<bool> showAlertDalog(BuildContext context,
+    {@required String tiitle,
     @required String content,
     String cancelActionText,
     bool getRequiredLinkbool,
