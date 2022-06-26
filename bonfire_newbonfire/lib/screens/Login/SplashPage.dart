@@ -4,6 +4,7 @@ import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -31,23 +32,13 @@ class SplashPage extends StatelessWidget {
         child: Builder(
           builder: (BuildContext context) {
             _auth = Provider.of<AuthProvider>(context);
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 35,
-                  width: 35.0,
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/flame_sharp_white.png")
-                      )
-                  ),
-                ),
-                CircularProgressIndicator(
-                  color: Theme.of(context).accentColor,
-                )
-              ],
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitFadingCircle(color: Theme.of(context).primaryColor,)
+                ],
+              ),
             );
           },
         ),

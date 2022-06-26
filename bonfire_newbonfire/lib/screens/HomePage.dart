@@ -1,3 +1,4 @@
+import 'package:bf_pagoda/models/bonfire.dart';
 import 'package:bf_pagoda/models/user.dart';
 import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:audioplayers/audioplayers.dart' as audio;
 import '../main.dart';
@@ -49,10 +51,41 @@ class _HomePageState extends State<HomePage> {
   late audio.AudioPlayer _audio;
   bool isPlayingBF = false;
 
+  Future<void> initOneSignal(BuildContext context) async {
+    /// Set App Id.
+    await OneSignal.shared.setAppId(oneSignalAppId);
+
+    /// Get the Onesignal userId and update that into the firebase.
+    /// So, that it can be used to send Notifications to users later.̥
+    final status = await OneSignal.shared.getDeviceState();
+    final String? osUserID = status?.userId;
+    print("Paul, the userId is $osUserID");
+    // We will update this once he logged in and goes to dashboard.
+    ////updateUserProfile(osUserID);
+    // Store it into shared prefs, So that later we can use it.
+    //Preferences.setOnesignalUserId(osUserID);
+
+    // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    await OneSignal.shared.promptUserForPushNotificationPermission(
+      fallbackToSettings: true,
+    );
+
+    /// Calls when foreground notification arrives.
+    /*OneSignal.shared.setNotificationWillShowInForegroundHandler(
+      handleForegroundNotifications,
+    );*/
+
+    /// Calls when the notification opens the app.
+    //OneSignal.shared.setNotificationOpenedHandler(handleBackgroundNotification);
+  }
+
   @override
   void initState() {
     _audio = audio.AudioPlayer();
     super.initState();
+    OneSignal.shared.getDeviceState().then((deviceState) {
+      print("DeviceState: ${deviceState?.userId}");
+    });
   }
 
   @override
@@ -102,6 +135,7 @@ class _HomePageState extends State<HomePage> {
         }
         final MyUserModel userData = snapshot.data!;
         print(userData.bonfires);
+        print("User's tokenId: " + userData.tokenId);
         return Scaffold(
           drawer: Drawer(
             // Add a ListView to the drawer. This ensures the user can scroll
@@ -204,63 +238,101 @@ class _HomePageState extends State<HomePage> {
                     // Show example option
                     //TODO: Create a Widget out of this dialog
                     showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        contentPadding: EdgeInsets.all(15.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20.0),
-                          ),
-                        ),
-                        backgroundColor: Color(0xff2A2827),
-                        title: Text(
-                          "First bonfire",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        content: Text(
-                          "Before start your first bonfire check some examples for reference",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
-                        actions: [
-                          FlatButton(
-                            color: Theme.of(context).primaryColor,
-                            child: Text(
-                              "see examples",
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => BFExample(
-                                        uid: userData.uid,
-                                        username: userData.name,
-                                        profileImg: userData.profileImage,
-                                      )));
-                            },
-                          ),
-                          FlatButton(
-                            color: Theme.of(context).indicatorColor,
-                            child: Text(
-                              "continue",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateBFPage(
-                                    uid: userData.uid,
-                                    username: userData.name,
-                                    profileImg: userData.profileImage,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    );
+                        context: context,
+                        builder: (_) => new AlertDialog(
+                          backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              content: Builder(
+                                builder: (context) {
+                                  // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                  var height =
+                                      MediaQuery.of(context).size.height;
+                                  var width = MediaQuery.of(context).size.width;
+
+                                  return Container(
+                                      height: height - 400,
+                                      width: width - 50,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "First bonfire",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4!
+                                                .copyWith(
+                                                    color:
+                                                        Colors.grey.shade600),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Before start your first bonfire check some examples for reference",
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1!
+                                                  .copyWith(
+                                                      color:
+                                                          Colors.grey.shade800,
+                                                      fontSize: 17.0),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 16.5),
+                                            child: FlatButton(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              child: Text(
+                                                "see examples", style: TextStyle(color: Theme.of(context).backgroundColor),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            BFExample(
+                                                              uid: userData.uid,
+                                                              username:
+                                                                  userData.name,
+                                                              profileImg: userData
+                                                                  .profileImage,
+                                                            )));
+                                              },
+                                            ),
+                                          ),
+                                          FlatButton(
+                                              color: Theme.of(context)
+                                                  .indicatorColor,
+                                              child: Text(
+                                                "continue",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CreateBFPage(
+                                                      uid: userData.uid,
+                                                      username: userData.name,
+                                                      profileImg:
+                                                          userData.profileImage,
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                        ],
+                                      ));
+                                },
+                              ),
+                            ));
                   } else {
                     Navigator.push(
                       context,
@@ -337,289 +409,47 @@ class _HomePageState extends State<HomePage> {
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: OurLoadingWidget(context));
               }
-              return ListView(
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
+              List<DocumentSnapshot> listOfBonfires = snapshot.data!.docs;
+
+              return RefreshIndicator(
+                onRefresh: () {
+                  return Future.delayed(
+                    Duration(seconds: 2),
+                    () {
+                      OurLoadingWidget(context);
+                    },
+                  );
+                },
+                child: ListView.builder(
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: listOfBonfires.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    OneSignal.shared.setNotificationOpenedHandler(
+                        (OSNotificationOpenedResult result) {
+                      print(
+                          "Opened notification: ${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => BonfirePage(
-                              bfId: data["bfId"], bfTitle: data["title"]),
+                              bfId: result.notification.smallIcon,
+                              bfTitle: result.notification.title,
+                              ownerId: result.notification.largeIcon),
                         ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).cardColor.withOpacity(0.75),
-                            borderRadius: BorderRadius.circular(15.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Flexible(
-                                    child: Text(
-                                      data['title'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline4!
-                                          .copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            overflow: TextOverflow.clip,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          MyFlutterApp.users,
-                                          color: Colors.grey.shade400,
-                                          size: 25.0,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 12.0),
-                                          child: Transform.translate(
-                                            offset: const Offset(2.0, 4.0),
-                                            child: Text(
-                                                data['audience'].toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline4!
-                                                    .copyWith(
-                                                        color: Colors
-                                                            .grey.shade400)),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    CircleAddButton(
-                                      context,
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                          barrierColor: Colors.grey.shade800
-                                              .withOpacity(0.8),
-                                          elevation: 10.0,
-                                          context: context,
-                                          builder: (context) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 12.0,
-                                                      horizontal: 10.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  ListTile(
-                                                    leading: isPlayingBF == false
-                                                        ? IconButton(
-                                                        onPressed: () async {
-                                                          setState(() {
-                                                            isPlayingBF = true;
-                                                          });
-                                                          _audio.play(data["file"]);
-                                                          _audio.onPlayerCompletion
-                                                              .listen((duration) {
-                                                            setState(() {
-                                                              isPlayingBF = false;
-                                                            });
-                                                          });
-                                                        },
-                                                        icon: Icon(
-                                                          FontAwesomeIcons.playCircle,
-                                                          color: Colors.white70,
-                                                        ))
-                                                        : IconButton(
-                                                        onPressed: () async {
-                                                          setState(() {
-                                                            isPlayingBF = false;
-                                                          });
-                                                          await _audio.pause();
-                                                        },
-                                                        icon: Icon(
-                                                          FontAwesomeIcons
-                                                              .pauseCircle,
-                                                          color: Colors.white70,
-                                                        )),
-                                                    title: new Text('Play',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4),
-                                                    onTap: () async {
-                                                      await _audio
-                                                          .play(data["file"]);
-                                                    },
-                                                  ),
-                                                  /*ListTile(
-                                                    leading: new Icon(
-                                                      FontAwesomeIcons.message,
-                                                      color: Colors.white,
-                                                    ),
-                                                    title: new Text('Reply',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4),
-                                                    onTap: () {
-                                                      showDialog<String>(
-                                                          barrierColor: Colors
-                                                              .transparent,
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return Text("");
-
-                                                          });
-                                                    },
-                                                  ),*/
-                                                  ListTile(
-                                                    leading: new Icon(
-                                                      Icons.share,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                    ),
-                                                    title: new Text('Share',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4),
-                                                    onTap: () async {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            AlertDialog(
-                                                          contentPadding:
-                                                              EdgeInsets.all(
-                                                                  15.0),
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          20.0))),
-                                                          backgroundColor:
-                                                              Color(0xff2A2827),
-                                                          title: Text(
-                                                            "Share bonfire",
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline4,
-                                                          ),
-                                                          content: Text(
-                                                            "Obtain link to start sharing this bonfire",
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline1,
-                                                          ),
-                                                          actions: <Widget>[
-                                                            FlatButton(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                              child: Text(
-                                                                "cancel",
-                                                              ),
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop(
-                                                                          false),
-                                                            ),
-                                                            FutureBuilder<Uri>(
-                                                                future: DynamicLinkService()
-                                                                    .createLongDynamicLink(
-                                                                        data[
-                                                                            "title"],
-                                                                        "${userData.name} - open bonfire"),
-                                                                builder: (context,
-                                                                    snapshot) {
-                                                                  if (snapshot
-                                                                      .hasData) {
-                                                                    Uri? uri =
-                                                                        snapshot
-                                                                            .data;
-                                                                    return FlatButton(
-                                                                      onPressed: () => FlutterShare.share(
-                                                                          title:
-                                                                              "example",
-                                                                          linkUrl:
-                                                                              uri.toString()),
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .indicatorColor,
-                                                                      child:
-                                                                          Text(
-                                                                        "continue",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Theme.of(context).primaryColor),
-                                                                      ),
-                                                                    );
-                                                                  } else {
-                                                                    return FlatButton(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .indicatorColor,
-                                                                      onPressed:
-                                                                          () {},
-                                                                      child:
-                                                                          Text(
-                                                                        "share",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Theme.of(context).primaryColor),
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                }),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
+                      );
+                    });
+                    return Bonfire(
+                      bfId: listOfBonfires[index]["bfId"],
+                      bfTitle: listOfBonfires[index]["title"],
+                      audience: listOfBonfires[index]["audience"],
+                      bfAudioFile: listOfBonfires[index]["file"],
+                      bfOwner: listOfBonfires[index]["ownerName"],
+                      ownerId: listOfBonfires[index]["ownerId"],
+                    );
+                  },
+                ),
               );
             },
           ),

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:audioplayers/audioplayers.dart' as audio;
@@ -9,15 +11,15 @@ import 'package:bf_pagoda/widgets/OurRecordBFButton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:http/http.dart';
+import '../../../main.dart';
 import '../../../widgets/audio_stream/MusicVisualizer.dart';
-
-
-
 
 String? path;
 String? durationBf;
@@ -58,6 +60,24 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
       _isPaused = false,
       _isRecorded = false,
       isPlaying = false;
+  bool _isLoading = false;
+
+  List<String> usersNotificationToken = [];
+
+  // TODO: FINISH TO RETRIEVE ONSEGINAL USERID'S
+  /*Future<void> uploadUserTokens() async {
+    List<String> userTokensList = [];
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("onesignal").get();
+    snapshot.docs.forEach((DocumentSnapshot documentSnap) {
+      Object? data = documentSnap.data();
+      userTokensList.add(data!["tokenId"]);
+    });
+    setState(() {
+      usersNotificationToken = userTokensList;
+      print(" printing list of tokens $usersNotificationToken");
+    });
+  }*/
+  // This function will be triggered when the button is pressed
 
   //Audio Player states
   late audio.AudioPlayer _audio;
@@ -65,16 +85,118 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
   Timer? _timer;
   late FlutterAudioRecorder2 _audioRecorder;
   int? _totalTime, _currentTime;
-
+  late final String? osUserID;
+  List<String> entries = [];
 
   // Firebase Storage file variables
   final metadata = SettableMetadata(contentType: "audio/x-wav");
   var date = DateTime.now();
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
+  List<String> collectionElements = [];
 
   _CreateBFAudioState(this.uid, this.username, this.profileImg, this.bfTitle,
       this.bfDuration, this.anonymous);
+
+  Future<List<String>> getJournalEntries() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        print(doc["tokenId"]);
+        entries.add(doc["tokenId"]);
+      });
+    });
+
+    return entries;
+  }
+
+  void _startLoading() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Wait for 3 seconds
+    // You can replace this with your own task like fetching data, proccessing images, etc
+    final oneSigState =
+        await OneSignal.shared.getDeviceState().then((deviceState) {
+      osUserID = deviceState!.userId;
+    });
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.uid)
+        .update({"tokenId": osUserID});
+    await storage
+        .ref()
+        .child(bfTitle)
+        .child("bonfire_audios")
+        .putFile(File(path.toString()))
+        .then((taskSnapshot) async {
+      print("task done");
+      if (taskSnapshot.state == TaskState.running) {
+        return Text(
+          "Loading...",
+          style: Theme.of(context).textTheme.headline1,
+        );
+      }
+// download url when it is uploaded
+      else if (taskSnapshot.state == TaskState.success) {
+        storage
+            .ref('${widget.bfTitle}/bonfire_audios')
+            .getDownloadURL()
+            .then((url) {
+          FutureServices.instance.createBF(
+            widget.uid,
+            widget.username,
+            widget.profileImg,
+            bfId,
+            bfTitle,
+            bfDuration,
+            "$minutes : $seconds",
+            DateTime(
+                date.year,
+                date.month,
+                date.day +
+                    int.parse(widget.bfDuration
+                        .substring(0, widget.bfDuration.indexOf("day")))),
+            url,
+            widget.anonymous,
+          ).then((value) async {
+            var entries = await getJournalEntries();
+            await OneSignal.shared.postNotification(OSCreateNotification(
+              heading: "${widget.username} created Bonfire",
+              playerIds: entries,
+              content: bfTitle,
+              androidSmallIcon: bfId,
+              androidLargeIcon: widget.uid,
+            ));
+          });
+          print("Here is the URL of Image $url");
+          return url;
+        }).catchError((onError) {
+          print("Got Error $onError");
+        });
+        print("this are the entries: " + entries.join(""));
+        /*await sendNotification(
+            entries, bfTitle, "${widget.username} created Bonfire", bfId, widget.uid);*/
+
+      }
+      /*var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+                      var res = await func.call(<String, dynamic>{
+                        "targetDevices": ["c_k5EcV8Sn-5rrNDlgoT2V:APA91bHeuGbzbO2S1mlYeqgtHNBy5E4KoC4dpMhKqpEfjeHrfNp3DU9xXArwbr3biFzb_0JYbo0Va_bRRLXmbXnm0q-N8GjWMeF23W0LHdoqPCihHRlxrToOGb87DKfNKsWHWRx52SYf"],
+                        "messageTitle": "Test title",
+                        "messageBody": "Hello paul!!"
+                      });
+
+                      print("message was ${res.data as bool ? "sent!" : "not sent!"}");*/
+    });
+
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.pushReplacementNamed(context, "home");
+  }
 
   @override
   void initState() {
@@ -91,13 +213,47 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
     super.dispose();
   }
 
+  Future<Response> sendNotification(
+      List<String> tokenIdList, String contents, String heading, String bfId, String? ownerId) async {
+    return await post(
+      Uri.parse('https://onesignal.com/api/v1/notifications'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "app_id": oneSignalAppId,
+        //kAppId is the App Id that one get from the OneSignal When the application is registered.
+
+        "include_player_ids": tokenIdList,
+        //tokenIdList Is the List of All the Token Id to to Whom notification must be sent.
+
+        // android_accent_color reprsent the color of the heading text in the notifiction
+        "android_accent_color": "FFFB8C00",
+
+        //"small_icon":"res/drawable-ic_launcher",
+
+        /*"large_icon":
+            "https://www.filepicker.io/api/file/zPloHSmnQsix82nlj9Aj?filename=name.jpg",*/
+
+        "headings": {"en": heading},
+
+        "contents": {"en": contents},
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.0,
-        title: _isRecorded == true ? Text("Upload", style: Theme.of(context).textTheme.headline6,): Text(""),
+        title: _isRecorded == true
+            ? Text(
+                "Upload",
+                style: Theme.of(context).textTheme.headline6,
+              )
+            : Text(""),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Icon(
@@ -110,72 +266,29 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
           _isRecording == false && _isRecorded == false
               ? Text("")
               : _isRecorded == true
-              ? Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Container(
-              color: Colors.orange.shade800,
-              child: IconButton(
-                  onPressed: () async {
-                    await storage
-                        .ref()
-                        .child(bfTitle)
-                        .child("bonfire_audios")
-                        .putFile(File(path.toString()))
-                        .then((taskSnapshot) async {
-                      print("task done");
-                      if (taskSnapshot.state == TaskState.running) {
-                        return Text(
-                          "Loading...",
-                          style: Theme.of(context).textTheme.headline1,
-                        );
-                      }
-// download url when it is uploaded
-                      else if (taskSnapshot.state == TaskState.success) {
-                        storage
-                            .ref('${widget.bfTitle}/bonfire_audios')
-                            .getDownloadURL()
-                            .then((url) {
-                          FutureServices.instance.createBF(
-                            widget.uid,
-                            widget.username,
-                            widget.profileImg,
-                            bfId,
-                            bfTitle,
-                            bfDuration,
-                            "$minutes : $seconds",
-                            DateTime(date.year, date.month, date.day + int.parse(widget.bfDuration.substring(0, widget.bfDuration.indexOf("day")))),
-                            url,
-                            widget.anonymous,
-                          );
-                          print("Here is the URL of Image $url");
-                          return url;
-                        }).catchError((onError) {
-                          print("Got Error $onError");
-                        });
-                      }
-                      /*var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
-                      var res = await func.call(<String, dynamic>{
-                        "targetDevices": ["c_k5EcV8Sn-5rrNDlgoT2V:APA91bHeuGbzbO2S1mlYeqgtHNBy5E4KoC4dpMhKqpEfjeHrfNp3DU9xXArwbr3biFzb_0JYbo0Va_bRRLXmbXnm0q-N8GjWMeF23W0LHdoqPCihHRlxrToOGb87DKfNKsWHWRx52SYf"],
-                        "messageTitle": "Test title",
-                        "messageBody": "Hello paul!!"
-                      });
-
-                      print("message was ${res.data as bool ? "sent!" : "not sent!"}");*/
-                      Navigator.pushReplacementNamed(context, "home");
-                    });
-                  },
-                  icon: Icon(
-                    FontAwesomeIcons.check,
-                    color: Colors.grey.shade200,
-                  )),
-            ),
-          )
-              : Text("")
+                  ? Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+                        color: _isLoading
+                            ? Colors.transparent
+                            : Colors.orange.shade900,
+                        child: IconButton(
+                            onPressed: _isLoading ? null : _startLoading,
+                            icon: _isLoading
+                                ? SpinKitPulse(
+                                    color: Colors.orange.shade900,
+                                  )
+                                : Icon(
+                                    FontAwesomeIcons.check,
+                                    color: Colors.grey.shade200,
+                                  )),
+                      ),
+                    )
+                  : Text("")
         ],
       ),
       body: Padding(
-        padding:
-        const EdgeInsets.symmetric(vertical: 3.0, horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 30.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -465,7 +578,7 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
     if (_isRecording || _isPaused) {
       return ClipOval(
         child: Material(
-          color: Colors.teal.withOpacity(0.85),
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
           child: InkWell(
             onTap: () async {
               _audioRecorder.stop();
@@ -506,7 +619,7 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
               height: 60.0,
               child: Icon(
                 FontAwesomeIcons.check,
-                color: Theme.of(context).indicatorColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -524,7 +637,7 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
     }
 
     return Text(
-      "Waiting to record",
+      "Tap to record",
       style: TextStyle(
           color: Colors.grey,
           fontSize: 16.0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 Widget OurLoadingWidget(BuildContext context) {
   return Container(
@@ -8,10 +9,8 @@ Widget OurLoadingWidget(BuildContext context) {
     child: Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: Center(
-        child: LinearProgressIndicator(
-          color: Theme.of(context).accentColor,
-          backgroundColor: Theme.of(context).indicatorColor,
-        ),
+        child: SpinKitFadingCircle(color: Theme.of(context).accentColor,)
+
       ),
     ),
   );

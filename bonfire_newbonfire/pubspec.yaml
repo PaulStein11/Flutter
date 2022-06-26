@@ -66,8 +66,9 @@ dependencies:
   flutter_email_sender:
 # UI EFFECTS
   avatar_glow:
-# NOTIFICATIONS
-
+  flutter_spinkit: ^5.1.0
+  # NOTIFICATIONS
+  onesignal_flutter: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -11,8 +11,8 @@ Widget CircleAddButton(BuildContext context, {required Function() onPressed}) {
         child: GestureDetector(
           onTap: onPressed,
           child: Container(
-            height: 30.0,
-            width: 30.0,
+            height: 35.0,
+            width: 35.0,
             decoration: BoxDecoration(
               color: Colors.orange.shade900,//Theme.of(context).accentColor,
               borderRadius: BorderRadius.circular(60.0),

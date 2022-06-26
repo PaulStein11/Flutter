@@ -21,10 +21,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'screens/Login/RegisterPage.dart';
 import 'screens/Profile/ProfilePage.dart';
 
+final String  oneSignalAppId = "397cc3b7-7d47-44cf-b0eb-eb8ce39f8456";
 
 /// --- MAIN FUNCTION --- ///
 Future<void> main() async {
@@ -33,20 +35,10 @@ Future<void> main() async {
   ));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
-  // Allows to retrieve the Dynamic Link that opened the application.
-  /*final PendingDynamicLinkData initialLink =
-      await FirebaseDynamicLinks.instance.getInitialLink();
+  OneSignal.shared.setAppId(oneSignalAppId);
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );*/
-
-// Ideal time to initialize
-//  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-//...
   runApp(MyApp());
 }
 
@@ -64,7 +56,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'BF Pagoda',
         theme: OurDarkTheme().buildTheme(),
-        darkTheme: OurDarkTheme().buildTheme(),
         initialRoute: "splash",
         onGenerateRoute: (settings) {
           return MaterialPageRoute(

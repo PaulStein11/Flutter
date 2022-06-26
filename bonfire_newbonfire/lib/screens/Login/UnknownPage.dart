@@ -1,3 +1,4 @@
+import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
 import 'package:bf_pagoda/services/navigation_service.dart';
 import 'package:bf_pagoda/services/snackbar_service.dart';
@@ -5,6 +6,7 @@ import 'package:bf_pagoda/widgets/OurOutlinedButton.dart';
 import 'package:bf_pagoda/widgets/TermsWidget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,20 @@ class _UnknownPageState extends State<UnknownPage> {
   final _formKey = GlobalKey<FormState>();
   String _feedback = "";
   late AuthStatus _status;
+  bool _isLoading = false;
+
+  void _startLoading() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await _auth!.signInWithGoogle().whenComplete(() {
+      print("Method completed from AuthClass");
+    });
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,33 +94,31 @@ class _UnknownPageState extends State<UnknownPage> {
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: _isLoading ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
                       children: [
-                        OurOutlineButton(
+                        _isLoading ? Container(
+
+                          child: SpinKitRing(color: Theme.of(context).accentColor, size: 35.0, lineWidth: 2,),
+                        ) : OurOutlineButton(
                           context: context,
                           text: 'Continue with Google',
                           hasIcon: true,
                           icon: FontAwesomeIcons.google,
                           color: Theme.of(context).primaryColor,
-                          onPressed: () async {
-                            await _auth!.signInWithGoogle().whenComplete(() {
-                              print("Method completed from AuthClass");
-                            });
-                          },
+                          onPressed: _isLoading ? null : _startLoading,
                         ),
                         SizedBox(
                           height: 20.0,
                         ),
                         OurOutlineButton(
-                          context: context,
-                          text: 'Continue with email',
-                          hasIcon: true,
-                          icon: FontAwesomeIcons.envelope,
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            navigatorKey?.currentState?.pushNamed("login");
-                          }
-                                                  ),
+                            context: context,
+                            text: 'Continue with email',
+                            hasIcon: true,
+                            icon: FontAwesomeIcons.envelope,
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              navigatorKey?.currentState?.pushNamed("login");
+                            }),
                         SizedBox(
                           height: 35.0,
                         ),
@@ -151,7 +165,8 @@ class _UnknownPageState extends State<UnknownPage> {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 onPressed: () {
-                                  navigatorKey?.currentState?.pushNamed("register");
+                                  navigatorKey?.currentState
+                                      ?.pushNamed("register");
                                 }),
                           ],
                         ),

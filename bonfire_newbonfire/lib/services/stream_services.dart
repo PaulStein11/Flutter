@@ -17,14 +17,14 @@ class StreamServices {
 
 
 
-  Stream<MyUserModel> getUserData(String _userID) {
+  Stream<MyUserModel> getUserData(String? _userID) {
     var _ref = _db?.collection(_userCollection).doc(_userID);
     return _ref!.get().asStream().map((_snapshot) {
       return MyUserModel.fromDocument(_snapshot);
     });
   }
 
-  Stream<List<BF>> getBonfires(int limit) {
+  /*Stream<List<BF>> getBonfires(int limit) {
     var _ref = _db!.collection("bonfires").orderBy("timestamp", descending: true).limit(limit);
     return _ref.get().asStream().map((_snapshot) {
       return _snapshot.docs.map((_doc) {
@@ -44,6 +44,6 @@ class StreamServices {
         return BF.fromDocument(_doc);
       }).toList();
     });
-  }
+  }*/
 
 }

@@ -17,7 +17,7 @@ class FutureServices {
   String todayWeekday = DateFormat('EEEE').format(DateTime.now());
 
   Future<void> createUserInDB(String? _uid, String? _name, String? _email,
-      String? profileImage, String? _bio, String _tokenId) async {
+      String? profileImage, String? _bio, String? _tokenId) async {
     try {
       return await _firestore.collection(_users).doc(_uid).set({
         "name": _name,
@@ -29,6 +29,7 @@ class FutureServices {
         "groups": false,
         "unseenCount": 0,
         "lastSeen": DateTime.now().toUtc(),
+        "tip": false
       });
     } catch (error) {
       print(error);
@@ -76,10 +77,10 @@ class FutureServices {
   Future<void> createInteraction(String? _uid,
       String? _username,
       String? _profileImg,
-      String _interacId,
-      String _interacTitle,
-      String _bfId,
-      String _bfTitle,
+      String? _interacId,
+      String? _interacTitle,
+      String? _bfId,
+      String? _bfTitle,
       String? _file,
       String? _fileDuration) async {
     try {

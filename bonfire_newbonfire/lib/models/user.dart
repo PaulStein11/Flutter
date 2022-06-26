@@ -10,12 +10,13 @@ class MyUserModel {
   final String bio;
   final int bonfires;
   final bool groups;
+  final bool tip;
   final String profileImage;
   final String tokenId;
   final int unseenCount;
   final Timestamp lastSeen;
 
-  MyUserModel({this.uid, this.name, this.email, this.profileImage, this.tokenId, this.bio, this.bonfires, this.groups, this.unseenCount, this.lastSeen});
+  MyUserModel({this.uid, this.name, this.email, this.profileImage, this.tokenId, this.bio, this.bonfires, this.groups, this.tip, this.unseenCount, this.lastSeen});
 
   factory MyUserModel.fromDocument(DocumentSnapshot snapshot) {
     //Map<String, dynamic> data = snapshot.data as Map<String, dynamic>;
@@ -28,6 +29,7 @@ class MyUserModel {
       bio: snapshot["bio"],
       bonfires: snapshot["bonfires"],
       groups: snapshot["groups"],
+      tip: snapshot["tip"],
       unseenCount: snapshot["unseenCount"],
       lastSeen: snapshot["lastSeen"],
     );

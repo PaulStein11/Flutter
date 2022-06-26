@@ -12,8 +12,7 @@ import 'CreateInteracAudioPage.dart';
 import 'createBF/CreateBFAudio.dart';
 
 class CreateInteractionPage extends StatefulWidget {
-  String bfTitle;
-  String bfId;
+  String? bfTitle, bfId;
 
   CreateInteractionPage({required this.bfTitle, required this.bfId});
 
@@ -24,7 +23,7 @@ class CreateInteractionPage extends StatefulWidget {
 
 class _CreateInteractionPageState extends State<CreateInteractionPage> {
   late AuthProvider _auth;
-  String bfTitle, bfId;
+  String? bfTitle, bfId;
   late String _interactionTitle;
 
   //Interaction control
@@ -80,7 +79,7 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                             SizedBox(height: 40.0),
                             Center(
                               child: Text(
-                                bfTitle,
+                                bfTitle!,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline1!
@@ -140,14 +139,14 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                       },
                                       style: TextStyle(
                                           color: Colors.grey.shade300,
-                                          fontSize: 14.5),
+                                          fontSize: 16.5),
                                       controller: interacController,
                                       cursorColor:
                                           Theme.of(context).accentColor,
                                       minLines: 2,
                                       maxLines: 4,
                                       decoration: InputDecoration(
-                                        //fillColor: Colors.black87,
+                                        fillColor: Theme.of(context).backgroundColor,
                                         filled: true,
                                         hintText:
                                             "Title your interaction here...",
@@ -184,7 +183,7 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                             FontAwesomeIcons.solidCheckCircle,
                                             size: 18.0,
                                             color:
-                                                Colors.orange.withOpacity(0.8),
+                                                Colors.orange.shade900,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -211,7 +210,7 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                             FontAwesomeIcons.solidCheckCircle,
                                             size: 18.0,
                                             color:
-                                            Colors.orange.withOpacity(0.8),
+                                            Colors.orange.shade900,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(

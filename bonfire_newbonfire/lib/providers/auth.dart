@@ -1,8 +1,10 @@
 import 'package:bf_pagoda/services/navigation_service.dart';
 import 'package:bf_pagoda/services/snackbar_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../services/future_services.dart';
@@ -24,7 +26,7 @@ class AuthProvider extends ChangeNotifier {
   late bool newUser = false;
   UserCredential? _credential;
   static AuthProvider instance = AuthProvider();
-
+  late final String? osUserID;
   AuthProvider() {
     _auth = FirebaseAuth.instance;
     checkCurrentUserIsAuth();
@@ -159,8 +161,25 @@ class AuthProvider extends ChangeNotifier {
         return deviceToken;
       });*/
       if (authResult.additionalUserInfo!.isNewUser) {
-        await FutureServices.instance.createUserInDB(user!.uid,
-            user!.displayName, user!.email, user!.photoURL, "", "");//tokenId!);
+        /*var tokenId =
+            await OneSignal.shared.getDeviceState().then((deviceState) {
+          var userTokenId = deviceState!.userId;
+          print("$userTokenId");
+          return userTokenId;
+        });*/
+        final oneSigState = await OneSignal.shared.getDeviceState().then((deviceState) {
+          osUserID = deviceState!.userId;
+        });
+
+        print("Paul, the userId is $osUserID");
+
+        await FutureServices.instance.createUserInDB(
+            user!.uid,
+            user!.displayName,
+            user!.email,
+            user!.photoURL,
+            "",
+            osUserID); //tokenId!);
         status = AuthStatus.Authenticated;
         navigatorKey?.currentState?.pushReplacementNamed("onboarding");
       } else {

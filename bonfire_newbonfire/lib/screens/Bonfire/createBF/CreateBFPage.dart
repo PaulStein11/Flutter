@@ -83,13 +83,13 @@ class _CreateBFPageState extends State<CreateBFPage> {
                       _bfTitle = input!;
                     },
                     style:
-                        TextStyle(color: Colors.grey.shade300, fontSize: 14.5),
+                    TextStyle(color: Colors.grey.shade300, fontSize: 16.5),
                     controller: bfTitleController,
                     cursorColor: Theme.of(context).accentColor,
                     minLines: 2,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      //fillColor: Colors.black87,
+                      fillColor: Theme.of(context).backgroundColor,
                       filled: true,
                       hintText: "Ex: The day DOGE will reach 1 dollar",
                       hintStyle: TextStyle(
@@ -208,7 +208,7 @@ class _CreateBFPageState extends State<CreateBFPage> {
                             Icon(
                               FontAwesomeIcons.solidCheckCircle,
                               size: 18.0,
-                              color: Colors.orange.withOpacity(0.8),
+                              color: Colors.orange.shade900,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
