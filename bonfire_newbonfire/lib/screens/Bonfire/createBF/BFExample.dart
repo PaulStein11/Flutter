@@ -29,6 +29,7 @@ class _BFExampleState extends State<BFExample> {
   late audio.AudioPlayer _audio;
   bool isPlayingBF = false;
   bool isPlayingInt = false;
+  List<String> titles = ["title 1, title2, title 3"];
   List<String> userNames = ["Robin", "Patricia", "Kyle"];
   List<String> profileImages = [
     "https://firebasestorage.googleapis.com/v0/b/pagoda-7fac2.appspot.com/o/examples%2FprofileImages%2FSF.jpg?alt=media&token=fa571ab2-f83c-4690-85d8-ad3f99c7afad",
@@ -65,16 +66,17 @@ class _BFExampleState extends State<BFExample> {
           padding: const EdgeInsets.all(8.0),
           child: SafeArea(
             child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
+              decoration: BoxDecoration(border: Border.all(color: Theme.of(context).accentColor,),
+                  color: Theme.of(context).backgroundColor,
                   borderRadius: BorderRadius.circular(20.0)),
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Text(
-                  "Robin is a social media content creator that likes to engage people to talk about SPACE EXPLORATION. He also likes to get the best MEMES of the week from his audience",
+                  "Robin likes to participate in new tech conversations and this can be one of them",
                   style: Theme.of(context).textTheme.headline1!.copyWith(
-                      color: Theme.of(context).backgroundColor,
-                      fontWeight: FontWeight.w600),
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.w500,
+                  fontSize: 17.0),
                 ),
               ),
             ),
@@ -116,7 +118,7 @@ class _BFExampleState extends State<BFExample> {
                       children: [
                         Flexible(
                           child: Text(
-                            "Same title",
+                            "",
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4!
@@ -130,52 +132,50 @@ class _BFExampleState extends State<BFExample> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50.0),
                         border:
-                            Border.all(color: Theme.of(context).primaryColor)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          isPlayingBF == false
-                              ? IconButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      isPlayingBF = true;
-                                    });
-                                    _audio.play(fileAudios[0]);
-                                    _audio.onPlayerCompletion
-                                        .listen((duration) {
-                                      setState(() {
-                                        isPlayingBF = false;
-                                      });
-                                    });
-                                  },
-                                  icon: Icon(
-                                    FontAwesomeIcons.playCircle,
-                                    color: Colors.white70,
-                                  ))
-                              : IconButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      isPlayingBF = false;
-                                    });
-                                    await _audio.pause();
-                                  },
-                                  icon: Icon(
-                                    FontAwesomeIcons.pauseCircle,
-                                    color: Colors.white70,
-                                  )),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.67,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: isPlayingBF == false
-                                  ? Colors.grey.shade300
-                                  : Colors.amber.shade600,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                            Border.all(color: Theme.of(context).cardColor)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        isPlayingBF == false
+                            ? IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                isPlayingBF = true;
+                              });
+                              _audio.play(fileAudios[0]);
+                              _audio.onPlayerCompletion
+                                  .listen((duration) {
+                                setState(() {
+                                  isPlayingBF = false;
+                                });
+                              });
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.playCircle,
+                              color: Colors.white70,
+                            ))
+                            : IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                isPlayingBF = false;
+                              });
+                              await _audio.pause();
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.pauseCircle,
+                              color: Colors.white70,
+                            )),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.67,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: isPlayingBF == false
+                                ? Colors.grey.shade300
+                                : Colors.amber.shade600,
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          /*Text(
+                        ),
+                        /*Text(
                                       bfData["audioDuration"]
                                           .toString()
                                           .substring(1),
@@ -189,11 +189,10 @@ class _BFExampleState extends State<BFExample> {
                                           fontSize: 16.5,
                                           color: Colors.grey),
                                     ),*/
-                        ],
-                      ),
+                      ],
                     ),
                   ),
-                  Padding(
+                  /*Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 30.0),
                     child: Row(
@@ -292,7 +291,7 @@ class _BFExampleState extends State<BFExample> {
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
@@ -328,7 +327,7 @@ class _BFExampleState extends State<BFExample> {
                   ),*/
                   OurFilledButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CreateBFPage(
@@ -337,6 +336,7 @@ class _BFExampleState extends State<BFExample> {
                               profileImg: widget.profileImg,
                             ),
                           ),
+                          ModalRoute.withName('home'),
                         );
                       },
                       context: context,

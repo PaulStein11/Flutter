@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:audioplayers/audioplayers.dart' as audio;
@@ -5,7 +6,7 @@ import '../my_flutter_app_icons.dart';
 import '../screens/Bonfire/BonfirePage.dart';
 
 class Bonfire extends StatefulWidget {
-  late String bfId, bfTitle, bfAudioFile, bfOwner, ownerId;
+  late String bfId, bfTitle, bfAudioFile, bfOwner, ownerId, ownerImage, file;
   late int audience;
   Bonfire(
       {required this.bfId,
@@ -13,15 +14,17 @@ class Bonfire extends StatefulWidget {
       required this.audience,
       required this.bfAudioFile,
       required this.bfOwner,
-      required this.ownerId});
+      required this.ownerId,
+      required this.ownerImage,
+      required this.file});
 
   @override
   State<Bonfire> createState() => _BonfireState(
-      this.bfId, this.bfTitle, this.audience, this.bfAudioFile, this.bfOwner, this.ownerId);
+      this.bfId, this.bfTitle, this.audience, this.bfAudioFile, this.bfOwner, this.ownerId, this.ownerImage, this.file);
 }
 
 class _BonfireState extends State<Bonfire> {
-  late String bfId, bfTitle, bfAudioFile, bfOwner, ownerId;
+  late String bfId, bfTitle, bfAudioFile, bfOwner, ownerId, ownerImage, file;
   late int audience;
 
   //AUDIO PLAYER
@@ -29,7 +32,7 @@ class _BonfireState extends State<Bonfire> {
   bool isPlayingBF = false;
 
   _BonfireState(
-      this.bfId, this.bfTitle, this.audience, this.bfAudioFile, this.bfOwner, this.ownerId);
+      this.bfId, this.bfTitle, this.audience, this.bfAudioFile, this.bfOwner, this.ownerId, this.ownerImage, this.file);
 
   @override
   void initState() {
@@ -43,6 +46,9 @@ class _BonfireState extends State<Bonfire> {
     super.dispose();
     _audio.dispose();
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -52,7 +58,7 @@ class _BonfireState extends State<Bonfire> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                BonfirePage(bfId: widget.bfId, bfTitle: widget.bfTitle, ownerId: widget.ownerId,),
+                BonfirePage(bfId: widget.bfId, bfTitle: widget.bfTitle, ownerId: widget.ownerId),
           ),
         ),
         child: Container(

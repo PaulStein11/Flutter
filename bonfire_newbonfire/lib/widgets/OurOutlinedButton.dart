@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Widget OurOutlineButton(
@@ -9,7 +10,8 @@ Widget OurOutlineButton(
     Function onPressed,
     Color color,
     IconData icon,
-    bool hasIcon}) {
+    bool hasIcon,
+    bool isLoading}) {
   return InkWell(
     onTap: onPressed,
     child: Container(
@@ -20,7 +22,7 @@ Widget OurOutlineButton(
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 50.0,
-        child: Row(
+        child: isLoading == true ? SpinKitRing(color: Theme.of(context).accentColor, size: 30.0, lineWidth: 2.3,) : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -96,12 +96,9 @@ class _UnknownPageState extends State<UnknownPage> {
                     Column(
                       crossAxisAlignment: _isLoading ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
                       children: [
-                        _isLoading ? Container(
-
-                          child: SpinKitRing(color: Theme.of(context).accentColor, size: 35.0, lineWidth: 2,),
-                        ) : OurOutlineButton(
+                        _isLoading ? OurOutlineButton(context: context, isLoading: true) : OurOutlineButton(
                           context: context,
-                          text: 'Continue with Google',
+                          text: 'Access with Google',
                           hasIcon: true,
                           icon: FontAwesomeIcons.google,
                           color: Theme.of(context).primaryColor,
@@ -112,7 +109,7 @@ class _UnknownPageState extends State<UnknownPage> {
                         ),
                         OurOutlineButton(
                             context: context,
-                            text: 'Continue with email',
+                            text: 'Access with email',
                             hasIcon: true,
                             icon: FontAwesomeIcons.envelope,
                             color: Theme.of(context).primaryColor,

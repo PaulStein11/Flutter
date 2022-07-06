@@ -1,7 +1,11 @@
 // @dart=2.9
 
+import 'dart:async';
+
 import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
+import 'package:bf_pagoda/screens/Login/UnknownPage.dart';
+import 'package:bf_pagoda/services/navigation_service.dart';
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,39 +14,45 @@ import 'package:provider/provider.dart';
 
 AuthProvider _auth;
 
-class SplashPage extends StatelessWidget {
-  bool isAuth = false;
-  int duration = 0;
-  //Widget goToPage;
+class SplashPage extends StatefulWidget {
+  @override
+  Splash createState() => Splash();
+}
 
-  //SplashScreen({this.goToPage, this.duration});
+class Splash extends State<SplashPage>  {
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
-    /*Future.delayed(Duration(seconds: this.duration), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => this.goToPage),
-      );
-    });*/
+    Timer(
+        Duration(seconds: 3),
+            () =>
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => UnknownPage())));
+
+
+    var assetsImage = new AssetImage(
+        'assets/images/logo.png'); //<- Creates an object that fetches an image.
+    var image = new Image(
+        image: assetsImage,
+        height: 100); //<- Creates a widget that displays an image.
+
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: ChangeNotifierProvider<AuthProvider>.value(
-        value: AuthProvider.instance,
-        child: Builder(
-          builder: (BuildContext context) {
-            _auth = Provider.of<AuthProvider>(context);
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SpinKitFadingCircle(color: Theme.of(context).primaryColor,)
-                ],
-              ),
-            );
-          },
+      /* appBar: AppBar(
+          title: Text("MyApp"),
+          backgroundColor:
+              Colors.blue, //<- background color to combine with the picture :-)
+        ),*/
+      body: Container(
+        decoration: new BoxDecoration(color: Theme.of(context).backgroundColor),
+        child: new Center(
+          child: image,
         ),
-      ),
+      ), //<- place where the image appears
     );
   }
 }

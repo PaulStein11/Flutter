@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart' as audio;
-import 'package:bf_pagoda/screens/Bonfire/UploadInterac.dart';
 
 import 'package:file/local.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -78,6 +77,9 @@ class _RecordInteractionState extends State<RecordInteraction> {
     });
     await storage
         .ref()
+        .child("bonfires")
+        .child(bfTitle!)
+    .child("interactions")
         .child(interacTitle!)
         .child("interaction_audios")
         .putFile(File(path.toString()))
@@ -92,7 +94,8 @@ class _RecordInteractionState extends State<RecordInteraction> {
 // download url when it is uploaded
       else if (taskSnapshot.state == TaskState.success) {
         storage
-            .ref('${widget.interacTitle}/interaction_audios')
+            .ref(
+                '/bonfires/${widget.bfTitle}/interactions/${widget.interacTitle}/interaction_audios')
             .getDownloadURL()
             .then((url) {
           FutureServices.instance.createInteraction(
@@ -248,17 +251,6 @@ class _RecordInteractionState extends State<RecordInteraction> {
     if (_isRecorded == true) {
       return Column(
         children: [
-          /*Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Text(
-              "Audio",
-              style: TextStyle(
-                  color: Colors.grey.shade300,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.3),
-            ),
-          ),*/
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Container(

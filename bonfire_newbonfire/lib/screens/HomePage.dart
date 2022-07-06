@@ -148,34 +148,34 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.14,
                   child: DrawerHeader(
-                      child: Row(
-                    children: [
-                      SizedBox(
-                        width: 5.0,
-                      ),
-                      CircleAvatar(
-                        backgroundColor: Theme.of(context).indicatorColor,
-                        radius: 26.0,
-                        child: CircleAvatar(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        CircleAvatar(
                           backgroundColor: Theme.of(context).indicatorColor,
-                          radius: 20.0,
-                          child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/logo.png",
-                              fit: BoxFit.cover,
+                          radius: 26.0,
+                          child: CircleAvatar(
+                            backgroundColor: Theme.of(context).indicatorColor,
+                            radius: 20.0,
+                            child: ClipOval(
+                              child: Image.asset(
+                                "assets/images/logo.png",
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 15.0,
-                      ),
-                      appTitle(),
-                    ],
-                  )),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        appTitle(),
+                      ],
+                    ),
+                  ),
                 ),
-                Divider(color: Colors.grey.shade800),
-                drawerListTile(
+                /*drawerListTile(
                   icon: FontAwesomeIcons.houseFire,
                   text: "Explore",
                   onPressed: () {
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                       navigatorKey?.currentState?.pushNamed("main_groups");
                     }*/
                   },
-                ),
+                ),*/
                 /*drawerListTile(
                   icon: FontAwesomeIcons.fireBurner,
                   text: "Divulge",
@@ -240,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                     showDialog(
                         context: context,
                         builder: (_) => new AlertDialog(
-                          backgroundColor: Colors.white,
+                              backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0))),
@@ -289,7 +289,10 @@ class _HomePageState extends State<HomePage> {
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               child: Text(
-                                                "see examples", style: TextStyle(color: Theme.of(context).backgroundColor),
+                                                "see examples",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .backgroundColor),
                                               ),
                                               onPressed: () {
                                                 Navigator.of(context).push(
@@ -333,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ));
-                  } else {
+                  } else if (userData.bonfires > 0){
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -434,9 +437,10 @@ class _HomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => BonfirePage(
-                              bfId: result.notification.smallIcon,
-                              bfTitle: result.notification.title,
-                              ownerId: result.notification.largeIcon),
+                            bfId: result.notification.smallIcon,
+                            bfTitle: result.notification.title,
+                            ownerId: result.notification.largeIcon,
+                          ),
                         ),
                       );
                     });
@@ -447,6 +451,8 @@ class _HomePageState extends State<HomePage> {
                       bfAudioFile: listOfBonfires[index]["file"],
                       bfOwner: listOfBonfires[index]["ownerName"],
                       ownerId: listOfBonfires[index]["ownerId"],
+                      ownerImage: listOfBonfires[index]["ownerImage"],
+                      file: listOfBonfires[index]["file"],
                     );
                   },
                 ),

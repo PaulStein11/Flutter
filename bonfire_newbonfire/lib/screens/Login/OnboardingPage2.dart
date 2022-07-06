@@ -110,7 +110,7 @@ class OnboardingPage2 extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    "Check what comes out once the time is over!",
+                    "See the outcome of your collaboration!",
                     //"Get ready to contribute your idea around others and build something new together"
                     style: Theme.of(context).textTheme.headline4!.copyWith(
                       fontSize: 17.0,

@@ -24,8 +24,9 @@ Widget OurAlertDialog() {
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
-                      .headline4!.copyWith(color: Colors.grey.shade600),
+                      .headline4!.copyWith(color: Theme.of(context).backgroundColor, fontSize: 22.0),
                 ),
+                SizedBox(height: 10.0),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(

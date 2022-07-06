@@ -26,7 +26,7 @@ import 'package:provider/provider.dart';
 import 'screens/Login/RegisterPage.dart';
 import 'screens/Profile/ProfilePage.dart';
 
-final String  oneSignalAppId = "397cc3b7-7d47-44cf-b0eb-eb8ce39f8456";
+final String oneSignalAppId = "397cc3b7-7d47-44cf-b0eb-eb8ce39f8456";
 
 /// --- MAIN FUNCTION --- ///
 Future<void> main() async {
@@ -64,7 +64,8 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         routes: {
           // LOGIN SCREENS
-          "splash": (BuildContext context) => SplashPage(),
+          "splash": (BuildContext context) => SplashPage(
+              ),
           "home": (BuildContext context) => HomePage(),
           "unknown": (BuildContext context) => UnknownPage(),
           "terms&conditions": (BuildContext context) => TermsOfPrivacyPage(),
@@ -90,5 +91,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

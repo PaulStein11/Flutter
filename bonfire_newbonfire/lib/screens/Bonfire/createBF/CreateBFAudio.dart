@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:audioplayers/audioplayers.dart' as audio;
 import 'package:bf_pagoda/services/future_services.dart';
@@ -17,8 +14,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-import 'package:http/http.dart';
-import '../../../main.dart';
 import '../../../widgets/audio_stream/MusicVisualizer.dart';
 
 String? path;
@@ -37,10 +32,6 @@ class CreateBFAudio extends StatefulWidget {
       required this.bfDuration,
       required this.anonymous});
 
-  //OnStop function was commented in order to let this function to when user confirms the completion
-  /*final void Function(String path) onStop;
-
-  const AudioRecorder({required this.onStop});*/
 
   @override
   _CreateBFAudioState createState() => _CreateBFAudioState(
@@ -98,7 +89,7 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
   _CreateBFAudioState(this.uid, this.username, this.profileImg, this.bfTitle,
       this.bfDuration, this.anonymous);
 
-  Future<List<String>> getJournalEntries() async {
+  Future<List<String>> getOneSignalTokens() async {
     await FirebaseFirestore.instance
         .collection('users')
         .get()
@@ -117,7 +108,6 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
       _isLoading = true;
     });
 
-    // Wait for 3 seconds
     // You can replace this with your own task like fetching data, proccessing images, etc
     final oneSigState =
         await OneSignal.shared.getDeviceState().then((deviceState) {
@@ -129,68 +119,62 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
         .update({"tokenId": osUserID});
     await storage
         .ref()
+        .child("bonfires")
         .child(bfTitle)
         .child("bonfire_audios")
         .putFile(File(path.toString()))
-        .then((taskSnapshot) async {
-      print("task done");
-      if (taskSnapshot.state == TaskState.running) {
-        return Text(
-          "Loading...",
-          style: Theme.of(context).textTheme.headline1,
-        );
-      }
+        .then(
+      (taskSnapshot) async {
+        print("task done");
+        if (taskSnapshot.state == TaskState.running) {
+          return Text(
+            "Loading...",
+            style: Theme.of(context).textTheme.headline1,
+          );
+        }
 // download url when it is uploaded
-      else if (taskSnapshot.state == TaskState.success) {
-        storage
-            .ref('${widget.bfTitle}/bonfire_audios')
-            .getDownloadURL()
-            .then((url) {
-          FutureServices.instance.createBF(
-            widget.uid,
-            widget.username,
-            widget.profileImg,
-            bfId,
-            bfTitle,
-            bfDuration,
-            "$minutes : $seconds",
-            DateTime(
-                date.year,
-                date.month,
-                date.day +
-                    int.parse(widget.bfDuration
-                        .substring(0, widget.bfDuration.indexOf("day")))),
-            url,
-            widget.anonymous,
-          ).then((value) async {
-            var entries = await getJournalEntries();
-            await OneSignal.shared.postNotification(OSCreateNotification(
-              heading: "${widget.username} created Bonfire",
-              playerIds: entries,
-              content: bfTitle,
-              androidSmallIcon: bfId,
-              androidLargeIcon: widget.uid,
-            ));
+        else if (taskSnapshot.state == TaskState.success) {
+          storage
+              .ref('bonfires/${widget.bfTitle}/bonfire_audios')
+              .getDownloadURL()
+              .then((url) {
+            FutureServices.instance
+                .createBF(
+              widget.uid,
+              widget.username,
+              widget.profileImg,
+              bfId,
+              bfTitle,
+              bfDuration,
+              "$minutes : $seconds",
+              DateTime(
+                  date.year,
+                  date.month,
+                  date.day +
+                      int.parse(widget.bfDuration
+                          .substring(0, widget.bfDuration.indexOf("day")))),
+              url,
+              widget.anonymous,
+            )
+                .then((value) async {
+              var entries = await getOneSignalTokens();
+              await OneSignal.shared.postNotification(OSCreateNotification(
+                heading: "${widget.username} created Bonfire",
+                playerIds: entries,
+                content: bfTitle,
+                androidSmallIcon: bfId,
+                androidLargeIcon: widget.uid,
+              ));
+            });
+            print("Here is the URL of Image $url");
+            return url;
+          }).catchError((onError) {
+            print("Got Error $onError");
           });
-          print("Here is the URL of Image $url");
-          return url;
-        }).catchError((onError) {
-          print("Got Error $onError");
-        });
-        print("this are the entries: " + entries.join(""));
-        /*await sendNotification(
-            entries, bfTitle, "${widget.username} created Bonfire", bfId, widget.uid);*/
-
-      }
-      /*var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
-                      var res = await func.call(<String, dynamic>{
-                        "targetDevices": ["c_k5EcV8Sn-5rrNDlgoT2V:APA91bHeuGbzbO2S1mlYeqgtHNBy5E4KoC4dpMhKqpEfjeHrfNp3DU9xXArwbr3biFzb_0JYbo0Va_bRRLXmbXnm0q-N8GjWMeF23W0LHdoqPCihHRlxrToOGb87DKfNKsWHWRx52SYf"],
-                        "messageTitle": "Test title",
-                        "messageBody": "Hello paul!!"
-                      });
-
-                      print("message was ${res.data as bool ? "sent!" : "not sent!"}");*/
-    });
+          print("this are the entries: " + entries.join(""));
+        }
+      },
+    );
 
     setState(() {
       _isLoading = false;
@@ -211,35 +195,6 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
     _audio.dispose();
     _audioRecorder;
     super.dispose();
-  }
-
-  Future<Response> sendNotification(
-      List<String> tokenIdList, String contents, String heading, String bfId, String? ownerId) async {
-    return await post(
-      Uri.parse('https://onesignal.com/api/v1/notifications'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        "app_id": oneSignalAppId,
-        //kAppId is the App Id that one get from the OneSignal When the application is registered.
-
-        "include_player_ids": tokenIdList,
-        //tokenIdList Is the List of All the Token Id to to Whom notification must be sent.
-
-        // android_accent_color reprsent the color of the heading text in the notifiction
-        "android_accent_color": "FFFB8C00",
-
-        //"small_icon":"res/drawable-ic_launcher",
-
-        /*"large_icon":
-            "https://www.filepicker.io/api/file/zPloHSmnQsix82nlj9Aj?filename=name.jpg",*/
-
-        "headings": {"en": heading},
-
-        "contents": {"en": contents},
-      }),
-    );
   }
 
   @override
@@ -336,17 +291,6 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
     if (_isRecorded == true) {
       return Column(
         children: [
-          /*Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Text(
-              "Audio",
-              style: TextStyle(
-                  color: Colors.grey.shade300,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.3),
-            ),
-          ),*/
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Container(
@@ -593,26 +537,6 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
               });
               print(path);
               print(recordDuration.toString());
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => UploadInterac(
-                      uid: widget.uid,
-                      username: widget.username,
-                      profileImg: widget.profileImg,
-                      interacTitle: widget.interacTitle,
-                      audioDuration: "$minutes : $seconds",
-                      filePath: path,
-                      bfId: widget.bfId,
-                      bfTitle: widget.bfTitle,
-                    ) /*UploadBF(
-                          bfTitle: widget.bfTitle,
-                          bfDuration: widget.bfDuration,
-                          anonymous: widget.anonymous,
-                          filePath: path,
-                        ),*/
-                ),
-              );*/
             },
             child: SizedBox(
               width: 60.0,

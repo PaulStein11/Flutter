@@ -78,15 +78,18 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                           [
                             SizedBox(height: 40.0),
                             Center(
-                              child: Text(
-                                bfTitle!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1!
-                                    .copyWith(fontSize: 25.0),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 12.0, right: 8),
+                                child: Text(
+                                  bfTitle!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .copyWith(fontSize: 22.0),
+                                ),
                               ),
                             ),
-                            SizedBox(height: 50.0),
+                            SizedBox(height: 35.0),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(children: <Widget>[
