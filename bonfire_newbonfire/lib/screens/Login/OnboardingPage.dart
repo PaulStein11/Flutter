@@ -18,7 +18,7 @@ class _OnboardingPageState extends State<OnboardingPage>
     // TODO: implement initState
     super.initState();
     controller = AnimationController(
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 3),
       vsync: this,
     );
     controller.forward();
@@ -193,7 +193,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Container(
                       child: Text(
-                        "Welcome to bonfire!",
+                        "Welcome to bonfire",
                         style: Theme.of(context).textTheme.headline4!.copyWith(
                             fontSize: 22.0,
                             color: Colors.white.withOpacity(controller.value)),

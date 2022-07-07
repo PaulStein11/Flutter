@@ -41,25 +41,14 @@ class OnboardingPage2 extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        height: 55.0,
-                        width: 55.0,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).accentColor,
-                            borderRadius: BorderRadius.circular(50.0)),
-                        child: FittedBox(
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: 35,
-                                width: 35.0,
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/flame_sharp_white.png"))),
-                              )),
-                        ),
+                      Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Container(
+
+                            child: Image(
+                                image: AssetImage("assets/images/flame_sharp_white.png"),
+                                height: 55),
+                          ),
                       ),
                       Text(
                         "<=>",
@@ -68,7 +57,7 @@ class OnboardingPage2 extends StatelessWidget {
                       ),
                       Icon(
                         MyFlutterApp.chat_empty,
-                        size: 35.0,
+                        size: 45.0,
                         color: Theme.of(context).primaryColor,
                       )
                     ],
@@ -83,31 +72,10 @@ class OnboardingPage2 extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.microphoneLines,
-                        size: 35.0,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      Text(
-                        "<=>",
-                        style:
-                        TextStyle(fontSize: 28.0, color: Colors.white),
-                      ),
-                      CircleAvatar(
-                        radius: 27,
-                        backgroundColor: Theme.of(context).accentColor,
-                        child: IconButton(
-                          iconSize: 25.0,
-                          icon: Icon(MyFlutterApp.angle_circled_up,
-                              color:
-                              Theme.of(context).secondaryHeaderColor),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ],
+                  Icon(
+                    FontAwesomeIcons.microphoneLines,
+                    size: 45.0,
+                    color: Theme.of(context).primaryColor,
                   ),
                   Text(
                     "See the outcome of your collaboration!",
@@ -119,6 +87,7 @@ class OnboardingPage2 extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: 40.0,),
                   OurFilledButton(
                     context: context,
                     text: "continue",

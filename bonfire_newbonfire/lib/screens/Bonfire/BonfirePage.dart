@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bf_pagoda/models/user.dart';
 import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
-import 'package:bf_pagoda/screens/Bonfire/CreateInteracPage.dart';
+import 'package:bf_pagoda/screens/Bonfire/createInterac/CreateInteracPage.dart';
 import 'package:bf_pagoda/widgets/OurLeadingIcon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

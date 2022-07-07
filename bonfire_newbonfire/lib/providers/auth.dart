@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../services/future_services.dart';
 
 enum AuthStatus {
@@ -27,6 +26,7 @@ class AuthProvider extends ChangeNotifier {
   UserCredential? _credential;
   static AuthProvider instance = AuthProvider();
   late final String? osUserID;
+
   AuthProvider() {
     _auth = FirebaseAuth.instance;
     checkCurrentUserIsAuth();
@@ -57,22 +57,6 @@ class AuthProvider extends ChangeNotifier {
       },
     );
   }
-
-  Future<void> signOut() async {
-    try {
-      await _auth.signOut();
-      status = AuthStatus.NotAuthenticated;
-      notifyListeners();
-      navigatorKey?.currentState?.pushReplacementNamed("unknown");
-    } catch (err) {
-      status = AuthStatus.Error;
-      notifyListeners();
-      print(err);
-    }
-    notifyListeners();
-  }
-
-  // --------
 
   // //AUTHENTICATING BASE ACCOUNTS
 
@@ -140,6 +124,20 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+      status = AuthStatus.NotAuthenticated;
+      notifyListeners();
+      navigatorKey?.currentState?.pushReplacementNamed("unknown");
+    } catch (err) {
+      status = AuthStatus.Error;
+      notifyListeners();
+      print(err);
+    }
+    notifyListeners();
+  }
+
 // ------------
 
   Future<String> signInWithGoogle() async {
@@ -156,33 +154,18 @@ class AuthProvider extends ChangeNotifier {
       );
       UserCredential authResult = await _auth.signInWithCredential(credential);
       user = authResult.user;
-      /*String? tokenId = await messaging.getToken().then((deviceToken) {
-        print("Device Token: $deviceToken");
-        return deviceToken;
-      });*/
       if (authResult.additionalUserInfo!.isNewUser) {
-        /*var tokenId =
-            await OneSignal.shared.getDeviceState().then((deviceState) {
-          var userTokenId = deviceState!.userId;
-          print("$userTokenId");
-          return userTokenId;
-        });*/
-        final oneSigState = await OneSignal.shared.getDeviceState().then((deviceState) {
-          osUserID = deviceState!.userId;
-        });
-
+        final osSignal = await OneSignal.shared.getDeviceState().then(
+          (deviceState) async {
+            osUserID = deviceState!.userId;
+          },
+        );
         print("Paul, the userId is $osUserID");
-
-        await FutureServices.instance.createUserInDB(
-            user!.uid,
-            user!.displayName,
-            user!.email,
-            user!.photoURL,
-            "",
-            osUserID); //tokenId!);
+        await FutureServices.instance.createUserInDB(user!.uid,
+            user!.displayName, user!.email, user!.photoURL, "", osUserID);
         status = AuthStatus.Authenticated;
         navigatorKey?.currentState?.pushReplacementNamed("onboarding");
-      } else {
+      } else if (authResult.additionalUserInfo!.username!.isNotEmpty) {
         navigatorKey?.currentState?.pushReplacementNamed("home");
       }
     } on FirebaseAuthException catch (err) {
@@ -244,3 +227,14 @@ class AuthProvider extends ChangeNotifier {
   }*/
 
 }
+/*var tokenId =
+            await OneSignal.shared.getDeviceState().then((deviceState) {
+          var userTokenId = deviceState!.userId;
+          print("$userTokenId");
+          return userTokenId;
+        });*/
+
+/*String? tokenId = await messaging.getToken().then((deviceToken) {
+        print("Device Token: $deviceToken");
+        return deviceToken;
+      });*/

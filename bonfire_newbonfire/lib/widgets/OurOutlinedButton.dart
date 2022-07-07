@@ -1,8 +1,8 @@
 // @dart=2.9
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 Widget OurOutlineButton(
     {BuildContext context,
@@ -22,7 +22,7 @@ Widget OurOutlineButton(
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 50.0,
-        child: isLoading == true ? SpinKitRing(color: Theme.of(context).accentColor, size: 30.0, lineWidth: 2.3,) : Row(
+        child: isLoading == true ? Center(child: LoadingAnimationWidget.threeArchedCircle(color: Theme.of(context).accentColor, size: 28.0,)) : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

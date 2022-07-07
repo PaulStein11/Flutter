@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../../widgets/OurFilledButton.dart';
-import '../../widgets/OurLeadingIcon.dart';
-import '../../widgets/OurLoadingWidget.dart';
-import 'CreateInteracAudioPage.dart';
-import 'createBF/CreateBFAudio.dart';
+import '../../../widgets/OurFilledButton.dart';
+import '../../../widgets/OurLeadingIcon.dart';
+import '../../../widgets/OurLoadingWidget.dart';
+import 'CreateInteracAudio.dart';
+import '../createBF/CreateBFAudio.dart';
 
 class CreateInteractionPage extends StatefulWidget {
   String? bfTitle, bfId;
@@ -79,7 +79,8 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                             SizedBox(height: 40.0),
                             Center(
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 12.0, right: 8),
+                                padding:
+                                    const EdgeInsets.only(left: 12.0, right: 8),
                                 child: Text(
                                   bfTitle!,
                                   style: Theme.of(context)
@@ -149,7 +150,8 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                       minLines: 2,
                                       maxLines: 4,
                                       decoration: InputDecoration(
-                                        fillColor: Theme.of(context).backgroundColor,
+                                        fillColor:
+                                            Theme.of(context).backgroundColor,
                                         filled: true,
                                         hintText:
                                             "Title your interaction here...",
@@ -185,8 +187,7 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                           Icon(
                                             FontAwesomeIcons.solidCheckCircle,
                                             size: 18.0,
-                                            color:
-                                                Colors.orange.shade900,
+                                            color: Colors.orange.shade900,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -212,8 +213,7 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                           Icon(
                                             FontAwesomeIcons.solidCheckCircle,
                                             size: 18.0,
-                                            color:
-                                            Colors.orange.shade900,
+                                            color: Colors.orange.shade900,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -244,20 +244,19 @@ class _CreateInteractionPageState extends State<CreateInteractionPage> {
                                 text: "continue",
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              RecordInteraction(
-                                                  uid: userData.uid,
-                                                  username: userData.name,
-                                                  profileImg:
-                                                      userData.profileImage,
-                                                  interacTitle:
-                                                      _interactionTitle,
-                                                  bfId: widget.bfId,
-                                                  bfTitle: widget.bfTitle),
-                                        ));
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RecordInteraction(
+                                            uid: userData.uid,
+                                            username: userData.name,
+                                            profileImg: userData.profileImage,
+                                            interacTitle: _interactionTitle,
+                                            bfId: widget.bfId,
+                                            bfTitle: widget.bfTitle),
+                                      ),
+                                      ModalRoute.withName('home'),
+                                    );
                                   }
                                 },
                               ),

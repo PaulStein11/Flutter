@@ -16,7 +16,7 @@ Widget OurFilledButton(
         child: Text(
             text,
             style: TextStyle(
-                fontSize: 17,
+                fontSize: 16.5,
                 fontWeight: FontWeight.w900,
                 color: Theme.of(context).backgroundColor),
           ),

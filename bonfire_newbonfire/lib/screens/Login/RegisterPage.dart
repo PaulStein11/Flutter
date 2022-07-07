@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
-
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -39,7 +39,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   /// Get from gallery
   _getFromGallery() async {
-    XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery,
+    XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
       maxWidth: 1800,
       maxHeight: 1800,
     );
@@ -73,7 +74,11 @@ class _RegisterPageState extends State<RegisterPage> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.grey.shade200, size: 22.0,),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.grey.shade200,
+            size: 22.0,
+          ),
         ),
       ),
       body: Padding(
@@ -140,8 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextFormField(
                     autofillHints: [AutofillHints.name],
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20.0),
+                        color: Theme.of(context).primaryColor, fontSize: 20.0),
                     textAlign: TextAlign.left,
                     onSaved: (_input) {
                       setState(() {
@@ -155,15 +159,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           : "Username need more than 6 characters";
                     },
                   ),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   OurTextForm("Email"),
                   TextFormField(
                     autofillHints: [AutofillHints.email],
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20.0),
+                        color: Theme.of(context).primaryColor, fontSize: 20.0),
                     textAlign: TextAlign.left,
                     onSaved: (_input) {
                       setState(() {
@@ -177,14 +179,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           : "Please enter a valid email";
                     },
                   ),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   OurTextForm("Password"),
                   TextFormField(
                     obscureText: _obscureText,
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20.0),
+                        color: Theme.of(context).primaryColor, fontSize: 20.0),
                     textAlign: TextAlign.left,
                     onSaved: (_input) {
                       setState(() {
@@ -197,13 +197,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: _toggle,
                         icon: _obscureText
                             ? Icon(
-                          FontAwesomeIcons.solidEye,
-                          color: Colors.grey,
-                        )
+                                FontAwesomeIcons.solidEye,
+                                color: Colors.grey,
+                              )
                             : Icon(
-                          FontAwesomeIcons.solidEyeSlash,
-                          color: Colors.white70,
-                        ),
+                                FontAwesomeIcons.solidEyeSlash,
+                                color: Colors.white70,
+                              ),
                         color: Colors.grey,
                       ),
                     ),
@@ -230,15 +230,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   Widget registerButton() {
     return _auth.status == AuthStatus.Authenticating
         ? Align(
             alignment: Alignment.center,
-            child:CircularProgressIndicator(
-              color: Theme.of(context).accentColor,
-              backgroundColor: Theme.of(context).indicatorColor,
+            child: Center(
+              child: LoadingAnimationWidget.threeArchedCircle(
+                color: Theme.of(context).accentColor,
+                size: 28.0,
+              ),
             ),
           )
         : Center(
@@ -248,10 +248,11 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () {
                 //Implement registration functionality.
                 if (_formKey.currentState!.validate() != null) {
-                  _auth.registerUserWithEmailAndPassword( context,
+                  _auth.registerUserWithEmailAndPassword(
+                    context,
                     _email,
                     _password,
-                        (String _uid) async {
+                    (String _uid) async {
                       /*var _result = await CloudStorageService.instance
                             .uploadUserImage(_uid, _image);
                         var _imageURL = await _result.ref.getDownloadURL();
@@ -262,8 +263,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           print("$userTokenId");
                           return userTokenId;
                         });*/
-                      await FutureServices.instance.createUserInDB(
-                        _uid, _name, _email, "", "", "");
+                      await FutureServices.instance
+                          .createUserInDB(_uid, _name, _email, "", "", "");
                     },
                   );
                   /*if (image == null) {
@@ -277,5 +278,3 @@ class _RegisterPageState extends State<RegisterPage> {
           );
   }
 }
-
-

@@ -9,17 +9,18 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import '../../services/future_services.dart';
-import '../../widgets/OurRecordBFButton.dart';
-import '../../widgets/audio_stream/MusicVisualizer.dart';
+import '../../../services/future_services.dart';
+import '../../../services/navigation_service.dart';
+import '../../../widgets/OurRecordBFButton.dart';
+import '../../../widgets/audio_stream/MusicVisualizer.dart';
 
 String? path;
 String? durationBf;
@@ -79,7 +80,7 @@ class _RecordInteractionState extends State<RecordInteraction> {
         .ref()
         .child("bonfires")
         .child(bfTitle!)
-    .child("interactions")
+        .child("interactions")
         .child(interacTitle!)
         .child("interaction_audios")
         .putFile(File(path.toString()))
@@ -118,7 +119,7 @@ class _RecordInteractionState extends State<RecordInteraction> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.pushReplacementNamed(context, "home");
+    navigatorKey?.currentState?.pushReplacementNamed("home");
   }
 
   @override
@@ -169,9 +170,14 @@ class _RecordInteractionState extends State<RecordInteraction> {
                         child: IconButton(
                             onPressed: _isLoading ? null : _startLoading,
                             icon: _isLoading
-                                ? SpinKitPulse(
-                                    color: Colors.orange.shade900,
-                                  )
+                                ? Center(
+                                    child:
+                                        LoadingAnimationWidget.discreteCircle(
+                                    color: Theme.of(context).accentColor,
+                                    secondRingColor: Colors.blueAccent,
+                                    thirdRingColor: Colors.teal,
+                                    size: 23,
+                                  ))
                                 : Icon(
                                     FontAwesomeIcons.check,
                                     color: Colors.grey.shade200,
@@ -192,7 +198,7 @@ class _RecordInteractionState extends State<RecordInteraction> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  bfTitle!,
+                  widget.interacTitle!,
                   style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 19.0,
@@ -410,6 +416,9 @@ class _RecordInteractionState extends State<RecordInteraction> {
 
   Widget _recordBtn() {
     return OurRecordBFButton(context, _isRecording, () {
+      setState(() {
+        _isRecorded = false;
+      });
       if (_isRecording == false || _isPaused == true) {
         _start();
       }
@@ -479,7 +488,7 @@ class _RecordInteractionState extends State<RecordInteraction> {
     if (_isRecording || _isPaused) {
       return ClipOval(
         child: Material(
-          color: Theme.of(context).primaryColor.withOpacity(0.85),
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
           child: InkWell(
             onTap: () async {
               _audioRecorder.stop();
@@ -494,33 +503,13 @@ class _RecordInteractionState extends State<RecordInteraction> {
               });
               print(path);
               print(recordDuration.toString());
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => UploadInterac(
-                      uid: widget.uid,
-                      username: widget.username,
-                      profileImg: widget.profileImg,
-                      interacTitle: widget.interacTitle,
-                      audioDuration: "$minutes : $seconds",
-                      filePath: path,
-                      bfId: widget.bfId,
-                      bfTitle: widget.bfTitle,
-                    ) /*UploadBF(
-                          bfTitle: widget.bfTitle,
-                          bfDuration: widget.bfDuration,
-                          anonymous: widget.anonymous,
-                          filePath: path,
-                        ),*/
-                ),
-              );*/
             },
             child: SizedBox(
               width: 60.0,
               height: 60.0,
               child: Icon(
                 FontAwesomeIcons.check,
-                color: Theme.of(context).indicatorColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),

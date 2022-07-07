@@ -15,6 +15,7 @@ import 'package:bf_pagoda/screens/Login/SplashPage.dart';
 import 'package:bf_pagoda/screens/Login/TermsPrivacyPage.dart';
 import 'package:bf_pagoda/screens/Login/UnknownPage.dart';
 import 'package:bf_pagoda/screens/Profile/EditProfile.dart';
+import 'package:bf_pagoda/screens/SendFeedbackPage.dart';
 import 'package:bf_pagoda/services/navigation_service.dart';
 import 'package:bf_pagoda/utils/OurDarkTheme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -84,7 +85,7 @@ class MyApp extends StatelessWidget {
           // GROUPS SCREENS
           "intro_groups": (BuildContext context) => IntroGroup(),
           "first_groups": (BuildContext context) => FirstQuestionsPage(),
-          "main_groups": (BuildContext context) => SparksPage()
+          "main_groups": (BuildContext context) => SparksPage(),
         },
         //home:  MyHomePage(),
       ),

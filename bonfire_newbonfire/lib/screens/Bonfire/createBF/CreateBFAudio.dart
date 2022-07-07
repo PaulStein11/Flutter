@@ -8,12 +8,13 @@ import 'package:bf_pagoda/widgets/OurRecordBFButton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
+import '../../../services/navigation_service.dart';
 import '../../../widgets/audio_stream/MusicVisualizer.dart';
 
 String? path;
@@ -31,7 +32,6 @@ class CreateBFAudio extends StatefulWidget {
       required this.bfTitle,
       required this.bfDuration,
       required this.anonymous});
-
 
   @override
   _CreateBFAudioState createState() => _CreateBFAudioState(
@@ -54,21 +54,6 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
   bool _isLoading = false;
 
   List<String> usersNotificationToken = [];
-
-  // TODO: FINISH TO RETRIEVE ONSEGINAL USERID'S
-  /*Future<void> uploadUserTokens() async {
-    List<String> userTokensList = [];
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("onesignal").get();
-    snapshot.docs.forEach((DocumentSnapshot documentSnap) {
-      Object? data = documentSnap.data();
-      userTokensList.add(data!["tokenId"]);
-    });
-    setState(() {
-      usersNotificationToken = userTokensList;
-      print(" printing list of tokens $usersNotificationToken");
-    });
-  }*/
-  // This function will be triggered when the button is pressed
 
   //Audio Player states
   late audio.AudioPlayer _audio;
@@ -179,7 +164,7 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.pushReplacementNamed(context, "home");
+    navigatorKey?.currentState?.pushReplacementNamed("home");
   }
 
   @override
@@ -228,15 +213,21 @@ class _CreateBFAudioState extends State<CreateBFAudio> {
                             ? Colors.transparent
                             : Colors.orange.shade900,
                         child: IconButton(
-                            onPressed: _isLoading ? null : _startLoading,
-                            icon: _isLoading
-                                ? SpinKitPulse(
-                                    color: Colors.orange.shade900,
-                                  )
-                                : Icon(
-                                    FontAwesomeIcons.check,
-                                    color: Colors.grey.shade200,
-                                  )),
+                          onPressed: _isLoading ? null : _startLoading,
+                          icon: _isLoading
+                              ? Center(
+                                  child: LoadingAnimationWidget.discreteCircle(
+                                    color: Theme.of(context).accentColor,
+                                    secondRingColor: Colors.blueAccent,
+                                    thirdRingColor: Colors.teal,
+                                    size: 23.0,
+                                  ),
+                                )
+                              : Icon(
+                                  FontAwesomeIcons.check,
+                                  color: Colors.grey.shade200,
+                                ),
+                        ),
                       ),
                     )
                   : Text("")

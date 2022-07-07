@@ -1,12 +1,8 @@
-import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
 import 'package:bf_pagoda/services/navigation_service.dart';
-import 'package:bf_pagoda/services/snackbar_service.dart';
 import 'package:bf_pagoda/widgets/OurOutlinedButton.dart';
 import 'package:bf_pagoda/widgets/TermsWidget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +16,6 @@ class UnknownPage extends StatefulWidget {
 }
 
 class _UnknownPageState extends State<UnknownPage> {
-  final _formKey = GlobalKey<FormState>();
-  String _feedback = "";
-  late AuthStatus _status;
   bool _isLoading = false;
 
   void _startLoading() async {

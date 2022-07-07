@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
 
 class Storage {
+  String _profileImages = "profile_images";
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   String _bfAudios = "bonfire_audios";
@@ -24,7 +25,17 @@ class Storage {
     });
     return url;
   }
+  /*Future<firebase_storage.TaskSnapshot> uploadUserImage(String _uid, File _imageFile) {
+    try {
+      return storage.ref()
+          .child(_uid)
+          .child(_profileImages)
+          .putFile(_imageFile);
+    } catch (e) {
+      print(e);
+    }
 
+  }*/
   Future<firebase_storage.ListResult> listFiles(String _uid) async {
     firebase_storage.ListResult results = await storage.ref('$_uid/$_bfAudios').listAll();
     results.items.forEach((firebase_storage.Reference ref) {

@@ -43,12 +43,18 @@ class _ProfilePageState extends State<ProfilePage> {
           style: Theme.of(context).textTheme.headline5,
         ),
         centerTitle: true,
-        leading: OurLeadingIcon(context),
+        leading: IconButton(
+          onPressed: () => navigatorKey?.currentState?.pushNamed("home"),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.grey.shade200, size: 22.0,),
+        ),
         actions: [
           PopupMenuButton(
               color: Theme.of(context).indicatorColor,
               // add icon, by default "3 dot" icon
-              icon: Icon(FontAwesomeIcons.ellipsisH, color: Colors.grey.shade200,),
+              icon: Icon(
+                FontAwesomeIcons.ellipsisH,
+                color: Colors.grey.shade200,
+              ),
               itemBuilder: (context) {
                 return [
                   PopupMenuItem<int>(
@@ -72,8 +78,8 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               onSelected: (value) {
                 if (value == 0) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditProfile()));
+                  navigatorKey?.currentState
+                      ?.pushReplacementNamed("edit_profile");
                 } else if (value == 1) {
                   print("Settings menu is selected.");
                 } else if (value == 2) {
@@ -112,37 +118,44 @@ class _ProfilePageState extends State<ProfilePage> {
                 DateFormat('yMd').format(accountTimestamp.toDate());
 
             return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 25.0, horizontal: 20.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       userData.profileImage.isEmpty ||
-                          snapshot.connectionState ==
-                              ConnectionState.active
-                          ? GestureDetector(
-                          child: Icon(
-                            FontAwesomeIcons.solidCircleUser,
-                            color: Theme.of(context)
-                                .secondaryHeaderColor,
-                            size: 80.0,
-                          ),
-                          onTap: () {
-                            //TODO: Change profile Image
-                          })
+                              snapshot.connectionState == ConnectionState.active
+                          ? CircleAvatar(
+                              backgroundColor: Theme.of(context).indicatorColor,
+                              radius: 45.0,
+                              child: GestureDetector(
+                                  child: Icon(
+                                    FontAwesomeIcons.solidCircleUser,
+                                    color:
+                                        Theme.of(context).secondaryHeaderColor,
+                                    size: 80.0,
+                                  ),
+                                  onTap: () {
+                                    //TODO: Change profile Image
+                                  }),
+                            )
                           : CircleAvatar(
-                        backgroundColor:
-                        Theme.of(context).cardColor,
-                        radius: 45.0,
-                        child: CircleAvatar(
-                          radius: 39.0,
-                          backgroundImage:
-                          NetworkImage(userData.profileImage),
-                        ),
+                              backgroundColor: Theme.of(context).cardColor,
+                              radius: 45.0,
+                              child: CircleAvatar(
+                                radius: 39.0,
+                                backgroundImage:
+                                    NetworkImage(userData.profileImage),
+                              ),
+                            ),
+                      SizedBox(
+                        width: 25.0,
                       ),
-                      SizedBox(width: 30.0,),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,29 +164,45 @@ class _ProfilePageState extends State<ProfilePage> {
                             userData.name,
                             style: TextStyle(
                                 color: Colors.grey.shade100,
-                                fontSize: 16.5,
-                                fontWeight: FontWeight.w700),
+                                fontSize: 20.5,
+                                fontFamily: "Palanquin",
+                                fontWeight: FontWeight.bold),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 18.0),
+                            padding: const EdgeInsets.symmetric(vertical: 7.0),
                             child: Container(
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderRadius: BorderRadius.circular(5.0),
                                   color: Theme.of(context).indicatorColor),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 13.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6.0),
                                 child: Text(
                                   "Joined $formatter",
-                                  style: Theme.of(context).textTheme.headline2,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline2!
+                                      .copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 12.5),
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20.0, right: 5.0, bottom: 12.0),
+                  child: Text(
+                    userData.bio,
+                    style: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 Divider(
@@ -184,7 +213,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: const EdgeInsets.symmetric(vertical: 18.0),
                   child: buildCountColumn("bonfires", userData.bonfires),
                 ),
-
               ],
             );
           }),

@@ -1,23 +1,15 @@
 import 'package:bf_pagoda/models/bonfire.dart';
 import 'package:bf_pagoda/models/user.dart';
-import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/providers/auth.dart';
 import 'package:bf_pagoda/screens/Bonfire/createBF/BFExample.dart';
 import 'package:bf_pagoda/screens/Bonfire/createBF/CreateBFPage.dart';
-import 'package:bf_pagoda/screens/Groups/IntroGroups.dart';
-import 'package:bf_pagoda/services/dynamic_services.dart';
 import 'package:bf_pagoda/services/navigation_service.dart';
 import 'package:bf_pagoda/services/stream_services.dart';
-import 'package:bf_pagoda/widgets/CircleAddButton.dart';
 import 'package:bf_pagoda/widgets/DrawerWidgets.dart';
-import 'package:bf_pagoda/widgets/OurFilledButton.dart';
-import 'package:bf_pagoda/widgets/OurOutlinedButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
@@ -26,12 +18,9 @@ import '../main.dart';
 import '../widgets/OurFloatingButton.dart';
 import '../widgets/OurLoadingWidget.dart';
 import 'Bonfire/BonfirePage.dart';
-import 'Login/OnboardingPage.dart';
 import 'SendFeedbackPage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -112,7 +101,9 @@ class _HomePageState extends State<HomePage> {
     return StreamBuilder<MyUserModel>(
       stream: StreamServices.instance.getUserData(_auth.user!.uid),
       builder: (context, AsyncSnapshot<MyUserModel> snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.data == null) {
+          return OurLoadingWidget(context);
+        } else if (snapshot.hasError) {
           Column(
             children: [
               const Icon(
@@ -203,9 +194,7 @@ class _HomePageState extends State<HomePage> {
                   icon: Icons.feedback_rounded,
                   text: "Send feedback",
                   onPressed: () {
-                    navigatorKey?.currentState
-                        ?.pushReplacementNamed("onboarding");
-                    /*Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SendFeedback(
@@ -214,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                           email: userData.email,
                         ),
                       ),
-                    );*/
+                    );
                   },
                 ),
                 drawerListTile(
@@ -230,126 +219,23 @@ class _HomePageState extends State<HomePage> {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 18.0),
-              child: OurFloatingButton(
-                context: context,
-                onPressed: () {
-                  if (userData.bonfires == 0) {
-                    // Show example option
-                    //TODO: Create a Widget out of this dialog
-                    showDialog(
-                        context: context,
-                        builder: (_) => new AlertDialog(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              content: Builder(
-                                builder: (context) {
-                                  // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                                  var height =
-                                      MediaQuery.of(context).size.height;
-                                  var width = MediaQuery.of(context).size.width;
-
-                                  return Container(
-                                      height: height - 400,
-                                      width: width - 50,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "First bonfire",
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4!
-                                                .copyWith(
-                                                    color:
-                                                        Colors.grey.shade600),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "Before start your first bonfire check some examples for reference",
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline1!
-                                                  .copyWith(
-                                                      color:
-                                                          Colors.grey.shade800,
-                                                      fontSize: 17.0),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 16.5),
-                                            child: FlatButton(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              child: Text(
-                                                "see examples",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .backgroundColor),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            BFExample(
-                                                              uid: userData.uid,
-                                                              username:
-                                                                  userData.name,
-                                                              profileImg: userData
-                                                                  .profileImage,
-                                                            )));
-                                              },
-                                            ),
-                                          ),
-                                          FlatButton(
-                                              color: Theme.of(context)
-                                                  .indicatorColor,
-                                              child: Text(
-                                                "continue",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CreateBFPage(
-                                                      uid: userData.uid,
-                                                      username: userData.name,
-                                                      profileImg:
-                                                          userData.profileImage,
-                                                    ),
-                                                  ),
-                                                );
-                                              }),
-                                        ],
-                                      ));
-                                },
-                              ),
-                            ));
-                  } else if (userData.bonfires > 0){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateBFPage(
-                          uid: userData.uid,
-                          username: userData.name,
-                          profileImg: userData.profileImage,
-                        ),
-                      ),
-                    );
-                  }
-                },
-              )),
+            padding: const EdgeInsets.only(bottom: 18.0),
+            child: OurFloatingButton(
+              context: context,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateBFPage(
+                      uid: userData.uid,
+                      username: userData.name,
+                      profileImg: userData.profileImage,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(60.0),
             child: AppBar(
@@ -383,12 +269,10 @@ class _HomePageState extends State<HomePage> {
                         child: CircleAvatar(
                           backgroundColor: Colors.grey.shade700,
                           radius: 19,
-                          child: ClipOval(
-                            child: Image.network(
+                          backgroundImage: NetworkImage(
                               userData.profileImage,
-                              fit: BoxFit.cover,
                             ),
-                          ),
+
                         ),
                       ),
                 SizedBox(
@@ -415,11 +299,12 @@ class _HomePageState extends State<HomePage> {
               List<DocumentSnapshot> listOfBonfires = snapshot.data!.docs;
 
               return RefreshIndicator(
+                color: Theme.of(context).accentColor,
                 onRefresh: () {
                   return Future.delayed(
                     Duration(seconds: 2),
                     () {
-                      OurLoadingWidget(context);
+                      navigatorKey?.currentState?.pushReplacementNamed("home");
                     },
                   );
                 },

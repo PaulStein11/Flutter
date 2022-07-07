@@ -1,3 +1,4 @@
+import 'package:bf_pagoda/my_flutter_app_icons.dart';
 import 'package:bf_pagoda/screens/Bonfire/createBF/CreateBFAudio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import '../../../widgets/OurFilledButton.dart';
 import '../../../widgets/OurLeadingIcon.dart';
+import 'BFExample.dart';
 
 class CreateBFPage extends StatefulWidget {
   String? uid, username, profileImg; // User data to be passed onto nex screen
@@ -40,13 +42,97 @@ class _CreateBFPageState extends State<CreateBFPage> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-            title: Text(
-              "Create bonfire",
-              style: Theme.of(context).textTheme.headline6,
+          title: Text(
+            "Create bonfire",
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+          leading: OurLeadingIcon(context),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => new AlertDialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    content: Builder(
+                      builder: (context) {
+                        // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                        var height = MediaQuery.of(context).size.height;
+                        var width = MediaQuery.of(context).size.width;
+
+                        return Container(
+                          height: height - 500,
+                          width: width - 30,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "TIPS",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline4!
+                                    .copyWith(
+                                        color:
+                                            Theme.of(context).backgroundColor,
+                                        fontSize: 22.0),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "See how people uses bonfires to gather people to create new content",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .copyWith(
+                                          color: Colors.grey.shade800,
+                                          fontSize: 17.0),
+                                ),
+                              ),
+                              SizedBox(height: 20.0),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.5),
+                                child: FlatButton(
+                                  color: Theme.of(context).backgroundColor,
+                                  child: Text(
+                                    "see examples",
+                                    style: TextStyle(
+                                        color:
+                                            Theme.of(context).primaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => BFExample(
+                                                  uid: widget.uid,
+                                                  username: widget.username,
+                                                  profileImg: widget.profileImg,
+                                                )));
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+              icon: Icon(
+                MyFlutterApp.attention,
+                size: 17.0,
+              ),
+              color: Colors.white70,
             ),
-            centerTitle: true,
-            elevation: 0.0,
-            leading: OurLeadingIcon(context)),
+          ],
+        ),
         body: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.symmetric(
@@ -83,7 +169,7 @@ class _CreateBFPageState extends State<CreateBFPage> {
                       _bfTitle = input!;
                     },
                     style:
-                    TextStyle(color: Colors.grey.shade300, fontSize: 16.5),
+                        TextStyle(color: Colors.grey.shade300, fontSize: 16.5),
                     controller: bfTitleController,
                     cursorColor: Theme.of(context).accentColor,
                     minLines: 2,
@@ -114,41 +200,6 @@ class _CreateBFPageState extends State<CreateBFPage> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.05,
                   ),
-                  /*Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 15.0),
-                                  child: Icon(
-                                    FontAwesomeIcons.userSecret,
-                                    size: 28.0,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: const Text(
-                                    'Make it anonymous',
-                                    style: TextStyle(
-                                        color: Colors.white70,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15.0,
-                                        letterSpacing: 0.5),
-                                  ),
-                                ),
-                                Switch(
-                                  inactiveTrackColor: Theme.of(context).indicatorColor,
-                                  activeColor: Theme.of(context).accentColor,
-                                  value: isAnonymous,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      isAnonymous = !isAnonymous;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.01,
-                            ),*/
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -166,38 +217,45 @@ class _CreateBFPageState extends State<CreateBFPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 3.0),
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                           decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).indicatorColor,
-                              ),
-                              color: Theme.of(context).backgroundColor,
-                              borderRadius: BorderRadius.circular(10)),                          child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: dropdownvalue,
-                            // Initial Value
-                            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white70,),
-                            // Down Arrow Icon
-                            items: items.map((String items) {
-                              // Array list of items
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(
-                                  items,
-                                  style: TextStyle(
-                                      color: Colors.grey.shade400, fontSize: 14.5),
-                                ),
-                              );
-                            }).toList(),
-                            // After selecting the desired option,it will
-                            // change button value to selected value
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropdownvalue = newValue!;
-                              });
-                            },
+                            border: Border.all(
+                              color: Theme.of(context).indicatorColor,
+                            ),
+                            color: Theme.of(context).backgroundColor,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              value: dropdownvalue,
+                              // Initial Value
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.white70,
+                              ),
+                              // Down Arrow Icon
+                              items: items.map((String items) {
+                                // Array list of items
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Text(
+                                    items,
+                                    style: TextStyle(
+                                        color: Colors.grey.shade400,
+                                        fontSize: 14.5),
+                                  ),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownvalue = newValue!;
+                                });
+                              },
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
@@ -222,7 +280,6 @@ class _CreateBFPageState extends State<CreateBFPage> {
                       ),
                     ],
                   ),
-
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
                   ),
@@ -237,7 +294,7 @@ class _CreateBFPageState extends State<CreateBFPage> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   if (isAnonymous == true) {
-                                    Navigator.push(
+                                    Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => CreateBFAudio(
@@ -249,20 +306,23 @@ class _CreateBFPageState extends State<CreateBFPage> {
                                           bfDuration: dropdownvalue,
                                         ),
                                       ),
+                                      ModalRoute.withName('home'),
                                     );
                                   } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CreateBFAudio(
-                                            uid: widget.uid,
-                                            username: widget.username,
-                                            profileImg: widget.profileImg,
-                                            bfTitle: _bfTitle,
-                                            anonymous: isAnonymous,
-                                            bfDuration: dropdownvalue,
-                                          ),
-                                        ));
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateBFAudio(
+                                          uid: widget.uid,
+                                          username: widget.username,
+                                          profileImg: widget.profileImg,
+                                          bfTitle: _bfTitle,
+                                          anonymous: isAnonymous,
+                                          bfDuration: dropdownvalue,
+                                        ),
+                                      ),
+                                      ModalRoute.withName('home'),
+                                    );
                                   }
                                 }
                               },

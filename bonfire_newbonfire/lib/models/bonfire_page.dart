@@ -4,7 +4,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:audioplayers/audioplayers.dart' as audio;
 import '../my_flutter_app_icons.dart';
-import '../screens/Bonfire/CreateInteracPage.dart';
+import '../screens/Bonfire/createInterac/CreateInteracPage.dart';
 import '../services/dynamic_services.dart';
 import '../widgets/CircleAddButton.dart';
 
@@ -63,10 +63,17 @@ class _BonfirePageModelState extends State<BonfirePageModel> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             children: [
-              CircleAvatar(
+              ownerImage.isEmpty ? Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Icon(
+                  FontAwesomeIcons.solidCircleUser,
+                  color: Theme.of(context).secondaryHeaderColor,
+                  size: 28.0,
+                ),
+              ) : CircleAvatar(
                 backgroundColor: Colors.grey.shade700,
                 radius: 18,
                 backgroundImage: NetworkImage(ownerImage),

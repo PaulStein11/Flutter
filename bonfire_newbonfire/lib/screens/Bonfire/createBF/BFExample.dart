@@ -1,5 +1,5 @@
 import 'package:bf_pagoda/my_flutter_app_icons.dart';
-import 'package:bf_pagoda/screens/Bonfire/CreateInteracPage.dart';
+import 'package:bf_pagoda/screens/Bonfire/createInterac/CreateInteracPage.dart';
 import 'package:bf_pagoda/widgets/OurFilledButton.dart';
 import 'package:bf_pagoda/widgets/OurOutlinedButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -175,123 +175,9 @@ class _BFExampleState extends State<BFExample> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
-                        /*Text(
-                                      bfData["audioDuration"]
-                                          .toString()
-                                          .substring(1),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline1!
-                                          .copyWith(
-                                          fontFamily: "Palanquin",
-                                          letterSpacing: -0.5,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16.5,
-                                          color: Colors.grey),
-                                    ),*/
                       ],
                     ),
                   ),
-                  /*Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      textBaseline: TextBaseline.ideographic,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              MyFlutterApp.users,
-                              color: Colors.grey.shade400,
-                              size: 25.0,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Transform.translate(
-                                offset: const Offset(2.0, 4.0),
-                                child: Text(10.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline4!
-                                        .copyWith(color: Colors.grey.shade400)),
-                              ),
-                            ),
-                          ],
-                        ),
-                        CircleAddButton(
-                          context,
-                          onPressed: () {
-                            showModalBottomSheet(
-                              barrierColor:
-                                  Colors.grey.shade800.withOpacity(0.8),
-                              elevation: 10.0,
-                              context: context,
-                              builder: (context) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12.0, horizontal: 10.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: new Icon(
-                                          FontAwesomeIcons.message,
-                                          color: Colors.white,
-                                        ),
-                                        title: new Text('Interact',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4),
-                                        onTap: () {
-                                          /*Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => CreateInteractionPage(
-                                                                bfTitle:
-                                                                bfData[
-                                                                "title"],
-                                                                bfId: bfData[
-                                                                "bfId"])));*/
-                                        },
-                                      ),
-                                      ListTile(
-                                        leading: new Icon(
-                                          Icons.share,
-                                          color: Colors.white,
-                                        ),
-                                        title: new Text('Share',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4),
-                                        onTap: () async {
-                                          /*await showAlertDialog(
-                                                          context,
-                                                          title:
-                                                          'Share Bonfire!',
-                                                          content:
-                                                          'Get link to share with others',
-                                                          cancelActionText:
-                                                          'Cancel',
-                                                          defaultActionText:
-                                                          'Get link',
-                                                          getRequiredLink:
-                                                          _dynamicLinkService
-                                                              .createDynamicLink());*/
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),*/
                 ],
               ),
             ),
@@ -306,25 +192,6 @@ class _BFExampleState extends State<BFExample> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  /*Material(
-                    color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    elevation: 2.0,
-                    child: MaterialButton(
-                      onPressed: (){},
-                      minWidth: 150.0,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          "see more",
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(context).primaryColor),
-                        ),
-                      ),
-                    ),
-                  ),*/
                   OurFilledButton(
                       onPressed: () {
                         Navigator.pushAndRemoveUntil(
